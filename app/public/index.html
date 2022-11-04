@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>Lively</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    
 </head>
 <body>
     <h1>Welcome to Lively</h1>
@@ -13,11 +14,11 @@
     <div class="form">
         <div>
             <label for="artist">Artist</label>
-		    <input id="artist" type="text" name="artist">
+            <input id="artist" type="text" name="artist">
         </div>
         <div>
             <label for="genre">Genre</label>
-		    <select id="genre" name="genre" size="1" multiple>
+            <select id="genre" name="genre" size="1" multiple>
                 <option value="rock">Rock</option>
                 <option value="pop">Pop</option>
                 <option value="hip-hop">Hip Hop</option>
@@ -26,10 +27,16 @@
         </div>
         <div>
             <label for="location">Location</label>
-		    <input id="location" type="text" name="location">
+            <input id="location" type="text" name="location">
         </div>
     </div>
     <h3>or</h3>
     <button>Search with Spotify</button>
+    <br>
+    <br>
+    <div id="map"> Map </div>
+    <script type="module" src="index.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap&v=weekly"
+            defer></script>
 </body>
 </html>
