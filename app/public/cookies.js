@@ -44,7 +44,7 @@ export function setCookie(name, value, expirationDays) {
     const d = new Date();
     d.setTime(d.getTime() + (expirationDays * 24 * 60 * 60 * 1000));
     let expiration = "expires=" + d.toUTCString();
-    document.cookie = name + "=" + value + ";" + expiration + ";path=/";
+    document.cookie = name + "=" + value + ";" + expiration + ";path=/; SameSite=Lax";
 }
 
 export function deleteCookie(name) {
