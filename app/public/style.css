@@ -1,7 +1,16 @@
+
+#login, #loggedin {
+    display: none;
+  }
+  .text-overflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 500px;
+  }
 #map {
     height:60vh;
 }
-
 #cookieConsentContainer {
     background-color: lightgray;
     display: none;
