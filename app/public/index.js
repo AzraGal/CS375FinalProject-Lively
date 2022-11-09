@@ -1,6 +1,3 @@
-
-window.initMap = initMap;
-
 let cookieConsent = getCookie("cookie_consent");
 let cookieContainer = document.getElementById("cookieConsentContainer");
 let acceptCookieButton = document.getElementById("acceptCookieButton");
