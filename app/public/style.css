@@ -1,3 +1,4 @@
+
 #login, #loggedin {
     display: none;
   }
@@ -7,3 +8,10 @@
     white-space: nowrap;
     width: 500px;
   }
+#map {
+    height:60vh;
+}
+#cookieConsentContainer {
+    background-color: lightgray;
+    display: none;
+}

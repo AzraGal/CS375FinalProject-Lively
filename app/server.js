@@ -176,6 +176,12 @@ let hostname = "localhost";
 
    })
 
+app.use(express.static("public"));
+
+app.get("/", (req, res) => {
+    res.send("public/index.html"); 
+});
+
 app.listen(port, hostname, () => {
     console.log(`http://${hostname}:${port}`);
 });

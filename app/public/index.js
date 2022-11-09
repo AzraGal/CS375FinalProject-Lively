@@ -1,55 +1,46 @@
-let newToken = document.getElementById('obtain-new-token');
+import * as cookies from "./cookies.js";
 
-newToken.addEventListener('click', function() {
-    $.ajax({
-      url: '/refresh_token',
-      data: {
-        'refresh_token': refresh_token
-      }
-    }).done(function(data) {
-      access_token = data.access_token;
-      oauthPlaceholder.innerHTML = oauthTemplate({
-        access_token: access_token,
-        refresh_token: refresh_token
-      });
+let map;
+
+function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 39.95228, lng: -75.16245 },
+        zoom: 8,
     });
-  }, false);
+}
 
-// let loginSpotify = document.getElementById('loginSpotify');
+window.initMap = initMap;
 
-// loginSpotify.addEventListener('click', function() {
-//     console.log('here');
-//     fetch('/login').then((response) => {
-//         return response.json();
-//     })
-// });
+let submitSearchButton = document.getElementById("submitSearchButton");
+let artistInput = document.getElementById("artist");
+let genreInput = document.getElementById("genre");
+let locationInput = document.getElementById("location");
+let artist = "";
+let genre = "";
+let location = "";
 
-let vicbutton = document.getElementById('buttontopartist');
+function init() {
+    submitSearchButton.addEventListener("click", submitSearch);
+    if (cookies.cookieConsent !== "") {
+        artistInput.value = cookies.getCookie("artist_search").substring(1);
+        genreInput.value = cookies.getCookie("genre_search").substring(1);
+        locationInput.value = cookies.getCookie("location_search").substring(1);
+    }
+}
 
-vicbutton.addEventListener("click", () => {
+function submitSearch() {
+    artist = artistInput.value;
+    genre = genreInput.value;
+    location = locationInput.value;
 
-    fetch('/artists').then((response) => {
-        return response.json();
-    }).then((body) => {
-        let artists = [];
-        let genres = [];
+    if (cookies.cookieConsent !== "") {
+        cookies.deleteCookie("artist_search");
+        cookies.deleteCookie("genre_search");
+        cookies.deleteCookie("location_search");
+        cookies.setCookie("artist_search", artist, 30);
+        cookies.setCookie("genre_search", genre, 30);
+        cookies.setCookie("location_search", location, 30);
+    }
+}
 
-        for (let i = 0; i < body.items.length; i++) {
-            const element = body.items[i];
-
-            artists.push(element.name);
-
-            for (let g = 0; g < element.genres.length; g++) {
-                const genre = element.genres[g];
-
-                if(!genres.includes(genre)){
-                    genres.push(genre);
-                }
-                
-            }
-        }
-        console.log(artists);
-        console.log(genres);
-    })
-
-})
+init();

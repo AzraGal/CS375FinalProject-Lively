@@ -1,12 +1,40 @@
-<!doctype html>
-<html>
-  <head>
-    <!-- <script src="index.js"></script> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Lively</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <style src="style.css" type="text/css"> </style>
-  </head>
+    <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
+    
+</head>
+<body>
+    <h1>Welcome to Lively</h1>
+    <h2>Everything you need to see your favorite artists in real life.</h2>
 
-  <body>
+    <h3>Search by</h3>
+    <div class="form">
+        <div>
+            <label for="artist">Artist</label>
+            <input id="artist" type="text" name="artist">
+        </div>
+        <div>
+            <label for="genre">Genre</label>
+            <select id="genre" name="genre" size="1" multiple>
+                <option value="rock">Rock</option>
+                <option value="pop">Pop</option>
+                <option value="hip-hop">Hip Hop</option>
+                <option value="country">Country</option>
+            </select>
+        </div>
+        <div>
+            <label for="location">Location</label>
+            <input id="location" type="text" name="location">
+        </div>
+        <button id="submitSearchButton">Search</button>
+    </div>
+    <h3>or</h3>
+    <!-- <button>Search with Spotify</button> -->
     <div class="container">
       <div id="login">
         <a href="/login" class="btn btn-primary">Log in with Spotify</a>
@@ -41,6 +69,20 @@
     </script> -->
 
     <button id='buttontopartist'>get top artists</button>
+    <br>
+    <br>
+    <div id="map"> Map </div>
+    <div id="cookieConsentContainer">
+        <h3>We Use Cookies!</h3>
+        <p>Lively uses cookies to enhance your browser experience. By accepting, you agree to let us save your search results until your cookie expires.</p>
+        <button id="acceptCookieButton" class="cookieButton">Accept</button>
+        <button id="declineCookieButton" class="cookieButton">Decline</button>
+    </div>
+    <script type="module" src="cookies.js"></script>
+    <script type="module" src="index.js"></script>
+    <script type="module" src="spotify.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap&v=weekly"
+            defer></script>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
@@ -56,7 +98,7 @@
           var e, r = /([^&;=]+)=?([^&;]*)/g,
               q = window.location.hash.substring(1);
           while ( e = r.exec(q)) {
-             hashParams[e[1]] = decodeURIComponent(e[2]);
+              hashParams[e[1]] = decodeURIComponent(e[2]);
           }
           return hashParams;
         }
@@ -108,6 +150,5 @@
         }
       })();
     </script>
-    <script src="index.js"></script>
-  </body>
+</body>
 </html>
