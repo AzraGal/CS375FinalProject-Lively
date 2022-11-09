@@ -4,8 +4,6 @@ let app = express();
 let port = 8888;
 let hostname = "localhost";
 
-
-
 // Spotify Test
   /**
  * This is an example of a basic node.js script that performs
@@ -42,9 +40,7 @@ let hostname = "localhost";
    };
    
    var stateKey = 'spotify_auth_state';
-
    var  user_access_token = null;
-   
    
    app.use(express.static(__dirname + '/public'))
       .use(cors())
@@ -160,9 +156,10 @@ let hostname = "localhost";
 
    app.get("/artists", async (req, res) => {
     let type = 'artists'
+    let range = 'medium_term'
     var config = {
       method: 'get',
-      url: `https://api.spotify.com/v1/me/top/${type}?time_range=short_term`,
+      url: `https://api.spotify.com/v1/me/top/${type}?time_range=${range}`,
       headers: { 
         'Content-Type': 'application/json', 
         'Authorization': `Bearer ${user_access_token}`
@@ -176,7 +173,6 @@ let hostname = "localhost";
     .catch(function (error) {
       console.log(error);
     });
-
 
    })
 
