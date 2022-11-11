@@ -4,9 +4,12 @@
     <meta charset="utf-8">
     <title>Lively</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <!-- <style src="style.css" type="text/css"> </style> -->
     <link rel="stylesheet" type="text/css" href="style.css">
-    
+    <!-- <style src="style.css" type="text/css"> </style> -->
+    <!-- Select2 -->
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </head>
 <body class='bodyStyle'>
     <div class='header'>
@@ -22,13 +25,18 @@
             <input id="artist" type="text" name="artist">
         </div>
         <div>
+          <div class="">
             <label for="genre">Genre</label>
-            <select id="genre" name="genre" size="1" multiple>
+            <select class="js-example-basic-multiple genreSelect" name="genres[]" multiple="multiple" id="genre">
+            </select>
+          </div>
+        
+            <!-- <select id="genre" name="genre" size="1" multiple>
                 <option value="rock">Rock</option>
                 <option value="pop">Pop</option>
                 <option value="hip-hop">Hip Hop</option>
                 <option value="country">Country</option>
-            </select>
+            </select> -->
         </div>
         <div>
             <label for="location">Location</label>
@@ -72,7 +80,7 @@
     </script> -->
 
     <!-- this button will get you top arists and genres -->
-    <!-- <button id='buttontopartist'>get top artists</button> -->
+    <button id='buttontopartist'>Use my spotify!</button>
     <br>
     <br>
     <div class="map" id="map"> Map </div>
@@ -115,10 +123,8 @@
             defer></script>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script>
       (function() {
-
         /**
          * Obtains parameters from the hash of the URL
          * @return Object
