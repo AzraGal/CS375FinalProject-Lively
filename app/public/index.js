@@ -17,7 +17,29 @@ let genreInput = document.getElementById("genre");
 let locationInput = document.getElementById("location");
 let artist = "";
 let genre = "";
+let selectedGenres = [];
 let location = "";
+
+
+var optionsData = [];
+// inset Ticket master genres here
+var createData = ["traditional pop", "jazz", "blues", "country", "rock", "rock and roll", "R&B", "pop", "hip hop", "soul"];
+function createSelectOptions(data){
+    for (let i = 0; i < data.length; i++) {
+        const element = data[i];
+        optionsData.push({
+            id: i,
+            text: element
+        })
+    }
+}
+console.log(optionsData);
+
+
+$(document).ready(function() {
+    createSelectOptions(createData);
+    $(".js-example-basic-multiple").select2({data: optionsData})
+});
 
 function init() {
     submitSearchButton.addEventListener("click", submitSearch);
@@ -28,9 +50,23 @@ function init() {
     }
 }
 
+function getSelectedGenres(){
+    let data = $('.js-example-basic-multiple').select2('data');
+    // console.log("genre data:",data);
+
+    let selectedGenres = []
+    for (let i = 0; i < data.length; i++) {
+        const element = data[i];
+        selectedGenres.push(element.text);
+    }
+    return selectedGenres;
+}
+
 function submitSearch() {
+
     artist = artistInput.value;
     genre = genreInput.value;
+    selectedGenres = getSelectedGenres();
     location = locationInput.value;
 
     if (cookies.cookieConsent !== "") {

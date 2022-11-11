@@ -48,6 +48,10 @@
     column-gap: 2rem;
 }
 
+.genreSelect{
+    min-width: 20rem;
+}
+
 .results{
     width:100%;
     margin-top: 2rem;
