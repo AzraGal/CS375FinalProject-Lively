@@ -1,5 +1,4 @@
 let newToken = document.getElementById('obtain-new-token');
-
 newToken.addEventListener('click', function() {
     $.ajax({
       url: '/refresh_token',
@@ -26,30 +25,28 @@ newToken.addEventListener('click', function() {
 
 let vicbutton = document.getElementById('buttontopartist');
 
-vicbutton.addEventListener("click", () => {
+let spotifyTopArtists = []
+let spotifyTopGenres = []
 
+vicbutton.addEventListener("click", () => {
     fetch('/artists').then((response) => {
         return response.json();
     }).then((body) => {
-        let artists = [];
-        let genres = [];
 
         for (let i = 0; i < body.items.length; i++) {
             const element = body.items[i];
-
-            artists.push(element.name);
+            spotifyTopArtists.push(element.name);
 
             for (let g = 0; g < element.genres.length; g++) {
                 const genre = element.genres[g];
 
-                if(!genres.includes(genre)){
-                    genres.push(genre);
+                if(!spotifyTopGenres.includes(genre)){
+                    spotifyTopGenres.push(genre);
                 }
-                
             }
         }
-        console.log(artists);
-        console.log(genres);
+        console.log(spotifyTopArtists);
+        console.log(spotifyTopGenres);
     })
 
 })
