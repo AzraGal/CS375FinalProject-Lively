@@ -4,16 +4,19 @@
     <meta charset="utf-8">
     <title>Lively</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <style src="style.css" type="text/css"> </style>
-    <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
+    <!-- <style src="style.css" type="text/css"> </style> -->
+    <link rel="stylesheet" type="text/css" href="style.css">
     
 </head>
-<body>
+<body class='bodyStyle'>
+    <div class='header'>
+      <p class="headerTitle">Lively</p>
+    </div>
     <h1>Welcome to Lively</h1>
-    <h2>Everything you need to see your favorite artists in real life.</h2>
+    <h4>Everything you need to see your favorite artists in real life.</h5>
 
     <h3>Search by</h3>
-    <div class="form">
+    <div class="filterRow">
         <div>
             <label for="artist">Artist</label>
             <input id="artist" type="text" name="artist">
@@ -32,22 +35,22 @@
             <input id="location" type="text" name="location">
         </div>
         <button id="submitSearchButton">Search</button>
+        <h3>or</h3>
+        <div class="container">
+          <div id="login">
+            <a href="/login" class="btn btn-primary">Log in with Spotify</a>
+          </div>
+          <!-- <button id="loginSpotify" >Log In to Spotify</button> -->
+          <div id="loggedin">
+            <div id="user-profile">
+            </div>
+            <div id="oauth">
+            </div>
+            <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
+          </div>
+        </div>
     </div>
-    <h3>or</h3>
     <!-- <button>Search with Spotify</button> -->
-    <div class="container">
-      <div id="login">
-        <a href="/login" class="btn btn-primary">Log in with Spotify</a>
-      </div>
-      <!-- <button id="loginSpotify" >Log In to Spotify</button> -->
-      <div id="loggedin">
-        <div id="user-profile">
-        </div>
-        <div id="oauth">
-        </div>
-        <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
-      </div>
-    </div>
 
     <script id="user-profile-template" type="text/x-handlebars-template">
       <h1>Logged in as {{display_name}}</h1>
@@ -68,10 +71,37 @@
       </dl>
     </script> -->
 
-    <button id='buttontopartist'>get top artists</button>
+    <!-- this button will get you top arists and genres -->
+    <!-- <button id='buttontopartist'>get top artists</button> -->
     <br>
     <br>
-    <div id="map"> Map </div>
+    <div class="map" id="map"> Map </div>
+    <div class="results">
+      <!-- Table Code -->
+      <div>
+        <p class="resultHeader">Results</p>
+        <table class="resTable">
+          <tbody>
+            <thead>
+              <tr>
+                <th>Artist Name</th>
+                <th>Genre</th>
+                <th>Location</th>
+                <th>Event Link</th>
+                <th>Hotels Link</th>
+              </tr>
+            </thead>
+            <tr>
+              <td>Artist Name</td>
+                <td>Genre</td>
+                <td>Location</td>
+                <td>Event Link</td>
+                <td>Hotels Link</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
     <div id="cookieConsentContainer">
         <h3>We Use Cookies!</h3>
         <p>Lively uses cookies to enhance your browser experience. By accepting, you agree to let us save your search results until your cookie expires.</p>
