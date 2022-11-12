@@ -22,6 +22,7 @@
     <div class="filterRow">
         <div>
             <label for="artist">Artist</label>
+            <!-- <select class="js-data-example-ajax artistSelect" name="artists[]" multiple="multiple" id="artist"></select> -->
             <input id="artist" type="text" name="artist">
         </div>
         <div>
@@ -83,6 +84,7 @@
     <button id='buttontopartist'>Use my spotify!</button>
     <br>
     <br>
+    <div id="suggestedArtists" style="display: none;">Suggested Artists:</div>
     <div class="map" id="map"> Map </div>
     <div class="results">
       <!-- Table Code -->
@@ -119,6 +121,7 @@
     <script type="module" src="cookies.js"></script>
     <script type="module" src="index.js"></script>
     <script type="module" src="spotify.js"></script>
+    <script type="module" src="artistSearch.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap&v=weekly"
             defer></script>
 
