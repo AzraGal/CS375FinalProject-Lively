@@ -40,7 +40,7 @@ let hostname = "localhost";
    };
    
    var stateKey = 'spotify_auth_state';
-   var  user_access_token = null;
+   var user_access_token = null;
    
    app.use(express.static(__dirname + '/public'))
       .use(cors())
