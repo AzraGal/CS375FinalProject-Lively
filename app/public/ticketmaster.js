@@ -1,5 +1,9 @@
-let tmGetGenreButton = document.getElementById('buttontopartist');
+let tmGetGenreButton = document.getElementById('buttonTicketMasterGenres');
 
-vicbutton.addEventListener("click", () => {
-    console.log("ticketMaster Button");
+tmGetGenreButton.addEventListener("click", () => {
+    fetch('/tmGenres').then((response) => {
+        return response.json();
+    }).then((body)=>{
+        console.log(body);
+    })
 })
