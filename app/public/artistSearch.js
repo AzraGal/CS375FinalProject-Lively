@@ -26,7 +26,6 @@ function artistSearch(key) {
                     });
                     suggestedArtists.append(div);
                 }
-                console.log(artistOptionsData);
                 suggestedArtists.style = "block"; 
             });
         });

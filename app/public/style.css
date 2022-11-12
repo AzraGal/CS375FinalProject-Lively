@@ -85,3 +85,18 @@
     font-size: 20px;
     font-weight: 500;
 }
+
+#suggestedArtists {
+    margin: 3rem auto;
+    font-weight: bold;
+}
+
+.suggestedArtist {
+    padding: 1rem;
+    font-weight: normal;
+}
+
+.suggestedArtist:hover {
+    cursor: pointer;
+    padding: 1.5rem;
+}
