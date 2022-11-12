@@ -45,7 +45,7 @@ function init() {
     submitSearchButton.addEventListener("click", submitSearch);
     if (cookies.cookieConsent !== "") {
         artistInput.value = cookies.getCookie("artist_search").substring(1);
-        genreInput.value = cookies.getCookie("genre_search").substring(1);
+        //genreInput.value = cookies.getCookie("genre_search").substring(1);
         locationInput.value = cookies.getCookie("location_search").substring(1);
     }
 }

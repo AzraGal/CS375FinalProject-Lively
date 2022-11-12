@@ -174,7 +174,46 @@ let hostname = "localhost";
       console.log(error);
     });
 
-   })
+   });
+
+   const dummyArtistData = require("../dummyArtistData.json");
+
+   app.get("/artistSearch", async (req, res) => {
+    // var config = {
+    //   method: 'get',
+    //   url: `https://api.spotify.com/v1/search?q=artist:${req.artist}&type=artist&limit=10`,
+    //   headers: { 
+    //     'Content-Type': 'application/json', 
+    //     'Authorization': `Bearer ${user_access_token}`
+    //   }
+    // };
+    
+    // axios(config).then(function (response) {
+    //   console.log(response.data.artists.items);
+    //   res.json(response.data);
+    // }).catch(function (error) {
+    //   console.log(error);
+    // });
+    let artist = req.query.artist;
+    console.log(artist);
+    // The following code is temporarily here to simulate searching for an artist by entering the letters "a", "b", or "c"
+    if (artist === "a") {
+      console.log("a");
+      res.json(dummyArtistData.a.artists.items);
+    }
+    else if (artist === "b") {
+      console.log("b");
+      res.json(dummyArtistData.b.artists.items);
+    }
+    else if (artist === "c") {
+      console.log("c");
+      res.json(dummyArtistData.c.artists.items);
+    }
+    else {
+      console.log("d");
+      res.json(dummyArtistData.other.artists.items);
+    }
+   });
 
 app.use(express.static("public"));
 
