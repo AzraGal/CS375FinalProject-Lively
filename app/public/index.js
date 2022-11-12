@@ -68,6 +68,7 @@ function submitSearch() {
     genre = genreInput.value;
     selectedGenres = getSelectedGenres();
     location = locationInput.value;
+    document.getElementById("suggestedArtists").style.display = "none";
 
     if (cookies.cookieConsent !== "") {
         cookies.deleteCookie("artist_search");
