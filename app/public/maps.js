@@ -202,22 +202,22 @@ function initMap() {
 
             let markerOptions = {
                 position: new google.maps.LatLng(lat, long),
-                map:map
+                map: map
+                
 
             }
             let contentString = `<b>Name: </b> ${dummy_venue_data[i].name} <br>  
                               <b>Address: </b> ${dummy_venue_data[i].address.line1}, ${dummy_venue_data[i].address.line2}`;
+
             infowindow = new google.maps.InfoWindow({
                 content: contentString,
                 ariaLabel: "Uluru",
             });
 
             let marker = new google.maps.Marker(markerOptions);
-            marker.addListener("click", () => {
-                infowindow.open({
-                    anchor: marker,
-                    map
-                });
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.setContent(contentString);
+                infowindow.open(map, this);
             });
             venueMarkers.push(marker)
         };
@@ -251,11 +251,9 @@ function initMap() {
                 ariaLabel: "Uluru",
             });
             let marker = new google.maps.Marker(markerOptions);
-            marker.addListener("click", () => {
-                infowindow.open({
-                    anchor: marker,
-                    map
-                });
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.setContent(contentString);
+                infowindow.open(map, this);
             });
             hotelMarkers.push(marker)
         };
