@@ -23,6 +23,7 @@ let hostname = "localhost";
    var client_id = env.client_id; // Your client id
    var client_secret = env.client_secret; // Your secret
    var redirect_uri = env.redirect_uri; // Your redirect uri
+   var redirect_uri = env.redirect_uri; // Your redirect uri
    
    /**
     * Generates a random string containing numbers and letters
