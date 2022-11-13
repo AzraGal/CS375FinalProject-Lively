@@ -177,7 +177,7 @@ app.get("/artists", async (req, res) => {
 })
 
 app.get("/tmGenres", async (req, res) => {
-	let musicID= "KZFzniwnSyZfZ7v7nJ"
+	let musicID= "KZFzniwnSyZfZ7v7nJ" //TODO: implement a classification getter so we always have the most up-to-date ID
 	let url = `https://app.ticketmaster.com/discovery/v2/classifications/${musicID}.json?apikey=${ticketmasterAPIkey}`
 	axios(url)
 	.then(response => {
