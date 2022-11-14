@@ -85,32 +85,56 @@
         <button id='buttonTicketMasterGenres'>Get TicketMaster Genres</button>
         <br>
         <br>
-        <div class="results">
-            <!-- Table Code -->
-            <div>
-                <p class="resultHeader">Results</p>
-                <table class="resTable">
-                    <tbody>
-                    <thead>
-                        <tr>
-                            <th>Artist Name</th>
-                            <th>Genre</th>
-                            <th>Location</th>
-                            <th>Event Link</th>
-                            <th>Hotels Link</th>
-                        </tr>
-                    </thead>
-                    <tr>
-                        <td>Artist Name</td>
-                        <td>Genre</td>
-                        <td>Location</td>
-                        <td>Event Link</td>
-                        <td>Hotels Link</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+        <div class="mapConcerts">
+          <div class="map" id="map"> Map </div>
+          <div class="concerts">
+            <p class="resultHeader">Concerts</p>
+            <table class="resTable concertTable">
+              <tbody>
+              <thead>
+                  <tr>
+                      <th>Artist</th>
+                      <th>Date</th>
+                      <th>Location</th>
+                      <th>Event Link</th>
+                  </tr>
+              </thead>
+              <tr id="concertRes">
+                  <td>Artist</td>
+                  <td>Date</td>
+                  <td>Location</td>
+                  <td>Event Link</td>
+              </tr>
+              </tbody>
+          </table>
+          </div>
         </div>
+        <div class="results">
+          <!-- Table Code -->
+          <div>
+              <p class="resultHeader">Hotels</p>
+              <table class="resTable">
+                  <tbody>
+                  <thead>
+                      <tr>
+                          <th>Artist Name</th>
+                          <th>Genre</th>
+                          <th>Location</th>
+                          <th>Event Link</th>
+                          <th>Hotels Link</th>
+                      </tr>
+                  </thead>
+                  <tr>
+                      <td>Artist Name</td>
+                      <td>Genre</td>
+                      <td>Location</td>
+                      <td>Event Link</td>
+                      <td>Hotels Link</td>
+                  </tr>
+                  </tbody>
+              </table>
+          </div>
+      </div>
         <div id="hotelLocations"></div>
         <div id="hotelResults">
             <table>
@@ -118,7 +142,6 @@
                 <tbody id="hotelBody"></tbody>
             </table>
         </div>
-        <div class="map" id="map"> Map </div>
         <div id="cookieConsentContainer">
             <h3>We Use Cookies!</h3>
             <p>Lively uses cookies to enhance your browser experience. By accepting, you agree to let us save your search results until your cookie expires.</p>
