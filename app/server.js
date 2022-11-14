@@ -1,6 +1,5 @@
 let axios = require("axios");
 let express = require("express");
-let axios = require("axios");
 let app = express();
 let port = 8888;
 let hostname = "localhost";
