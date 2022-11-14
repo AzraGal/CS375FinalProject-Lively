@@ -1,3 +1,5 @@
+import * as cookies from "./cookies.js";
+
 let map;
 
 function initMap() {
@@ -9,57 +11,72 @@ function initMap() {
 
 window.initMap = initMap;
 
-let cookieConsent = getCookie("cookie_consent");
-let cookieContainer = document.getElementById("cookieConsentContainer");
-let acceptCookieButton = document.getElementById("acceptCookieButton");
-let declineCookieButton = document.getElementById("declineCookieButton");
+let submitSearchButton = document.getElementById("submitSearchButton");
+let artistInput = document.getElementById("artist");
+let genreInput = document.getElementById("genre");
+let locationInput = document.getElementById("location");
+let artist = "";
+let genre = "";
+let selectedGenres = [];
+let location = "";
 
-function initCookies() {
-    acceptCookieButton.addEventListener("click", acceptCookie);
-    declineCookieButton.addEventListener("click", declineCookie);
-    if (cookieConsent === "") {
-        cookieContainer.style.display = "block";
+
+var optionsData = [];
+// inset Ticket master genres here
+var createData = ["traditional pop", "jazz", "blues", "country", "rock", "rock and roll", "R&B", "pop", "hip hop", "soul"];
+function createSelectOptions(data){
+    for (let i = 0; i < data.length; i++) {
+        const element = data[i];
+        optionsData.push({
+            id: i,
+            text: element
+        })
     }
-    else {
-        cookieContainer.style.display = "none";
+}
+console.log(optionsData);
+
+
+$(document).ready(function() {
+    createSelectOptions(createData);
+    $(".js-example-basic-multiple").select2({data: optionsData})
+});
+
+function init() {
+    submitSearchButton.addEventListener("click", submitSearch);
+    if (cookies.cookieConsent !== "") {
+        artistInput.value = cookies.getCookie("artist_search").substring(1);
+        genreInput.value = cookies.getCookie("genre_search").substring(1);
+        locationInput.value = cookies.getCookie("location_search").substring(1);
     }
 }
 
-function acceptCookie() {
-    cookieContainer.style.display = "none";
-    deleteCookie("cookie_consent");
-    setCookie("cookie_consent", true, 30);
-}
+function getSelectedGenres(){
+    let data = $('.js-example-basic-multiple').select2('data');
+    // console.log("genre data:",data);
 
-function declineCookie() {
-    cookieContainer.style.display = "none";
-}
-
-// The following two methods, getCookie(...) and setCookie(...) are inspired by 
-// https://www.codexworld.com/cookie-consent-popup-with-javascript/
-function getCookie(name) {
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let cookieArr = decodedCookie.split(';');
-    for (let c of cookieArr) {
-        while (c.charAt(0) === ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) === 0) {
-            return c.substring(name.length, c.length);
-        }
+    let selectedGenres = []
+    for (let i = 0; i < data.length; i++) {
+        const element = data[i];
+        selectedGenres.push(element.text);
     }
-    return "";
+    return selectedGenres;
 }
 
-function setCookie(name, value, expirationDays) {
-    const d = new Date();
-    d.setTime(d.getTime() + (expirationDays * 24 * 60 * 60 * 1000));
-    let expiration = "expires=" + d.toUTCString();
-    document.cookie = name + "=" + value + ";" + expiration + ";path=/";
+function submitSearch() {
+
+    artist = artistInput.value;
+    genre = genreInput.value;
+    selectedGenres = getSelectedGenres();
+    location = locationInput.value;
+
+    if (cookies.cookieConsent !== "") {
+        cookies.deleteCookie("artist_search");
+        cookies.deleteCookie("genre_search");
+        cookies.deleteCookie("location_search");
+        cookies.setCookie("artist_search", artist, 30);
+        cookies.setCookie("genre_search", genre, 30);
+        cookies.setCookie("location_search", location, 30);
+    }
 }
 
-function deleteCookie(name) {
-    document.cookie = name + "=; max-age=-1;";
-}
-
-initCookies();
+init();
