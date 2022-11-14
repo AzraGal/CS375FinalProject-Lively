@@ -14,13 +14,6 @@
     width: 500px;
   }
 
-
-.map {
-    height:60vh;
-    /* position: relative;
-    overflow: visible !important; */
-}
-
 #cookieConsentContainer {
     background-color: lightgray;
     display: none;
@@ -76,6 +69,17 @@
 .resTable tbody tr {
     border-bottom: 1px solid #dddddd;
 }
+
+.resTable tbody tr:hover {
+    background-color: #f3f3f3;
+}
+
+
+.resTable tbody th {
+    padding: 10px 14px;
+    text-align: left;
+}
+
 .resTable tbody tr td {
     padding: 10px 14px;
     text-align: left;
@@ -84,4 +88,27 @@
 .resultHeader{
     font-size: 20px;
     font-weight: 500;
+}
+
+.mapConcerts{
+    display:flex;
+}
+
+.concerts{
+    margin:2rem;
+}
+
+.concertTable{
+    width:30%
+}
+
+.concertTable tr:hover{
+    background-color: #f3f3f3;
+}
+
+.map {
+    height:60vh;
+    /* position: relative;
+    overflow: visible !important; */
+    width:70%
 }
