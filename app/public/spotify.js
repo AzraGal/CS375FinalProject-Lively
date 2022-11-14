@@ -45,8 +45,8 @@ vicbutton.addEventListener("click", () => {
                 }
             }
         }
-        console.log(spotifyTopArtists);
-        console.log(spotifyTopGenres);
+        console.log("spotifyTopArtists", spotifyTopArtists);
+        console.log("spotifyTopGenres", spotifyTopGenres);
     })
 
 })
