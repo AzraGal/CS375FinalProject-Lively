@@ -176,9 +176,6 @@ let hostname = "localhost";
 
    });
 
-   const dummyArtistData = require("../dummyArtistData.json");
-
-
    // TODO: if the user is not logged in, use Ticketmaster API to get artist data
    app.get("/artistSearch", async (req, res) => {
     var config = {
