@@ -20,6 +20,8 @@ let genre = "";
 let selectedGenres = [];
 let location = "";
 
+let getConcertHotels = document.getElementById("concertRes");
+
 
 var optionsData = [];
 // inset Ticket master genres here
@@ -78,5 +80,9 @@ function submitSearch() {
         cookies.setCookie("location_search", location, 30);
     }
 }
+
+getConcertHotels.addEventListener("click", () => {
+    console.log(getConcertHotels.value);
+});
 
 init();
