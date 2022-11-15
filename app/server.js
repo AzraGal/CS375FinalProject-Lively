@@ -189,10 +189,25 @@ app.get("/tmGenres", async (req, res) => {
 	.catch(function (error) {
 		console.log(error);
 	});
-	/*
-	
+})
 
-	*/
+app.get("/tmEvents", async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
+	let city = "Philadelphia"
+	let heavyMetalSubGenreId = "KZazBEonSMnZfZ7vkFd"
+	let indieRockSubGenreId = "KZazBEonSMnZfZ7vAde"
+	let pageSize = 200
+	
+	let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${ticketmasterAPIkey}`
+	axios(url)
+	.then(response => {
+		// console.log(response.data);
+		//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
+		console.log(response.data); 
+		res.json(response.data)
+	})
+	.catch(function (error) {
+		console.log(error);
+	});
 })
 
 app.use(express.static("public"));
