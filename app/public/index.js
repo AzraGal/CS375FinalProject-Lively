@@ -11,6 +11,10 @@ let location = "";
 
 let getConcertHotels = document.getElementById("concertRes");
 
+// 
+function showHideEventRow(row) {
+    $("#" + row).toggle();
+}
 
 var optionsData = [];
 // inset Ticket master genres here
