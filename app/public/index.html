@@ -90,13 +90,14 @@
           <div class="map" id="map"> Map </div>
           <div class="concerts">
             <p class="resultHeader">Concerts</p>
-            <table class="resTable concertTable">
-              <tbody>
+            <table id="eventsTable" class="resTable eventsTable">
+              <tbody id="eventsTableBody">
               <thead>
                   <tr>
-                      <th>Artist</th>
+                      <th>Event</th>
                       <th>Date</th>
-                      <th>Location</th>
+                      <th>Venue</th>
+                      <th>Price Range</th>
                       <th>Event Link</th>
                   </tr>
               </thead>
@@ -106,6 +107,21 @@
                   <td>Location</td>
                   <td>Event Link</td>
               </tr>
+<!-- 
+              <tr onclick="showHideEventRow('hidden_row1');">
+                <td>Person-1</td>
+                <td>24</td>
+                <td>60000</td>
+                <td>Computer Programmer</td>
+              </tr>
+              <tr id="hidden_row1" class="hidden_row">
+                <td colspan=4>
+                  Person-1 is 24 years old and
+                  he is a computer programmer
+                  he earns 60000 per month
+                </td>
+              </tr> -->
+
               </tbody>
           </table>
           </div>
@@ -114,26 +130,28 @@
           <!-- Table Code -->
           <div>
               <p class="resultHeader">Hotels</p>
-              <table class="resTable">
-                  <tbody>
-                  <thead>
-                      <tr>
-                          <th>Artist Name</th>
-                          <th>Genre</th>
-                          <th>Location</th>
-                          <th>Event Link</th>
-                          <th>Hotels Link</th>
-                      </tr>
-                  </thead>
-                  <tr>
-                      <td>Artist Name</td>
-                      <td>Genre</td>
-                      <td>Location</td>
-                      <td>Event Link</td>
-                      <td>Hotels Link</td>
-                  </tr>
-                  </tbody>
-              </table>
+       
+                <table class="resTable">
+                    <tbody>
+                    <thead>
+                        <tr>
+                            <th>Artist Name</th>
+                            <th>Genre</th>
+                            <th>Location</th>
+                            <th>Event Link</th>
+                            <th>Hotels Link</th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td>Artist Name</td>
+                        <td>Genre</td>
+                        <td>Location</td>
+                        <td>Event Link</td>
+                        <td>Hotels Link</td>
+                    </tr>
+                    </tbody>
+                </table>
+
           </div>
       </div>
         <div id="hotelLocations"></div>
