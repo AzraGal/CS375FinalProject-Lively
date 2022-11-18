@@ -1,16 +1,5 @@
 import * as cookies from "./cookies.js";
 
-let map;
-
-function initMap() {
-    map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: 39.95228, lng: -75.16245 },
-        zoom: 8,
-    });
-}
-
-window.initMap = initMap;
-
 let submitSearchButton = document.getElementById("submitSearchButton");
 let artistInput = document.getElementById("artist");
 let genreInput = document.getElementById("genre");
