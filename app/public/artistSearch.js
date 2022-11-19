@@ -1,5 +1,7 @@
 let suggestedArtists = document.getElementById("suggestedArtists");
 let artistInput = document.getElementById("artist");
+let selectedArtists = document.getElementById("selectedArtists");
+let listOfSelectedArtists = [];
 var artistOptionsData = [];
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const validKeys = ["click", "Backspace", "Delete", " "];
@@ -51,14 +53,36 @@ function populateSuggestedArtistsList(body) {
         div.className = "suggestedArtist";
         div.addEventListener("click", () => {   
             artistInput.value = artistOptionsData[i].text;
+            addToSelectedArtists(artistOptionsData[i].text);
         });
         suggestedArtists.append(div);
     }
     suggestedArtists.style = "block"; 
 }
 
+function addToSelectedArtists(artistName) {
+    if (!listOfSelectedArtists.includes(artistName)) {
+        listOfSelectedArtists.push(artistName);
+        let div = document.createElement("div");
+        div.className = "selectedArtist";
+        div.textContent = "X   " + artistName;
+        selectedArtists.append(div);
+        div.addEventListener("click", () => {   
+            div.remove();
+            listOfSelectedArtists = listOfSelectedArtists.filter(function(artist) {return artist !== artistName;});
+        });
+    }
+}
+
 function initArtistSearch() {
-    artistInput.addEventListener("keyup", (event) => {artistSearch(event.key);});
+    artistInput.addEventListener("keyup", (event) => {
+        if (event.key === "Enter") {
+            addToSelectedArtists(artistInput.value);
+        }
+        else {
+            artistSearch(event.key);
+        }
+    });
     artistInput.addEventListener("click", (event) => {artistSearch("click");});
 }
 
