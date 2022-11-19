@@ -30,12 +30,24 @@ tmGetEventsButton.addEventListener("click", () => {
 
             let eventName = event.name;
             let eventDate = event.dates.start.localDate;
-            let eventVenue = event.dates.start.localDate;
-            // let eventPriceRangeCurrency = event.priceRanges[0].currency;
-            // let eventPriceRangeMin = event.priceRanges[0].min;
-            // let eventPriceRangeMax = event.priceRanges[0].max;
+            let eventVenue ='';
+            if(event["_embedded"].venues !=undefined){
+                eventVenue = event["_embedded"].venues[0].name;
+            }else{
+                eventVenue = "N/A"
+            }
 
-            // let eventPriceRange = eventPriceRangeCurrency +eventPriceRangeMin+"-"+eventPriceRangeMax;
+            let eventPriceRange = '';
+            if(event.priceRanges != undefined){
+                let eventPriceRangeCurrency = event.priceRanges[0].currency;
+                let eventPriceRangeMin = event.priceRanges[0].min;
+                let eventPriceRangeMax = event.priceRanges[0].max;
+    
+                eventPriceRange = eventPriceRangeCurrency +eventPriceRangeMin+"-"+eventPriceRangeMax;
+            }else{
+                eventPriceRange = "N/A"
+            }
+
 
             let eventLink = event.url;
 	
@@ -49,8 +61,8 @@ tmGetEventsButton.addEventListener("click", () => {
 
             rowData1.textContent = eventName;
             rowData2.textContent = eventDate;
-            rowData3.textContent = 'eventVenue';
-            rowData4.textContent = 'eventPriceRange';
+            rowData3.textContent = eventVenue;
+            rowData4.textContent = eventPriceRange;
             
             rowData5.textContent = "L";
             rowData5.target = "_blank";
