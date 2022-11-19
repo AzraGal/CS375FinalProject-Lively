@@ -1,16 +1,5 @@
 import * as cookies from "./cookies.js";
 
-let map;
-
-function initMap() {
-    map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: 39.95228, lng: -75.16245 },
-        zoom: 8,
-    });
-}
-
-window.initMap = initMap;
-
 let submitSearchButton = document.getElementById("submitSearchButton");
 let artistInput = document.getElementById("artist");
 let genreInput = document.getElementById("genre");
@@ -20,6 +9,12 @@ let genre = "";
 let selectedGenres = [];
 let location = "";
 
+let getConcertHotels = document.getElementById("concertRes");
+
+// 
+function showHideEventRow(row) {
+    $("#" + row).toggle();
+}
 
 var optionsData = [];
 // inset Ticket master genres here
@@ -79,5 +74,9 @@ function submitSearch() {
         cookies.setCookie("location_search", location, 30);
     }
 }
+
+getConcertHotels.addEventListener("click", () => {
+    console.log(getConcertHotels.value);
+});
 
 init();

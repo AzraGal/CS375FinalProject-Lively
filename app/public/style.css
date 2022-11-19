@@ -14,13 +14,6 @@
     width: 500px;
   }
 
-
-.map {
-    height:60vh;
-    /* position: relative;
-    overflow: visible !important; */
-}
-
 #cookieConsentContainer {
     background-color: lightgray;
     display: none;
@@ -59,6 +52,7 @@
     flex-direction: row;
 }
 
+/* ---------ARTISTS TABLE ------------- */
 .resTable{
     border-collapse: collapse;
     margin: 25px 0;
@@ -76,15 +70,67 @@
 .resTable tbody tr {
     border-bottom: 1px solid #dddddd;
 }
+
+.resTable tbody tr:hover {
+    background-color: #f3f3f3;
+}
+
+.resTable tbody th {
+    padding: 10px 14px;
+    text-align: left;
+}
+
 .resTable tbody tr td {
     padding: 10px 14px;
     text-align: left;
 }
 
+#table_detail .hidden_row {
+    display: none;
+}
+/* ---------------------- */
+
 .resultHeader{
     font-size: 20px;
     font-weight: 500;
 }
+
+.mapConcerts{
+    display:flex;
+}
+
+.concerts{
+    margin:2rem;
+    height:60vh;
+    width:40%;
+    overflow-y: scroll;
+}
+
+.eventsTable{
+    width:100%;
+}
+
+.eventsTable tr:hover{
+    background-color: #f3f3f3;
+}
+
+.map {
+    height:60vh;
+    /* position: relative;
+    overflow: visible !important; */
+    width:70%
+}
+
+#legend {
+    font-family: Arial, sans-serif;
+    background: #fff;
+    padding: 5px;
+    margin: 5px;
+    border: 3px solid #000;
+    height: 15vh;
+    width: 10%
+}
+
 
 #suggestedArtists {
     margin: 3rem auto;
