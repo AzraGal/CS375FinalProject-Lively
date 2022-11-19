@@ -40,7 +40,7 @@ function init() {
     submitSearchButton.addEventListener("click", submitSearch);
     if (cookies.cookieConsent !== "") {
         artistInput.value = cookies.getCookie("artist_search").substring(1);
-        genreInput.value = cookies.getCookie("genre_search").substring(1);
+        //genreInput.value = cookies.getCookie("genre_search").substring(1);
         locationInput.value = cookies.getCookie("location_search").substring(1);
     }
 }
@@ -63,6 +63,7 @@ function submitSearch() {
     genre = genreInput.value;
     selectedGenres = getSelectedGenres();
     location = locationInput.value;
+    document.getElementById("suggestedArtists").style.display = "none";
 
     if (cookies.cookieConsent !== "") {
         cookies.deleteCookie("artist_search");
