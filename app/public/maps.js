@@ -2,94 +2,6 @@
 // hotel pins are purple 
 
 // ---- dummy data ----
-let dummy_venue_data = [
-    {
-        "name": "Test Location 1",
-        "type": "venue",
-        "id": "ZFr9jZkevd",
-        "test": false,
-        "locale": "en-us",
-        "postalCode": "19104",
-        "timezone": "America/New_York",
-        "city": {
-            "name": "Philadelphia"
-        },
-        "state": {
-            "name": "Pennsylvania",
-            "stateCode": "PA"
-        },
-        "country": {
-            "name": "United States Of America",
-            "countryCode": "US"
-        },
-        "address": {
-            "line1": "3025 Walnut St",
-            "line2": "Philadelphia, PA"
-        },
-        "location": {
-            "longitude": "-75.199501",
-            "latitude": "39.961601"
-        },
-        "dmas": [
-            {
-                "id": 358
-            }
-        ],
-        "upcomingEvents": {
-            "_total": 14,
-            "tmr": 14,
-            "_filtered": 0
-        },
-        "_links": {
-            "self": {
-                "href": "/discovery/v2/venues/ZFr9jZkevd?locale=en-us"
-            }
-        }
-    },
-    {
-        "name": "Test Location 2",
-        "type": "venue",
-        "id": "ZFr9jZkevd",
-        "test": false,
-        "locale": "en-us",
-        "postalCode": "19104",
-        "timezone": "America/New_York",
-        "city": {
-            "name": "Philadelphia"
-        },
-        "state": {
-            "name": "Pennsylvania",
-            "stateCode": "PA"
-        },
-        "country": {
-            "name": "United States Of America",
-            "countryCode": "US"
-        },
-        "address": {
-            "line1": "3025 Walnut St",
-            "line2": "Philadelphia, PA"
-        },
-        "location": {
-            "longitude": "-75.199501",
-            "latitude": "38.961601"
-        },
-        "dmas": [
-            {
-                "id": 358
-            }
-        ],
-        "upcomingEvents": {
-            "_total": 14,
-            "tmr": 14,
-            "_filtered": 0
-        },
-        "_links": {
-            "self": {
-                "href": "/discovery/v2/venues/ZFr9jZkevd?locale=en-us"
-            }
-        }
-    }
-];
 
 let dummy_hotel_data = [
     {
@@ -237,7 +149,8 @@ let dummy_hotel_data = [
 
 
 
-let searchButton = document.getElementById("submitSearchButton")
+let searchButton = document.getElementById("buttonTicketMasterEvents")
+
 
 function initMap() {
 
@@ -247,22 +160,61 @@ function initMap() {
     let hotelMarkers = [];
     let infowindow = null;
 
+
+    searchButton.addEventListener("click", () => {
+        console.log("Mapping Events from TicketMaster");
+        fetch('/tmEvents').then((response) => {
+            return response.json();
+        }).then((body) => {
+            let data = body['_embedded'].events;
+            showVenueMarkers(data)
+        })
+    });
+
+    //does not get hotel data from the server yet, have to fix server side issues
+
+    //searchButton.addEventListener("click", () => {
+    //    console.log("Mapping Hotes from Hotels.com");
+    //    fetch('/hotelsCoordinates').then((response) => {
+    //        return response.json();
+    //    }).then((body) => {
+    //        console.log("todoloo")
+    //        console.log(body);
+    //    })
+    //});
+
+
     // ----- all functions -----
 
 
-    function showVenueMarkers() {
-        for (let i = 0; i < dummy_venue_data.length; i++) {
-            let lat = dummy_venue_data[i].location.latitude;
-            let long = dummy_venue_data[i].location.longitude;
-            let contentString = `<b>Name: </b> ${dummy_venue_data[i].name} <br>  
-                              <b>Address: </b> ${dummy_venue_data[i].address.line1}, ${dummy_venue_data[i].address.line2}`;
-            createVenueMarker(lat, long, contentString)
+    function showVenueMarkers(data) {
+        for (let i = 0; i < data.length; i++) {
+            try {
+                let lat = data[i]._embedded.venues[0].location.latitude;
+                let long = data[i]._embedded.venues[0].location.longitude;
+                let banner = null;
+                for (let j = 0; j < data[i].images.length; j++) {
+                    if (data[i].images[j].ratio == "16_9" && data[i].images[j].width == 2048) {
+                        banner = data[i].images[j].url;
+                        break
+                    }
+                }
+                let contentString = `
+                              <center><img src = ${banner} width = "300" height = "150"> </center> <br>
+                              <b>Name: </b> ${data[i].name} <br>
+                              <b>Address: </b> ${data[i]._embedded.venues[0].address.line1}, ${data[i]._embedded.venues[0].city.name},<br> ${data[i]._embedded.venues[0].country.name} `;
+                createVenueMarker(lat, long, contentString)
+            }
 
+            catch {
+                continue
+            }
+                
         }
     };
 
 
-    function showHotelMarkers() {
+    function showHotelMarkers(data) {
         for (let i = 0; i < dummy_hotel_data.length; i++) {
                 let lat = dummy_hotel_data[i].coordinate.lat;
                 let long = dummy_hotel_data[i].coordinate.lon;
