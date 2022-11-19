@@ -16,177 +16,229 @@
       <p class="headerTitle">Lively</p>
     </div>
     <h1>Welcome to Lively</h1>
-    <h4>Everything you need to see your favorite artists in real life.</h5>
+    <h4>
+        Everything you need to see your favorite artists in real life.</h4>
 
-    <h3>Search by</h3>
-    <div class="filterRow">
-        <div>
-            <label for="artist">Artist</label>
-            <input id="artist" type="text" name="artist">
-        </div>
-        <div>
-          <div class="">
-            <label for="genre">Genre</label>
-            <select class="js-example-basic-multiple genreSelect" name="genres[]" multiple="multiple" id="genre">
-            </select>
-          </div>
-        
-            <!-- <select id="genre" name="genre" size="1" multiple>
+        <h3>Search by</h3>
+        <div class="filterRow">
+            <div>
+                <label for="artist">Artist</label>
+                <input id="artist" type="text" name="artist">
+            </div>
+            <div>
+                <div class="">
+                    <label for="genre">Genre</label>
+                    <select class="js-example-basic-multiple genreSelect" name="genres[]" multiple="multiple" id="genre">
+                    </select>
+                </div>
+
+                <!-- <select id="genre" name="genre" size="1" multiple>
                 <option value="rock">Rock</option>
                 <option value="pop">Pop</option>
                 <option value="hip-hop">Hip Hop</option>
                 <option value="country">Country</option>
             </select> -->
-        </div>
-        <div>
-            <label for="location">Location</label>
-            <input id="location" type="text" name="location">
-        </div>
-        <button id="submitSearchButton">Search</button>
-        <h3>or</h3>
-        <div class="container">
-          <div id="login">
-            <a href="/login" class="btn btn-primary">Log in with Spotify</a>
-          </div>
-          <!-- <button id="loginSpotify" >Log In to Spotify</button> -->
-          <div id="loggedin">
-            <div id="user-profile">
             </div>
-            <div id="oauth">
+            <div>
+                <label for="location">Location</label>
+                <input id="location" type="text" name="location">
             </div>
-            <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
-          </div>
+            <button id="submitSearchButton">Search</button>
+            <h3>or</h3>
+            <div class="container">
+                <div id="login">
+                    <a href="/login" class="btn btn-primary">Log in with Spotify</a>
+                </div>
+                <!-- <button id="loginSpotify" >Log In to Spotify</button> -->
+                <div id="loggedin">
+                    <div id="user-profile">
+                    </div>
+                    <div id="oauth">
+                    </div>
+                    <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
+                </div>
+            </div>
         </div>
-    </div>
-    <!-- <button>Search with Spotify</button> -->
+        <!-- <button>Search with Spotify</button> -->
 
-    <script id="user-profile-template" type="text/x-handlebars-template">
-      <h1>Logged in as {{display_name}}</h1>
-      <div class="media">
-        <div class="media-body">
-          <dl class="dl-horizontal">
-            <dt>Id</dt><dd>{{id}}</dd>
-          </dl>
-        </div>
-      </div>
-    </script>
+        <script id="user-profile-template" type="text/x-handlebars-template">
+            <h1>Logged in as {{display_name}}</h1>
+            <div class="media">
+                <div class="media-body">
+                    <dl class="dl-horizontal">
+                        <dt>Id</dt>
+                        <dd>{{id}}</dd>
+                    </dl>
+                </div>
+            </div>
+        </script>
 
-    <!-- <script id="oauth-template" type="text/x-handlebars-template">
+        <!-- <script id="oauth-template" type="text/x-handlebars-template">
       <h2>oAuth info</h2>
       <dl class="dl-horizontal">
         <dt>Access token</dt><dd class="text-overflow">{{access_token}}</dd>
         <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}</dd>
       </dl>
     </script> -->
-
-    <!-- this button will get you top arists and genres -->
-    <button id='buttontopartist'>Use my spotify!</button>
-    <br>
-    <br>
-    <div id="suggestedArtists" style="display: none;">Suggested Artists:</div>
-    <div class="map" id="map"> Map </div>
-    <div class="results">
-      <!-- Table Code -->
-      <div>
-        <p class="resultHeader">Results</p>
-        <table class="resTable">
-          <tbody>
-            <thead>
-              <tr>
-                <th>Artist Name</th>
-                <th>Genre</th>
-                <th>Location</th>
-                <th>Event Link</th>
-                <th>Hotels Link</th>
+        <!-- this button will get you top arists and genres -->
+        <button id='buttontopartist'>Use my spotify!</button>
+        <button id='buttonTicketMasterGenres'>Get TicketMaster Genres</button>
+        <button id='buttonTicketMasterEvents'>Get TicketMaster Events</button>
+        <br>
+        <br>
+        <div id="suggestedArtists" style="display: none;">Suggested Artists:</div>
+        <div class="mapConcerts">
+          <div class="map" id="map"> Map </div>
+          <div class="map" id="legend"><center><h4>Legend</h4></center></div>
+          <div class="concerts">
+            <p class="resultHeader">Concerts</p>
+            <table id="eventsTable" class="resTable eventsTable">
+              <tbody id="eventsTableBody">
+              <thead>
+                  <tr>
+                      <th>Event</th>
+                      <th>Date</th>
+                      <th>Venue</th>
+                      <th>Price Range</th>
+                      <th>Event Link</th>
+                  </tr>
+              </thead>
+              <tr id="concertRes">
+                  <td>Artist</td>
+                  <td>Date</td>
+                  <td>Location</td>
+                  <td>Event Link</td>
               </tr>
-            </thead>
-            <tr>
-              <td>Artist Name</td>
-                <td>Genre</td>
-                <td>Location</td>
-                <td>Event Link</td>
-                <td>Hotels Link</td>
-            </tr>
-          </tbody>
-        </table>
+              <tr onclick="showHideEventRow('hidden_row1');">
+                <td>Person-1</td>
+                <td>24</td>
+                <td>60000</td>
+                <td>Computer Programmer</td>
+              </tr>
+              <tr id="hidden_row1" class="hidden_row">
+                <td colspan=4>
+                  Person-1 is 24 years old and
+                  he is a computer programmer
+                  he earns 60000 per month
+                </td>
+              </tr> -->
+
+              </tbody>
+          </table>
+          </div>
+        </div>
+        <div class="results">
+          <!-- Table Code -->
+          <div>
+              <p class="resultHeader">Hotels</p>
+       
+                <table class="resTable">
+                    <tbody>
+                    <thead>
+                        <tr>
+                            <th>Artist Name</th>
+                            <th>Genre</th>
+                            <th>Location</th>
+                            <th>Event Link</th>
+                            <th>Hotels Link</th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td>Artist Name</td>
+                        <td>Genre</td>
+                        <td>Location</td>
+                        <td>Event Link</td>
+                        <td>Hotels Link</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+          </div>
       </div>
-    </div>
-    <div id="cookieConsentContainer">
-        <h3>We Use Cookies!</h3>
-        <p>Lively uses cookies to enhance your browser experience. By accepting, you agree to let us save your search results until your cookie expires.</p>
-        <button id="acceptCookieButton" class="cookieButton">Accept</button>
-        <button id="declineCookieButton" class="cookieButton">Decline</button>
-    </div>
-    <script type="module" src="cookies.js"></script>
-    <script type="module" src="index.js"></script>
-    <script type="module" src="spotify.js"></script>
-    <script type="module" src="artistSearch.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap&v=weekly"
-            defer></script>
+        <div id="hotelLocations"></div>
+        <div id="hotelResults">
+            <table>
+                <thead id="hotelHead"></thead>
+                <tbody id="hotelBody"></tbody>
+            </table>
+        </div>
+        <div id="cookieConsentContainer">
+            <h3>We Use Cookies!</h3>
+            <p>Lively uses cookies to enhance your browser experience. By accepting, you agree to let us save your search results until your cookie expires.</p>
+            <button id="acceptCookieButton" class="cookieButton">Accept</button>
+            <button id="declineCookieButton" class="cookieButton">Decline</button>
+        </div>
+        <script type="module" src="cookies.js"></script>
+        <script type="module" src="index.js"></script>
+        <script type="module" src="spotify.js"></script>
+        <script type="module" src="artistSearch.js"></script>
+        <script type="module" src="ticketmaster.js"></script>
+        <script type="module" src="maps.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ5ulv-oR0cVSQkN_x6gBjIWw-itZzOC0&v=beta&libraries=marker&callback=initMap" defer></script>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
-    <script>
-      (function() {
-        /**
-         * Obtains parameters from the hash of the URL
-         * @return Object
-         */
-        function getHashParams() {
-          var hashParams = {};
-          var e, r = /([^&;=]+)=?([^&;]*)/g,
-              q = window.location.hash.substring(1);
-          while ( e = r.exec(q)) {
-              hashParams[e[1]] = decodeURIComponent(e[2]);
-          }
-          return hashParams;
-        }
-
-        var userProfileSource = document.getElementById('user-profile-template').innerHTML,
-            userProfileTemplate = Handlebars.compile(userProfileSource),
-            userProfilePlaceholder = document.getElementById('user-profile');
-
-        // var 
-        //     oauthSource = document.getElementById('oauth-template').innerHTML,
-        //     oauthTemplate = Handlebars.compile(oauthSource),
-        //     oauthPlaceholder = document.getElementById('oauth');
-
-        var params = getHashParams();
-
-        var access_token = params.access_token,
-            refresh_token = params.refresh_token,
-            error = params.error;
-
-        if (error) {
-          alert('There was an error during the authentication');
-        } else {
-          if (access_token) {
-            // render oauth info
-            // oauthPlaceholder.innerHTML = oauthTemplate({
-            //   access_token: access_token,
-            //   refresh_token: refresh_token
-            // });
-
-            $.ajax({
-                url: 'https://api.spotify.com/v1/me',
-                headers: {
-                  'Authorization': 'Bearer ' + access_token
-                },
-                success: function(response) {
-                    // console.log("succ", userProfileTemplate(response))
-                  userProfilePlaceholder.innerHTML = userProfileTemplate(response);
-
-                  // $('#login').hide();
-                  $('#loggedin').show();
+        <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+        <script>
+            (function () {
+                /**
+                 * Obtains parameters from the hash of the URL
+                 * @return Object
+                 */
+                function getHashParams() {
+                    var hashParams = {};
+                    var e, r = /([^&;=]+)=?([^&;]*)/g,
+                        q = window.location.hash.substring(1);
+                    while (e = r.exec(q)) {
+                        hashParams[e[1]] = decodeURIComponent(e[2]);
+                    }
+                    return hashParams;
                 }
-            });
-          } else {
-              // render initial screen
-              $('#login').show();
-              // $('#loggedin').hide();
-          }
 
-        }
-      })();
-    </script>
+                var userProfileSource = document.getElementById('user-profile-template').innerHTML,
+                    userProfileTemplate = Handlebars.compile(userProfileSource),
+                    userProfilePlaceholder = document.getElementById('user-profile');
+
+                // var
+                //     oauthSource = document.getElementById('oauth-template').innerHTML,
+                //     oauthTemplate = Handlebars.compile(oauthSource),
+                //     oauthPlaceholder = document.getElementById('oauth');
+
+                var params = getHashParams();
+
+                var access_token = params.access_token,
+                    refresh_token = params.refresh_token,
+                    error = params.error;
+
+                if (error) {
+                    alert('There was an error during the authentication');
+                } else {
+                    if (access_token) {
+                        // render oauth info
+                        // oauthPlaceholder.innerHTML = oauthTemplate({
+                        //   access_token: access_token,
+                        //   refresh_token: refresh_token
+                        // });
+
+                        $.ajax({
+                            url: 'https://api.spotify.com/v1/me',
+                            headers: {
+                                'Authorization': 'Bearer ' + access_token
+                            },
+                            success: function (response) {
+                                // console.log("succ", userProfileTemplate(response))
+                                userProfilePlaceholder.innerHTML = userProfileTemplate(response);
+
+                                // $('#login').hide();
+                                $('#loggedin').show();
+                            }
+                        });
+                    } else {
+                        // render initial screen
+                        $('#login').show();
+                        // $('#loggedin').hide();
+                    }
+
+                }
+            })();
+        </script>
 </body>
 </html>
