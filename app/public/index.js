@@ -17,8 +17,7 @@ function showHideEventRow(row) {
 }
 
 var optionsData = [];
-// inset Ticket master genres here
-var createData = ["traditional pop", "jazz", "blues", "country", "rock", "rock and roll", "R&B", "pop", "hip hop", "soul"];
+
 function createSelectOptions(data){
     for (let i = 0; i < data.length; i++) {
         const element = data[i];
@@ -27,13 +26,40 @@ function createSelectOptions(data){
             text: element
         })
     }
+    // console.log(optionsData);
 }
-console.log(optionsData);
 
+var createData = [];
+
+const TMgenreMap = new Map(); //TMgenreMap exists so that genre ID's can be easily recalled later for event search functionality
+
+//TODO: use this map below to filter for against selection of a genre Category vs a subcategory of the same name; 
+/*when TWO event searches are made and the corresponding name for genreId and subGenreId are the same (yet each with different Id), the search with the genreId ought to be given preference, as it returns more accurate results
+*/
+const TMsubGenreMap = new Map(); //TMsubGenreMap exists so that subGenre ID's can be easily recalled later for event search functionality
 
 $(document).ready(function() {
-    createSelectOptions(createData);
-    $(".js-example-basic-multiple").select2({data: optionsData})
+    fetch('/tmGenres').then((response) => {
+        return response.json();
+    }).then((body)=>{
+        console.log(body);
+        let a = "a"
+        body.forEach(genre => {
+            genre._embedded.subgenres.forEach(subGenre => {
+                // console.log(subGenre);
+                TMsubGenreMap.set(subGenre.name, subGenre.id)
+            });
+            createData.push(genre.name)
+            TMgenreMap.set(genre.name, genre.id)
+        });
+        // console.log(TMgenreMap);
+        // console.log(TMsubGenreMap);
+        createSelectOptions(createData);
+        $(".js-example-basic-multiple").select2({data: optionsData, multiple: true, MultipleSelection: true})
+	}).catch(error => {
+		console.error(error);
+        throw error;
+	});	
 });
 
 function init() {
