@@ -176,23 +176,41 @@ let hostname = "localhost";
 
    });
 
-   // TODO: if the user is not logged in, use Ticketmaster API to get artist data
-   app.get("/artistSearch", async (req, res) => {
+   var ticketmasterKey = env.ticketmaster_api_key;
+
+   app.get("/artistSearchTicketMaster", async (req, res) => {
     var config = {
       method: 'get',
-      url: `https://api.spotify.com/v1/search?q=artist:${req.query.artist}&type=artist&limit=10`,
+      url: `https://app.ticketmaster.com/discovery/v2/attractions.json?apikey=${ticketmasterKey}&keyword=${req.query.artist}&size=10`,
       headers: { 
-        'Content-Type': 'application/json', 
-        'Authorization': `Bearer ${user_access_token}`
+        'Content-Type': 'application/json'
       }
     };
 
     axios(config).then(function (response) {
-      return res.json(response.data.artists.items);
+      return res.json(response.data._embedded.attractions);
     }).catch(function (error) {
       console.log(error);
       return res.sendStatus(400);
     });
+   });
+   
+   app.get("/artistSearchSpotify", async (req, res) => {
+      var config = {
+        method: 'get',
+        url: `https://api.spotify.com/v1/search?q=artist:${req.query.artist}&type=artist&limit=10`,
+        headers: { 
+          'Content-Type': 'application/json', 
+          'Authorization': `Bearer ${user_access_token}`
+        }
+      };
+  
+      axios(config).then(function (response) {
+        return res.json(response.data.artists.items);
+      }).catch(function (error) {
+        console.log(error);
+        return res.sendStatus(400);
+      });
    });
 
 app.use(express.static("public"));
