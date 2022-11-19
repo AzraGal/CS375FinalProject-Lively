@@ -24,6 +24,7 @@
             <div>
                 <label for="artist">Artist</label>
                 <input id="artist" type="text" name="artist">
+                <div id="selectedArtists"></div>
             </div>
             <div>
                 <div class="">
@@ -109,19 +110,21 @@
                   <td>Location</td>
                   <td>Event Link</td>
               </tr>
-              <tr onclick="showHideEventRow('hidden_row1');">
-                <td>Person-1</td>
-                <td>24</td>
-                <td>60000</td>
-                <td>Computer Programmer</td>
+              <tr id="row1">
+              <!-- <tr onclick="showHideEventRow('hidden_row1');"> -->
+                <td>Artist</td>
+                <td>Date</td>
+                <td>Location</td>
+                <td>Event Link</td>
               </tr>
               <tr id="hidden_row1" class="hidden_row">
                 <td colspan=4>
-                  Person-1 is 24 years old and
-                  he is a computer programmer
-                  he earns 60000 per month
+                  <p>Line Up</p>
+                  <ul>xx</ul>
+                  <ul>xx</ul>
+                  <ul>xx</ul>
                 </td>
-              </tr> -->
+              </tr>
 
               </tbody>
           </table>
