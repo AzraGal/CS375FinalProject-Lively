@@ -176,6 +176,41 @@ app.get("/artists", async (req, res) => {
 	});
 })
 
+app.get("/artistSearchTicketMaster", async (req, res) => {
+  var config = {
+    method: 'get',
+    url: `https://app.ticketmaster.com/discovery/v2/attractions.json?apikey=${ticketmasterAPIkey}&keyword=${req.query.artist}&size=10`,
+    headers: { 
+      'Content-Type': 'application/json'
+    }
+  };
+
+  axios(config).then(function (response) {
+    return res.json(response.data._embedded.attractions);
+  }).catch(function (error) {
+    console.log(error);
+    return res.sendStatus(400);
+  });
+});
+
+app.get("/artistSearchSpotify", async (req, res) => {
+  var config = {
+    method: 'get',
+    url: `https://api.spotify.com/v1/search?q=artist:${req.query.artist}&type=artist&limit=10`,
+    headers: { 
+      'Content-Type': 'application/json', 
+      'Authorization': `Bearer ${user_access_token}`
+    }
+  };
+
+  axios(config).then(function (response) {
+    return res.json(response.data.artists.items);
+  }).catch(function (error) {
+    console.log(error);
+    return res.sendStatus(400);
+  });
+});
+
 app.get("/tmGenres", async (req, res) => {
 	let musicID= "KZFzniwnSyZfZ7v7nJ" //TODO: implement a classification getter so we always have the most up-to-date ID
 	let url = `https://app.ticketmaster.com/discovery/v2/classifications/${musicID}.json?apikey=${ticketmasterAPIkey}`
