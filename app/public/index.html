@@ -86,8 +86,10 @@
         <button id='buttonTicketMasterEvents'>Get TicketMaster Events</button>
         <br>
         <br>
+        <div id="suggestedArtists" style="display: none;">Suggested Artists:</div>
         <div class="mapConcerts">
           <div class="map" id="map"> Map </div>
+          <div class="map" id="legend"><center><h4>Legend</h4></center></div>
           <div class="concerts">
             <p class="resultHeader">Concerts</p>
             <table id="eventsTable" class="resTable eventsTable">
@@ -171,6 +173,7 @@
         <script type="module" src="cookies.js"></script>
         <script type="module" src="index.js"></script>
         <script type="module" src="spotify.js"></script>
+        <script type="module" src="artistSearch.js"></script>
         <script type="module" src="ticketmaster.js"></script>
         <script type="module" src="maps.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=***REMOVED***&v=beta&libraries=marker&callback=initMap" defer></script>
