@@ -39,6 +39,7 @@
     flex-direction: row;
     align-items: center;
     column-gap: 2rem;
+    margin-bottom: 5rem;
 }
 
 .genreSelect{
@@ -145,4 +146,22 @@
 .suggestedArtist:hover {
     cursor: pointer;
     padding: 1.5rem;
+}
+
+#selectedArtists {
+    padding: 1rem;
+    height: 5rem;
+    width: 20rem;
+    overflow-y: scroll;
+    position: absolute;
+}
+
+.selectedArtist {
+    background-color: #efefef;
+    padding: 1rem;
+}
+
+.selectedArtist:hover {
+    background-color: #cecece;
+    cursor: pointer;
 }
