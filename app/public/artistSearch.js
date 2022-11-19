@@ -1,7 +1,7 @@
 let suggestedArtists = document.getElementById("suggestedArtists");
 let artistInput = document.getElementById("artist");
 let selectedArtists = document.getElementById("selectedArtists");
-let listOfSelectedArtists = [];
+export let listOfSelectedArtists = [];
 var artistOptionsData = [];
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const validKeys = ["click", "Backspace", "Delete", " "];
@@ -60,7 +60,7 @@ function populateSuggestedArtistsList(body) {
     suggestedArtists.style = "block"; 
 }
 
-function addToSelectedArtists(artistName) {
+export function addToSelectedArtists(artistName) {
     if (!listOfSelectedArtists.includes(artistName)) {
         listOfSelectedArtists.push(artistName);
         let div = document.createElement("div");
