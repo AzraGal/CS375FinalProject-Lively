@@ -12,9 +12,15 @@ let location = "";
 let getConcertHotels = document.getElementById("concertRes");
 
 // 
-function showHideEventRow(row) {
-    $("#" + row).toggle();
-}
+// function showHideEventRow(row) {
+//     $("#" + row).toggle();
+// }
+
+let row1 = document.getElementById("row1")
+
+row1.addEventListener("click", () => {
+    $("#" + 'hidden_row1').toggle();
+});
 
 var optionsData = [];
 // inset Ticket master genres here
