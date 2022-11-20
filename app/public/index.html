@@ -3,9 +3,12 @@
 <head>
     <meta charset="utf-8">
     <title>Lively</title>
+    
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <!-- <style src="style.css" type="text/css"> </style> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plaster&display=swap" rel="stylesheet">
     <!-- Select2 -->
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -13,7 +16,7 @@
 </head>
 <body class='bodyStyle'>
     <div class='header'>
-      <p class="headerTitle">Lively</p>
+      <p class="headerTitle">LIVELY</p>
     </div>
     <h1>Welcome to Lively</h1>
     <h4>
@@ -130,41 +133,31 @@
           </table>
           </div>
         </div>
+        <div id="hotelLocations"></div>
         <div class="results">
           <!-- Table Code -->
           <div>
               <p class="resultHeader">Hotels</p>
        
-                <table class="resTable">
-                    <tbody>
+                <table class="resTable" id="hotelResults">
                     <thead>
                         <tr>
-                            <th>Artist Name</th>
-                            <th>Genre</th>
-                            <th>Location</th>
-                            <th>Event Link</th>
-                            <th>Hotels Link</th>
+                            <th>Hotel Name</th>
+                            <th>Address</th>
+                            <th>Price Per Night</th>
                         </tr>
                     </thead>
+                    <tbody id="hotelBody">
                     <tr>
-                        <td>Artist Name</td>
-                        <td>Genre</td>
-                        <td>Location</td>
-                        <td>Event Link</td>
-                        <td>Hotels Link</td>
+                        <td>Hotel Name</td>
+                        <td>Address</td>
+                        <td>Price Per Night</td>
                     </tr>
                     </tbody>
                 </table>
 
           </div>
       </div>
-        <div id="hotelLocations"></div>
-        <div id="hotelResults">
-            <table>
-                <thead id="hotelHead"></thead>
-                <tbody id="hotelBody"></tbody>
-            </table>
-        </div>
         <div id="cookieConsentContainer">
             <h3>We Use Cookies!</h3>
             <p>Lively uses cookies to enhance your browser experience. By accepting, you agree to let us save your search results until your cookie expires.</p>
@@ -177,6 +170,7 @@
         <script type="module" src="artistSearch.js"></script>
         <script type="module" src="ticketmaster.js"></script>
         <script type="module" src="maps.js"></script>
+        <script type="module" src="hotels.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ5ulv-oR0cVSQkN_x6gBjIWw-itZzOC0&v=beta&libraries=marker&callback=initMap" defer></script>
 
         <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
