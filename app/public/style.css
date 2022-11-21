@@ -26,9 +26,10 @@
 }
 
 .headerTitle{
-    color: #D44CE6;
+    color: #c902b9;
     font-size: 30px;
     font-weight: 500;
+    font-family: 'Plaster', cursive;
     /* padding-top: 2rem;
     padding-bottom: 2rem;
     padding-left: 2rem; */
@@ -39,6 +40,7 @@
     flex-direction: row;
     align-items: center;
     column-gap: 2rem;
+    margin-bottom: 5rem;
 }
 
 .genreSelect{
@@ -129,5 +131,38 @@
     border: 3px solid #000;
     height: 15vh;
     width: 10%
+}
 
+
+#suggestedArtists {
+    margin: 3rem auto;
+    font-weight: bold;
+}
+
+.suggestedArtist {
+    padding: 1rem;
+    font-weight: normal;
+}
+
+.suggestedArtist:hover {
+    cursor: pointer;
+    padding: 1.5rem;
+}
+
+#selectedArtists {
+    padding: 1rem;
+    height: 5rem;
+    width: 20rem;
+    overflow-y: scroll;
+    position: absolute;
+}
+
+.selectedArtist {
+    background-color: #efefef;
+    padding: 1rem;
+}
+
+.selectedArtist:hover {
+    background-color: #cecece;
+    cursor: pointer;
 }
