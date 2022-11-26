@@ -87,3 +87,4 @@ function initArtistSearch() {
 }
 
 initArtistSearch();
+export {listOfSelectedArtists}

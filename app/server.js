@@ -209,7 +209,11 @@ app.get("/artistSearchSpotify", async (req, res) => {
 });
 
 app.get("/tmGenres", async (req, res) => {
-	let musicID = "KZFzniwnSyZfZ7v7nJ" //TODO: implement a classification getter so we always have the most up-to-date ID
+	let musicID = "KZFzniwnSyZfZ7v7nJ" //TODO: implement a classification getter so we always have the most up-to-date ID. use the below comment code outside of any function in this file to accomlish this on a time-based methodology:
+	// console.log(Date.now());
+	// setInterval(function() {
+	// 	console.log(Date.now());
+	// }, 1800000); //1800000 is every 30 min
 	let url = `https://app.ticketmaster.com/discovery/v2/classifications/${musicID}.json?apikey=${ticketmasterAPIkey}`
 	axios(url)
 	.then(response => {
@@ -293,6 +297,3 @@ app.listen(port, hostname, () => {
     console.log(`http://${hostname}:${port}`);
 });
 
-setInterval(function() {
-	console.log(Date.now());
-}, 1000);

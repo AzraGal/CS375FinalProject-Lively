@@ -112,3 +112,4 @@ getConcertHotels.addEventListener("click", () => {
 });
 
 init();
+// console.log(artistOptionsData);
