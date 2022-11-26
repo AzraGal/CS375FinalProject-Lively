@@ -48,7 +48,6 @@ app.use(express.static(__dirname + '/public'))
 	.use(cookieParser());
 
 app.get('/login', function(req, res) {
-
 	var state = generateRandomString(16);
 	res.cookie(stateKey, state);
 
@@ -66,10 +65,8 @@ app.get('/login', function(req, res) {
 });
 
 app.get('/callback', function(req, res) {
-
 	// your application requests refresh and access tokens
 	// after checking the state parameter
-
 	var code = req.query.code || null;
 	var state = req.query.state || null;
 	var storedState = req.cookies ? req.cookies[stateKey] : null;
@@ -212,7 +209,7 @@ app.get("/artistSearchSpotify", async (req, res) => {
 });
 
 app.get("/tmGenres", async (req, res) => {
-	let musicID= "KZFzniwnSyZfZ7v7nJ" //TODO: implement a classification getter so we always have the most up-to-date ID
+	let musicID = "KZFzniwnSyZfZ7v7nJ" //TODO: implement a classification getter so we always have the most up-to-date ID
 	let url = `https://app.ticketmaster.com/discovery/v2/classifications/${musicID}.json?apikey=${ticketmasterAPIkey}`
 	axios(url)
 	.then(response => {
@@ -230,7 +227,7 @@ app.get("/tmEvents", async (req, res) => {//find query parameters here: https://
 	let city = "Philadelphia"
 	let heavyMetalSubGenreId = "KZazBEonSMnZfZ7vkFd"
 	let indieRockSubGenreId = "KZazBEonSMnZfZ7vAde"
-	let pageSize = 100
+	let pageSize = 200
 	
 	let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${ticketmasterAPIkey}`
 	axios(url)
