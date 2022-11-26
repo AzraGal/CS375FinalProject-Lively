@@ -48,7 +48,6 @@ app.use(express.static(__dirname + '/public'))
 	.use(cookieParser());
 
 app.get('/login', function(req, res) {
-
 	var state = generateRandomString(16);
 	res.cookie(stateKey, state);
 
@@ -66,10 +65,8 @@ app.get('/login', function(req, res) {
 });
 
 app.get('/callback', function(req, res) {
-
 	// your application requests refresh and access tokens
 	// after checking the state parameter
-
 	var code = req.query.code || null;
 	var state = req.query.state || null;
 	var storedState = req.cookies ? req.cookies[stateKey] : null;
