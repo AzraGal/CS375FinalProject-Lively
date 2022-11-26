@@ -292,3 +292,7 @@ app.get("/hotels", (req, res) => {
 app.listen(port, hostname, () => {
     console.log(`http://${hostname}:${port}`);
 });
+
+setInterval(function() {
+	console.log(Date.now());
+}, 1000);
