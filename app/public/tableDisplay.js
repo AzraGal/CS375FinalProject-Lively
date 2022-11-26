@@ -3,6 +3,7 @@
 export { displayConcertSearchResults }
 
 let eventTable = document.getElementById('eventsTable');
+// (eventTable).scrollTableBody();
 let eventTableBody = document.getElementById('eventsTableBody');
 
 function displayConcertSearchResults(promise) {

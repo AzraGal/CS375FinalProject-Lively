@@ -76,7 +76,7 @@ function init() {
         locationInput.value = cookies.getCookie("location_search").substring(1);
     }
 }
-
+export { getSelectedGenres }
 function getSelectedGenres(){
     let data = $('.js-example-basic-multiple').select2('data');
     // console.log("genre data:",data);
