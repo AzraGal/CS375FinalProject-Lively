@@ -19,17 +19,27 @@ tmGetGenreButton.addEventListener("click", () => {
     })
 })
 
-tmGetEventsButton.addEventListener("click", () => {
-    console.log("fetching Events from TicketMaster");
-    let promise = getTicketmasterEvents();
-    let displayPromise = displayConcertSearchResults(promise)
-    console.log(promise);
-})
+// tmGetEventsButton.addEventListener("click", () => {
+//     console.log("fetching Events from TicketMaster");
+//     let promise = getTicketmasterEvents();
+//     let displayPromise = displayConcertSearchResults(promise)
+//     console.log(promise);
+// })
 
-function getTicketmasterEvents() {
+function getTicketmasterEvents(selectedArtists, selectedGenres, location) {
+// function getTicketmasterEvents() {
     //returns a promise of fetch call to server 
     console.log("fetching Events from TicketMaster with search parameters:");//TODO: add search parameter logging printing here
-    return fetch('/tmEvents').then((response) => {
+    // console.log(selectedArtists);
+    return fetch(`/tmEvents`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({selectedArtists: selectedArtists, 
+                                selectedGenres: selectedGenres,
+                                location: location}),
+    }).then((response) => {
         return response.json();
     })
 }

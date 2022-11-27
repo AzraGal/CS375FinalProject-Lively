@@ -2,6 +2,7 @@ let suggestedArtists = document.getElementById("suggestedArtists");
 let artistInput = document.getElementById("artist");
 let selectedArtists = document.getElementById("selectedArtists");
 let listOfSelectedArtists = [];
+export { listOfSelectedArtists }
 var artistOptionsData = [];
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const validKeys = ["click", "Backspace", "Delete", " "];
@@ -87,4 +88,4 @@ function initArtistSearch() {
 }
 
 initArtistSearch();
-export {listOfSelectedArtists}
+// export {listOfSelectedArtists}

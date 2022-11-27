@@ -20,6 +20,7 @@ const querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 
 const env = require("../env.json");
+const { log } = require("console");
 var client_id = env.client_id; // Your client id
 var client_secret = env.client_secret; // Your secret
 var redirect_uri = env.redirect_uri; // Your redirect uri
@@ -42,6 +43,9 @@ var generateRandomString = function(length) {
 
 var stateKey = 'spotify_auth_state';
 var  user_access_token = null;
+
+app.use(express.static("public"));
+app.use(express.json());
 
 app.use(express.static(__dirname + '/public'))
 	.use(cors())
@@ -226,17 +230,19 @@ app.get("/tmGenres", async (req, res) => {
 		console.log(error);
 	});
 })
-
-app.get("/tmEvents", async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
+// app.post("/tmEvents", async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
+app.post('/tmEvents', (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
+	console.log(req.body);
 	let city = "Philadelphia"
 	let heavyMetalSubGenreId = "KZazBEonSMnZfZ7vkFd"
 	let indieRockSubGenreId = "KZazBEonSMnZfZ7vAde"
+	let artistName = "Wage War"
 	let pageSize = 200
 	
 	let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${ticketmasterAPIkey}`
 	axios(url)
 	.then(response => {
-		console.log(response.data);
+		// console.log(response.data);
 		//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
 		res.json(response.data)
 	})
@@ -245,8 +251,26 @@ app.get("/tmEvents", async (req, res) => {//find query parameters here: https://
 	});
 })
 
-app.use(express.static("public"));
-app.use(express.json());
+// app.get("/tmEvents", async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
+// 	let city = "Philadelphia"
+// 	let heavyMetalSubGenreId = "KZazBEonSMnZfZ7vkFd"
+// 	let indieRockSubGenreId = "KZazBEonSMnZfZ7vAde"
+// 	let artistName = "Wage War"
+// 	let pageSize = 200
+	
+// 	let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${ticketmasterAPIkey}`
+// 	axios(url)
+// 	.then(response => {
+// 		console.log(response.data);
+// 		//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
+// 		res.json(response.data)
+// 	})
+// 	.catch(function (error) {
+// 		console.log(error);
+// 	});
+// })
+
+
 
 app.get("/", (req, res) => {
     res.send("public/index.html"); 
