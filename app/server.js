@@ -212,7 +212,7 @@ app.get("/artistSearchSpotify", async (req, res) => {
 });
 
 app.get("/tmGenres", async (req, res) => {
-	let musicID= "KZFzniwnSyZfZ7v7nJ" //TODO: implement a classification getter so we always have the most up-to-date ID
+	let musicID = "KZFzniwnSyZfZ7v7nJ" //TODO: implement a classification getter so we always have the most up-to-date ID
 	let url = `https://app.ticketmaster.com/discovery/v2/classifications/${musicID}.json?apikey=${ticketmasterAPIkey}`
 	axios(url)
 	.then(response => {
@@ -230,7 +230,7 @@ app.get("/tmEvents", async (req, res) => {//find query parameters here: https://
 	let city = "Philadelphia"
 	let heavyMetalSubGenreId = "KZazBEonSMnZfZ7vkFd"
 	let indieRockSubGenreId = "KZazBEonSMnZfZ7vAde"
-	let pageSize = 100
+	let pageSize = 200
 	
 	let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${ticketmasterAPIkey}`
 	axios(url)
