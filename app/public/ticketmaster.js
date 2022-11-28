@@ -36,9 +36,13 @@ tmGetEventsButton.addEventListener("click", () => {
             }else{
                 eventVenue = "N/A"
             }
-
-            let eventLat = eventVenue = event["_embedded"].venues[0].location.latitude;
-            let eventLog = eventVenue = event["_embedded"].venues[0].location.longitude;
+            let eventLat ='' ;
+            let eventLog='';
+            if(event["_embedded"].venues[0].location !=undefined){
+                eventLat  = event["_embedded"].venues[0].location.latitude;
+                eventLog  = event["_embedded"].venues[0].location.longitude;
+            }
+            
 
             let eventPriceRange = '';
             if(event.priceRanges != undefined){
