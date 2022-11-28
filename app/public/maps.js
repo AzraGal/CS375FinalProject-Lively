@@ -151,7 +151,6 @@ let dummy_hotel_data = [
 
 let searchButton = document.getElementById("buttonTicketMasterEvents")
 
-
 function initMap() {
 
     //global variables 
@@ -160,7 +159,6 @@ function initMap() {
     let hotelMarkers = [];
     let infowindow = null;
 
-
     searchButton.addEventListener("click", () => {
         console.log("Mapping Events from TicketMaster");
         fetch('/tmEvents').then((response) => {
@@ -168,6 +166,14 @@ function initMap() {
         }).then((body) => {
             let data = body['_embedded'].events;
             showVenueMarkers(data)
+
+            let table = document.getElementById("eventsTable")
+            for (let i = 0; i < table.rows.length; i++) {
+                table.rows[i].addEventListener("click", () => {
+                    console.log(table.rows[i]);
+                    //this.cells[0].textcontent
+                })
+            }
         })
     });
 
@@ -182,6 +188,7 @@ function initMap() {
     //        console.log(body);
     //    })
     //});
+
 
 
     // ----- all functions -----
@@ -318,6 +325,9 @@ function initMap() {
     }
 
     currentMap.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
+
+
+
 };
 
 //Calling the map
