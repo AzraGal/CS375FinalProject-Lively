@@ -38,7 +38,7 @@ tmGetEventsButton.addEventListener("click", () => {
             }
             let eventLat ='' ;
             let eventLog='';
-            if(event["_embedded"].venues[0].location !=undefined){
+            if(event["_embedded"].venues !=undefined){
                 eventLat  = event["_embedded"].venues[0].location.latitude;
                 eventLog  = event["_embedded"].venues[0].location.longitude;
             }
