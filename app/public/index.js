@@ -54,8 +54,8 @@ $(document).ready(function() {
             genre._embedded.subgenres.forEach(subGenre => {
                 // console.log(subGenre);
                 TMsubGenreMap.set(subGenre.name, subGenre.id)
+                createData.push(subGenre.name)
             });
-            createData.push(genre.name)
             TMgenreMap.set(genre.name, genre.id)
         });
         // console.log(TMgenreMap);

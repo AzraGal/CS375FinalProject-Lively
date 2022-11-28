@@ -5,6 +5,12 @@ let port = 8888;
 let hostname = "localhost";
 
 //Middleware
+var request = require('request'); // "Request" library
+var cors = require('cors');
+const querystring = require('querystring');
+var cookieParser = require('cookie-parser');
+const env = require("../env.json");
+const { log } = require("console");
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.static(__dirname + '/public'))
@@ -21,13 +27,7 @@ app.use(express.static(__dirname + '/public'))
  * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
  */
 
-var request = require('request'); // "Request" library
-var cors = require('cors');
-const querystring = require('querystring');
-var cookieParser = require('cookie-parser');
 
-const env = require("../env.json");
-const { log } = require("console");
 var client_id = env.client_id; // Your client id
 var client_secret = env.client_secret; // Your secret
 var redirect_uri = env.redirect_uri; // Your redirect uri
