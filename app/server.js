@@ -4,6 +4,13 @@ let app = express();
 let port = 8888;
 let hostname = "localhost";
 
+//Middleware
+app.use(express.static("public"));
+app.use(express.json());
+app.use(express.static(__dirname + '/public'))
+	.use(cors())
+	.use(cookieParser());
+
 // Spotify Test
 /**
  * This is an example of a basic node.js script that performs
@@ -42,14 +49,9 @@ var generateRandomString = function(length) {
 };
 
 var stateKey = 'spotify_auth_state';
-var  user_access_token = null;
+var user_access_token = null;
 
-app.use(express.static("public"));
-app.use(express.json());
 
-app.use(express.static(__dirname + '/public'))
-	.use(cors())
-	.use(cookieParser());
 
 app.get('/login', function(req, res) {
 	var state = generateRandomString(16);
