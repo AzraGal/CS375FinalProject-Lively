@@ -37,6 +37,9 @@ tmGetEventsButton.addEventListener("click", () => {
                 eventVenue = "N/A"
             }
 
+            let eventLat = eventVenue = event["_embedded"].venues[0].location.latitude;
+            let eventLog = eventVenue = event["_embedded"].venues[0].location.longitude;
+
             let eventPriceRange = '';
             if(event.priceRanges != undefined){
                 let eventPriceRangeCurrency = event.priceRanges[0].currency;
@@ -46,6 +49,14 @@ tmGetEventsButton.addEventListener("click", () => {
                 eventPriceRange = eventPriceRangeCurrency +eventPriceRangeMin+"-"+eventPriceRangeMax;
             }else{
                 eventPriceRange = "N/A"
+            }
+
+            let banner = null;
+            for (let j = 0; j < event.images.length; j++) {
+                if (event.images[j].ratio == "16_9" && event.images[j].width == 2048) {
+                    banner = event.images[j].url;
+                    break
+                }
             }
 
 
@@ -58,6 +69,13 @@ tmGetEventsButton.addEventListener("click", () => {
 			let rowData3 = document.createElement('td');
 			let rowData4 = document.createElement('td');
 			let rowData5 = document.createElement('a');
+            
+            let rowData6 = document.createElement('td');
+            rowData6.style.cssText = 'display:none;';
+            let rowData7 = document.createElement('td');
+            rowData7.style.cssText = 'display:none;';
+            let rowData8 = document.createElement('td');
+            rowData8.style.cssText = 'display:none;';
 
             rowData1.textContent = eventName;
             rowData2.textContent = eventDate;
@@ -67,12 +85,19 @@ tmGetEventsButton.addEventListener("click", () => {
             rowData5.textContent = "L";
             rowData5.target = "_blank";
             rowData5.href = eventLink;
-	
+            
+            rowData6.textContent = eventLat;
+            rowData7.textContent = eventLog;
+            rowData8.textContent = banner;
+
 			row.append(rowData1);
 			row.append(rowData2);
 			row.append(rowData3);
 			row.append(rowData4);
 			row.append(rowData5);
+			row.append(rowData6);
+			row.append(rowData7);
+			row.append(rowData8);
 	
 			eventTableBody.append(row);	
 		}
