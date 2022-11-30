@@ -244,6 +244,23 @@ app.get("/tmEvents", async (req, res) => {//find query parameters here: https://
 	});
 })
 
+app.get("/spotifyGenreEvents", async (req, res) => {
+	let genreIDs = req.query.genreIDs.split(",");
+	let size = 200;
+	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?size=${size}&subGenreId=`;
+	for (let id of genreIDs) {
+		baseURL += `${id},`;
+	}
+	baseURL = baseURL.substring(0, baseURL.length - 1);
+	baseURL += `&apikey=${ticketmasterAPIkey}`;
+	axios(baseURL).then(response => {
+		res.json(response.data)
+	})
+	.catch(function (error) {
+		console.log(error);
+	});
+});
+
 app.use(express.static("public"));
 app.use(express.json());
 
