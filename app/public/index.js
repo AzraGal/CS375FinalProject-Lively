@@ -42,7 +42,7 @@ const TMgenreMap = new Map(); //TMgenreMap exists so that genre ID's can be easi
 //TODO: use this map below to filter for against selection of a genre Category vs a subcategory of the same name; 
 /*when TWO event searches are made and the corresponding name for genreId and subGenreId are the same (yet each with different Id), the search with the genreId ought to be given preference, as it returns more accurate results
 */
-const TMsubGenreMap = new Map(); //TMsubGenreMap exists so that subGenre ID's can be easily recalled later for event search functionality
+export const TMsubGenreMap = new Map(); //TMsubGenreMap exists so that subGenre ID's can be easily recalled later for event search functionality
 
 $(document).ready(function() {
     fetch('/tmGenres').then((response) => {
@@ -53,9 +53,12 @@ $(document).ready(function() {
         body.forEach(genre => {
             genre._embedded.subgenres.forEach(subGenre => {
                 // console.log(subGenre);
+                if (!createData.includes(subGenre.name)) {
+                    createData.push(subGenre.name);
+                }
                 TMsubGenreMap.set(subGenre.name, subGenre.id)
             });
-            createData.push(genre.name)
+            // createData.push(genre.name)
             TMgenreMap.set(genre.name, genre.id)
         });
         // console.log(TMgenreMap);
