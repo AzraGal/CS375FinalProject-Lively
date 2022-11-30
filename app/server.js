@@ -247,7 +247,7 @@ app.get("/tmEvents", async (req, res) => {//find query parameters here: https://
 app.get("/spotifyGenreEvents", async (req, res) => {
 	let genreIDs = req.query.genreIDs.split(",");
 	let size = 200;
-	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?size=${size}&subGenreId=`;
+	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=music&size=${size}&subGenreId=`;
 	for (let id of genreIDs) {
 		baseURL += `${id},`;
 	}

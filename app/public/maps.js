@@ -1,5 +1,6 @@
 // venue concert pins are red
 // hotel pins are purple 
+import * as spotify from "./spotify.js";
 
 // ---- dummy data ----
 
@@ -150,6 +151,7 @@ let dummy_hotel_data = [
 
 
 let searchButton = document.getElementById("buttonTicketMasterEvents")
+let spotifyButton = document.getElementById("buttontopartist")
 
 
 function initMap() {
@@ -170,6 +172,17 @@ function initMap() {
             showVenueMarkers(data)
         })
     });
+
+    spotifyButton.addEventListener("click", () => {
+        console.log("Mapping Events from TicketMaster");
+        fetch(`/spotifyGenreEvents?genreIDs=${spotify.convertedGenreIDs.toString()}`).then((response) => {
+            return response.json();
+          }).then((body)=> {
+            let data = body['_embedded'].events;
+            showVenueMarkers(data)
+        })
+    });
+
 
     //does not get hotel data from the server yet, have to fix server side issues
 

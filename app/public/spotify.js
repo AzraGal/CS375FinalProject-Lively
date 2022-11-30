@@ -1,4 +1,5 @@
 import * as index from "./index.js";
+import * as ticketmaster from "./ticketmaster.js";
 
 let newToken = document.getElementById('obtain-new-token');
 newToken.addEventListener('click', function() {
@@ -50,8 +51,15 @@ vicbutton.addEventListener("click", () => {
         console.log("spotifyTopArtists", spotifyTopArtists);
         console.log("spotifyTopGenres", spotifyTopGenres);
         convertSpotifyToTicketMasterGenre();
+        fetch(`/spotifyArtistEvents?genreIDs=${convertedGenreIDs.toString()}`).then((response) => {
+            return response.json();
+          }).then((body)=> {
+            ticketmaster.populateEventsTable(body);
+        });
         fetch(`/spotifyGenreEvents?genreIDs=${convertedGenreIDs.toString()}`).then((response) => {
             return response.json();
+          }).then((body)=> {
+            ticketmaster.populateEventsTable(body);
         });
     });
 })
@@ -112,7 +120,7 @@ let specialGenres = [
   {"Turkish": ["Turkey"]},
   {"World-music": ["World"]}
 ];
-let convertedGenreIDs = [];
+export let convertedGenreIDs = [];
 
 function convertSpotifyToTicketMasterGenre() {
   const subGenreMap = index.TMsubGenreMap;
@@ -139,7 +147,7 @@ function convertSpotifyToTicketMasterGenre() {
     else {
       if (!convertedGenres.includes("Other")) {
         convertedGenres.push("Other");
-        //convertedGenreIDs.push(subGenreMap.get("Other"));
+        convertedGenreIDs.push(subGenreMap.get("Other"));
       }
     }
   }
