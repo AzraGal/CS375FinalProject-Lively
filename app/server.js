@@ -332,7 +332,8 @@ function getMusicClassificationId() {
 	let url = `https://app.ticketmaster.com/discovery/v2/classifications.json?apikey=${ticketmasterAPIkey}`
 	axios(url)
 	.then(response => {
-		console.log(response.data._embedded.classifications[2].segment.id)
+		musicID = response.data._embedded.classifications[2].segment.id;
+		console.log(musicID)
 	})
 	.catch(function (error) {
 		console.log(error);
