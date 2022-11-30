@@ -27,6 +27,7 @@ app.use(express.static(__dirname + '/public'))
  * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
  */
 
+var musicID = "" 
 
 var client_id = env.client_id; // Your client id
 var client_secret = env.client_secret; // Your secret
@@ -50,8 +51,6 @@ var generateRandomString = function(length) {
 
 var stateKey = 'spotify_auth_state';
 var user_access_token = null;
-
-
 
 app.get('/login', function(req, res) {
 	var state = generateRandomString(16);
@@ -215,7 +214,7 @@ app.get("/artistSearchSpotify", async (req, res) => {
 });
 
 app.get("/tmGenres", async (req, res) => {
-	let musicID = "KZFzniwnSyZfZ7v7nJ" //TODO: implement a classification getter so we always have the most up-to-date ID. use the below comment code outside of any function in this file to accomlish this on a time-based methodology:
+	// let musicID = "KZFzniwnSyZfZ7v7nJ" //TODO: implement a classification getter so we always have the most up-to-date ID. use the below comment code outside of any function in this file to accomlish this on a time-based methodology:
 	// console.log(Date.now());
 	// setInterval(function() {
 	// 	console.log(Date.now());
@@ -323,3 +322,19 @@ app.listen(port, hostname, () => {
     console.log(`http://${hostname}:${port}`);
 });
 
+//backgrounded worker periodic information fetching services
+
+// setInterval(function() {
+// 	console.log(Date.now());
+// }, 1800000); //1800000 is every 30 min
+getMusicClassificationId()
+function getMusicClassificationId() {
+	let url = `https://app.ticketmaster.com/discovery/v2/classifications.json?apikey=${ticketmasterAPIkey}`
+	axios(url)
+	.then(response => {
+		console.log(response.data._embedded.classifications[2].segment.id)
+	})
+	.catch(function (error) {
+		console.log(error);
+	});
+}

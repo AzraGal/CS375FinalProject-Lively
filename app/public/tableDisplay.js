@@ -1,6 +1,7 @@
 // import * as tm from "./ticketmaster.js";
 
 export { displayConcertSearchResults }
+export { clearEventsTable }
 
 let eventTable = document.getElementById('eventsTable');
 // (eventTable).scrollTableBody();
@@ -65,4 +66,10 @@ function displayConcertSearchResults(promise) {
 			eventTableBody.append(row);	
 		}
     })
+}
+
+function clearEventsTable() {
+    while (eventTableBody.childElementCount > 0) {
+        eventTableBody.firstElementChild.remove();
+    }
 }
