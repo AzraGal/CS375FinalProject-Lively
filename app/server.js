@@ -231,28 +231,64 @@ app.get("/tmGenres", async (req, res) => {
 		console.log(error);
 	});
 })
+
 // app.post("/tmEvents", async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
 app.post('/tmEvents', (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
-	console.log(req.body);
-	let city = "Philadelphia"
-	let heavyMetalSubGenreId = "KZazBEonSMnZfZ7vkFd"
-	let indieRockSubGenreId = "KZazBEonSMnZfZ7vAde"
-	let artistName = "Wage War"
+	console.log(req.body, req.body.selectedArtists.length);
+	let selectedArtists = req.body.selectedArtists;
+	let selectedGenres = req.body.selectedGenres;
+	let selectedLocation = req.body.location;
+	let locale = "en-us";
+
 	let pageSize = 200
+
+	if ( (selectedArtists == undefined) ||
+	(selectedGenres == undefined) ||
+	(selectedLocation == undefined) //TODO: Benedict, add checking if any of the arrays contain invalid entries, like numbers for genres. Check your old homeworks for thats
+	){ //TODO: test this checking for invalid requests before deployment
+		res.status(400).json({error: "Not all post request fields were populated!"});
+	}
+
+	let combinedGenres = ""
+	if ( !(selectedGenres.length <= 0) ){
+		combinedGenres = selectedGenres[0]
+		for (let index = 1; index < selectedGenres.length; index++) {
+			const element = selectedGenres[index];
+			combinedGenres = combinedGenres + ',' + element;
+		}
+	}
+	// console.log(combinedGenres);
+
 	
-	let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${ticketmasterAPIkey}`
-	axios(url)
-	.then(response => {
-		// console.log(response.data);
-		//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
-		res.json(response.data)
-	})
-	.catch(function (error) {
-		console.log(error);
-	});
+
+	let allRequestResults = []
+
+	if ( !(selectedArtists.length <= 0) ){
+		selectedArtists.forEach(element => {
+			// let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${ticketmasterAPIkey}`
+			let urlBase = `https://app.ticketmaster.com/discovery/v2/events.json?&apikey=${ticketmasterAPIkey}&locale=${locale}`
+			let classificationNameQueryParam = `&classificationName=${combinedGenres}`
+			let keywordQueryParam = `&keyword=${element}`;
+			let 
+			let url = urlBase + keywordQueryParam + classificationNameQueryParam;
+			// axios(url)
+			// .then(response => {
+			// 	// console.log(response.data);
+			// 	//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
+			// 	// res.json(response.data)
+				
+			// })
+			// .catch(function (error) {
+			// 	console.log(error);
+			// });
+		});
+	}
+
 })
 
-// app.get("/tmEvents", async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
+// app.post("/tmEvents", async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
+// app.post('/tmEvents', (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
+// 	console.log(req.body, req.body.selectedArtists.length);
 // 	let city = "Philadelphia"
 // 	let heavyMetalSubGenreId = "KZazBEonSMnZfZ7vkFd"
 // 	let indieRockSubGenreId = "KZazBEonSMnZfZ7vAde"
@@ -262,7 +298,7 @@ app.post('/tmEvents', (req, res) => {//find query parameters here: https://devel
 // 	let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${ticketmasterAPIkey}`
 // 	axios(url)
 // 	.then(response => {
-// 		console.log(response.data);
+// 		// console.log(response.data);
 // 		//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
 // 		res.json(response.data)
 // 	})
@@ -270,8 +306,6 @@ app.post('/tmEvents', (req, res) => {//find query parameters here: https://devel
 // 		console.log(error);
 // 	});
 // })
-
-
 
 app.get("/", (req, res) => {
     res.send("public/index.html"); 
