@@ -30,6 +30,8 @@ let vicbutton = document.getElementById('buttontopartist');
 
 let spotifyTopArtists = []
 let spotifyTopGenres = []
+let spotifyEvents = {_embedded: {"events": []}};
+let eventsTimer = null;
 
 vicbutton.addEventListener("click", () => {
     fetch('/artists').then((response) => {
@@ -51,18 +53,43 @@ vicbutton.addEventListener("click", () => {
         console.log("spotifyTopArtists", spotifyTopArtists);
         console.log("spotifyTopGenres", spotifyTopGenres);
         convertSpotifyToTicketMasterGenre();
-        fetch(`/spotifyArtistEvents?genreIDs=${convertedGenreIDs.toString()}`).then((response) => {
-            return response.json();
-          }).then((body)=> {
-            ticketmaster.populateEventsTable(body);
-        });
-        fetch(`/spotifyGenreEvents?genreIDs=${convertedGenreIDs.toString()}`).then((response) => {
-            return response.json();
-          }).then((body)=> {
-            ticketmaster.populateEventsTable(body);
-        });
+        eventsTimer = setInterval(fetchEvents, 500);
     });
-})
+});
+
+let artistCount = 0;
+let loadingContainer = document.getElementById("loadingContainer");
+
+function fetchEvents() {
+  loadingContainer.style.display = "";
+  let artist = spotifyTopArtists[artistCount];
+  fetch(`/spotifyArtistEvents?artist=${artist}`).then((response) => {
+      return response.json();
+    }).then((body)=> {
+      addEventsToList(body);
+  });
+  artistCount++;
+  if (artistCount === spotifyTopArtists.length) {
+    clearInterval(eventsTimer);
+    fetch(`/spotifyGenreEvents?genreIDs=${convertedGenreIDs.toString()}`).then((response) => {
+      return response.json();
+    }).then((body)=> {
+      addEventsToList(body);
+      ticketmaster.populateEventsTable(spotifyEvents);
+    });
+  }
+}
+
+function addEventsToList(body) {
+  if (body.hasOwnProperty('_embedded') && body['_embedded'].hasOwnProperty('events')) {
+    let events = body['_embedded'].events;
+    for (let event of events) {
+      if (!spotifyEvents["_embedded"]["events"].includes(event)) {
+        spotifyEvents["_embedded"]["events"].push(event);
+      }
+    }
+  }
+}
 
 let convertedGenres = [];
 let specialGenres = [

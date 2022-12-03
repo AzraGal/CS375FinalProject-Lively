@@ -112,4 +112,5 @@ export function populateEventsTable(body) {
 
         eventTableBody.append(row);	
     }
+    document.getElementById("loadingContainer").style.display = "none";
 } 
