@@ -1,6 +1,7 @@
 // venue concert pins are red
 // hotel pins are purple 
 import * as spotify from "./spotify.js";
+import * as cookies from "./cookies.js";
 
 // ---- dummy data ----
 
@@ -193,6 +194,16 @@ function initMap() {
             }
 
         })
+    });
+
+    spotifyButton.addEventListener("click", () => {
+        if (cookies.cookieConsent !== "" && window.localStorage.getItem("spotifyEvents")) {
+            let spotifyEvents = JSON.parse(window.localStorage.getItem("spotifyEvents"));
+            showVenueMarkers(spotifyEvents._embedded.events);
+        }
+        else {
+            setTimeout(() => {showVenueMarkers(spotify.spotifyEvents._embedded.events);}, 16000);
+        }
     });
 
     // ----- all functions -----

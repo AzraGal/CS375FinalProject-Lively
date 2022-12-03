@@ -31,7 +31,7 @@ let vicbutton = document.getElementById('buttontopartist');
 
 let spotifyTopArtists = []
 let spotifyTopGenres = []
-let spotifyEvents = {_embedded: {"events": []}};
+export let spotifyEvents = {_embedded: {"events": []}};
 let eventsTimer = null;
 
 vicbutton.addEventListener("click", () => {
