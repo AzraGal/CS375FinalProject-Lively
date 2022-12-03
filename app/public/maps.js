@@ -155,41 +155,43 @@ function initMap() {
 
     //global variables 
 
-    let venueMarkers = [];
-    let hotelMarkers = [];
+    let markers = [];
     let infowindow = null;
 
     searchButton.addEventListener("click", () => {
-        console.log("Mapping Events from TicketMaster");
         fetch('/tmEvents').then((response) => {
             return response.json();
         }).then((body) => {
             let data = body['_embedded'].events;
-            showVenueMarkers(data)
+                showVenueMarkers(data)
 
             let table = document.getElementById("eventsTable")
             for (let i = 0; i < table.rows.length; i++) {
-                table.rows[i].addEventListener("click", () => {
-                    console.log(table.rows[i]);
-                    //this.cells[0].textcontent
+                table.rows[i].addEventListener("click", () => { 
+                    let cellLat = table.rows[i].cells[4].textContent;
+                    let cellLong = table.rows[i].cells[5].textContent;
+                    let cellBanner = table.rows[i].cells[6].textContent;
+                    let contentString = `
+                              <center><img src = ${cellBanner} width = "300" height = "150"> </center> <br>
+                              <b>Name: </b> ${table.rows[i].cells[0].textContent} <br>
+                              <b>Address: </b> ${table.rows[i].cells[2].textContent} `;
+
+                    deleteMarkers()
+                    createVenueMarker(cellLat, cellLong, contentString);
+
+                    fetch("/hotels?latitude=" + cellLat + "&longitude=" + cellLong).then((response) => {
+                        return response.json();
+                    }).then((body) => {
+                        console.log("goes here")
+                        console.log(body.searchResults)
+                    });
+
+
                 })
             }
+
         })
     });
-
-    //does not get hotel data from the server yet, have to fix server side issues
-
-    //searchButton.addEventListener("click", () => {
-    //    console.log("Mapping Hotes from Hotels.com");
-    //    fetch('/hotelsCoordinates').then((response) => {
-    //        return response.json();
-    //    }).then((body) => {
-    //        console.log("todoloo")
-    //        console.log(body);
-    //    })
-    //});
-
-
 
     // ----- all functions -----
 
@@ -211,6 +213,7 @@ function initMap() {
                               <b>Name: </b> ${data[i].name} <br>
                               <b>Address: </b> ${data[i]._embedded.venues[0].address.line1}, ${data[i]._embedded.venues[0].city.name},<br> ${data[i]._embedded.venues[0].country.name} `;
                 createVenueMarker(lat, long, contentString)
+                
             }
 
             catch {
@@ -254,6 +257,7 @@ function initMap() {
             infowindow.open(currentMap, this);
         });
 
+        markers.push(marker);
         return marker
 
     };
@@ -284,10 +288,28 @@ function initMap() {
         google.maps.event.addListener(marker, 'click', function () {
             infowindow.setContent(contentString);
             infowindow.open(map, this);
-        });
-
+            
+        })
+        markers.push(marker);
     };
 
+    // Sets the map on all markers in the array.
+    function setMapOnAll(map) {
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(map);
+        }
+    }
+
+    // Removes the markers from the map, but keeps them in the array.
+    function clearMarkers() {
+        setMapOnAll(null);
+    }
+
+    // Deletes all markers in the array by removing references to them.
+    function deleteMarkers() {
+        clearMarkers();
+        markers = [];
+    }   
     // -----main-----
 
     let currentMap = new google.maps.Map(document.getElementById("map"), {
@@ -326,9 +348,9 @@ function initMap() {
 
     currentMap.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
 
-
-
 };
+
+
 
 //Calling the map
 window.initMap = initMap;
