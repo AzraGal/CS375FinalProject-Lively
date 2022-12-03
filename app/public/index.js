@@ -11,6 +11,24 @@ let location = "";
 
 let getConcertHotels = document.getElementById("concertRes");
 
+$('input[name="daterange"]').daterangepicker({
+    autoUpdateInput: false,
+    locale: {
+        cancelLabel: 'Clear'
+    }
+});
+
+$('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
+    $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+    console.log(picker.startDate.format('MM/DD/YYYY'), picker.endDate.format('MM/DD/YYYY'));
+});
+
+$('input[name="daterange"]').on('cancel.daterangepicker', function(ev, picker) {
+    $(this).val('');
+});
+
+
+
 // 
 // function showHideEventRow(row) {
 //     $("#" + row).toggle();
@@ -79,6 +97,7 @@ function init() {
         locationInput.value = cookies.getCookie("location_search").substring(1);
     }
 }
+
 
 function getSelectedGenres(){
     let data = $('.js-example-basic-multiple').select2('data');
