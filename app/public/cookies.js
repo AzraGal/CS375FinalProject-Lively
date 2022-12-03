@@ -18,6 +18,7 @@ function acceptCookie() {
     cookieContainer.style.display = "none";
     deleteCookie("cookie_consent");
     setCookie("cookie_consent", true, 30);
+    cookieConsent = getCookie("cookie_consent");
 }
 
 function declineCookie() {
