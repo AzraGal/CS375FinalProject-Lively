@@ -6,6 +6,8 @@
     
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plaster&display=swap" rel="stylesheet">
@@ -13,6 +15,10 @@
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- date range-->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 </head>
 <body class='bodyStyle'>
     <div class='header'>
@@ -35,17 +41,13 @@
                     <select class="js-example-basic-multiple genreSelect" name="genres[]" multiple="multiple" id="genre">
                     </select>
                 </div>
-
-                <!-- <select id="genre" name="genre" size="1" multiple>
-                <option value="rock">Rock</option>
-                <option value="pop">Pop</option>
-                <option value="hip-hop">Hip Hop</option>
-                <option value="country">Country</option>
-            </select> -->
             </div>
             <div>
                 <label for="location">Location</label>
                 <input id="location" type="text" name="location">
+            </div>
+            <div>
+                <input type="text" name="daterange" value="01/01/2023 - 01/15/2023" />
             </div>
             <button id="submitSearchButton">Search</button>
             <h3>or</h3>
@@ -184,7 +186,7 @@
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ5ulv-oR0cVSQkN_x6gBjIWw-itZzOC0&v=beta&libraries=marker&callback=initMap" defer></script>
 
         <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
-        <script>
+       <script>
             (function () {
                 /**
                  * Obtains parameters from the hash of the URL
