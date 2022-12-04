@@ -99,6 +99,7 @@
           <div class="concerts">
             <div id="loadingContainer" style="display: none;">Loading your Events...</div>
             <p class="resultHeader">Concerts</p>
+            <button id='allConcerts'>Show all concerts on Map</button>
             <table id="eventsTable" class="resTable eventsTable">
               <tbody id="eventsTableBody">
               <thead>
@@ -109,31 +110,24 @@
                       <th>Price Range</th>
                       <th>Link to Purchase Ticket</th>
                   </tr>
-              </thead>
-              <tr id="concertRes">
-                  <td>Artist</td>
-                  <td>Date</td>
-                  <td>Location</td>
-                  <td>Event Link</td>
-              </tr>
-              <tr id="row1">
-              <!-- <tr onclick="showHideEventRow('hidden_row1');"> -->
-                <td>Artist</td>
-                <td>Date</td>
-                <td>Location</td>
-                <td>Event Link</td>
-              </tr>
-              <tr id="hidden_row1" class="hidden_row">
-                <td colspan=4>
-                  <p>Line Up</p>
-                  <ul>xx</ul>
-                  <ul>xx</ul>
-                  <ul>xx</ul>
-                </td>
-              </tr>
+                  <tr id="row1">
+                      <!-- <tr onclick="showHideEventRow('hidden_row1');"> -->
+                      <td>Artist</td>
+                      <td>Date</td>
+                      <td>Location</td>
+                      <td>Event Link</td>
+                  </tr>
+                  <tr id="hidden_row1" class="hidden_row">
+                      <td colspan=4>
+                          <p>Line Up</p>
+                          <ul>xx</ul>
+                          <ul>xx</ul>
+                          <ul>xx</ul>
+                      </td>
+                  </tr>
 
-              </tbody>
-          </table>
+                  </tbody>
+              </table>
           </div>
         </div>
         <div id="hotelLocations"></div>

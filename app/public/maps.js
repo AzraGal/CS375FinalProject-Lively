@@ -149,24 +149,30 @@ let dummy_hotel_data = [
     }
 ]; 
 
-
-
-let searchButton = document.getElementById("buttonTicketMasterEvents")
-let spotifyButton = document.getElementById("buttontopartist")
+let searchButton = document.getElementById("buttonTicketMasterEvents");
+let allConcerts = document.getElementById("allConcerts");
+let spotifyButton = document.getElementById("buttontopartist");
 
 function initMap() {
 
     //global variables 
 
     let markers = [];
+    let selectedMarker = [];
     let infowindow = null;
+
+    
 
     searchButton.addEventListener("click", () => {
         fetch('/tmEvents').then((response) => {
             return response.json();
         }).then((body) => {
             let data = body['_embedded'].events;
+            showVenueMarkers(data)
+            allConcerts.addEventListener("click", function () {
+                deleteSelectedMarker()
                 showVenueMarkers(data)
+            })
 
             let table = document.getElementById("eventsTable")
             for (let i = 0; i < table.rows.length; i++) {
@@ -179,7 +185,9 @@ function initMap() {
                               <b>Name: </b> ${table.rows[i].cells[0].textContent} <br>
                               <b>Address: </b> ${table.rows[i].cells[2].textContent} `;
 
-                    deleteMarkers()
+                    deleteMarkers();
+                    deleteSelectedMarker();
+                    console.log(selectedMarker)
                     createVenueMarker(cellLat, cellLong, contentString);
 
                     fetch("/hotels?latitude=" + cellLat + "&longitude=" + cellLong).then((response) => {
@@ -206,8 +214,7 @@ function initMap() {
         }
     });
 
-    // ----- all functions -----
-
+  // --------------- marker creation functions -----------------
 
     function showVenueMarkers(data) {
         for (let i = 0; i < data.length; i++) {
@@ -270,12 +277,16 @@ function initMap() {
             infowindow.open(currentMap, this);
         });
 
+        google.maps.event.addListener(marker, 'dblclick', function () {
+            deleteSelectedMarker()
+            selectedMarker.push(marker);
+            deleteMarkers();
+            showSelectedMarker(currentMap);
+        })
         markers.push(marker);
         return marker
 
     };
-
-
 
     function createHotelMarker(lat, long, contentString) {
         let pinViewBackground = new google.maps.marker.PinView({
@@ -301,15 +312,23 @@ function initMap() {
         google.maps.event.addListener(marker, 'click', function () {
             infowindow.setContent(contentString);
             infowindow.open(map, this);
-            
         })
         markers.push(marker);
     };
 
+
+    // ------------- marker behaviour functions --------------
+
+
     // Sets the map on all markers in the array.
     function setMapOnAll(map) {
-        for (var i = 0; i < markers.length; i++) {
+        for (let i = 0; i < markers.length; i++) {
             markers[i].setMap(map);
+        }
+    }
+    function showSelectedMarker(map) {
+        for (let i = 0; i < selectedMarker.length; i++) {
+            selectedMarker[i].setMap(map);
         }
     }
 
@@ -322,7 +341,12 @@ function initMap() {
     function deleteMarkers() {
         clearMarkers();
         markers = [];
-    }   
+    }
+
+    function deleteSelectedMarker() {
+        showSelectedMarker(null);
+        selectedMarker = [];
+    }
     // -----main-----
 
     let currentMap = new google.maps.Map(document.getElementById("map"), {
@@ -330,12 +354,6 @@ function initMap() {
         zoom: 8,
         mapId: '3c124c6fbfda6d51'
     });
-
-    
-
-    searchButton.addEventListener("click", showVenueMarkers);
-    searchButton.addEventListener("click", showHotelMarkers);
-
 
     let legend = document.getElementById("legend");
     let icons = {
@@ -349,11 +367,12 @@ function initMap() {
         }
 
     };
+
     for (let key in icons) {
-        const type = icons[key];
-        const name = type.name;
-        const icon = type.icon;
-        const div = document.createElement("div");
+        let type = icons[key];
+        let name = type.name;
+        let icon = type.icon;
+        let div = document.createElement("div");
 
         div.innerHTML = '<img src="' + icon + '" width="30" height="30"> ' + name;
         legend.appendChild(div);
