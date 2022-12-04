@@ -278,15 +278,20 @@ app.post('/tmEvents', (req, res) => {//find query parameters here: https://devel
 			let keywordQueryParam = `&keyword=${element}`;
 			let cityQueryParam = `&city=${city}`
 			let stateQueryParam = `&stateCode=${state}`
+			let pageSizeQueryParam = `&size=${pageSize}`;
 			let url = urlBase + 
 					keywordQueryParam + 
 					classificationNameQueryParam + 
 					cityQueryParam + 
-					stateQueryParam;
+					stateQueryParam + 
+					pageSizeQueryParam;
+			console.log(url);
+			
 			// axios(url)
 			// .then(response => {
 			// 	// console.log(response.data);
 			// 	//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
+			// console.log(response.data["_embedded"].events);
 			// 	// res.json(response.data)
 				
 			// })
@@ -295,7 +300,6 @@ app.post('/tmEvents', (req, res) => {//find query parameters here: https://devel
 			// });
 		});
 	}
-
 })
 
 // app.post("/tmEvents", async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
@@ -312,6 +316,7 @@ app.post('/tmEvents', (req, res) => {//find query parameters here: https://devel
 // 	.then(response => {
 // 		// console.log(response.data);
 // 		//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
+// 		console.log(response.data["_embedded"].events);
 // 		res.json(response.data)
 // 	})
 // 	.catch(function (error) {
