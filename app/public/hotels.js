@@ -63,11 +63,14 @@ search.addEventListener("click", () => {
     fetch("/hotelsCoordinates?searchLocation=" + searchLocationVal).then((response) => {
         return response.json(); 
     }).then((body) => {
-        let cities = body.suggestions[0].entities;
+        console.log(body);
+        let cities = body.data;
 
         for (let i = 0; i < cities.length; i ++) {
-            let city = [cities[i].caption, cities[i].latitude, cities[i].longitude];
-            locations[cities[i].geoId] = city; 
+            if (cities[i].type === "CITY") {
+                let city = [cities[i].regionNames.displayName, cities[i].coordinates.latitude, cities[i].coordinates.longitude];
+                locations[cities[i].gaiaId] = city; 
+            }
         }
 
         generateLocations();
@@ -112,7 +115,7 @@ function fetchHotels(locationId) {
     fetch("/hotels?latitude=" + locations[locationId][1] + "&longitude=" + locations[locationId][2]).then((response) => {
         return response.json();
     }).then((body) => {
-        console.log(body.searchResults);
+        console.log(body);
 
         let searchResults = body.searchResults.results;
 

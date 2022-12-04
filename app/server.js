@@ -284,7 +284,7 @@ app.get("/hotelsCoordinates", (req, res) => {
     const hotelDestConfig = {
         params: {
             query: req.query.searchLocation,
-            currency: "USD",
+            domain: "US",
             locale: "en_US"
         }, 
         headers: {
@@ -293,7 +293,7 @@ app.get("/hotelsCoordinates", (req, res) => {
         }
     }
 
-    axios.get('https://hotels-com-provider.p.rapidapi.com/v1/destinations/search', hotelDestConfig)
+    axios.get('https://hotels-com-provider.p.rapidapi.com/v2/regions', hotelDestConfig)
         .then((response) => { res.json(response.data); })
         .catch((error) => { console.log(error); });
 });
@@ -303,10 +303,10 @@ app.get("/hotels", (req, res) => {
         params: {
             latitude: req.query.latitude,
             longitude: req.query.longitude,
-            currency: "USD",
+            domain: "US",
             locale: "en_US",
-            checkin_date: "2022-11-25",
-            checkout_date: "2022-11-27",
+            checkin_date: "2022-12-29",
+            checkout_date: "2022-12-30",
             sort_order: "PRICE",
             adults_number: "2"
         },
@@ -316,7 +316,7 @@ app.get("/hotels", (req, res) => {
         }
     }
 
-    axios.get('https://hotels-com-provider.p.rapidapi.com/v1/hotels/nearby', hotelConfig)
+    axios.get('https://hotels-com-provider.p.rapidapi.com/v2/hotels/search', hotelConfig)
         .then((response) => { res.json(response.data); })
         .catch((error) => { console.log(error); });
 });
