@@ -243,7 +243,7 @@ app.post('/tmEvents', (req, res) => {//find query parameters here: https://devel
 	let pageSize = 200
 
 	if ( (selectedArtists == undefined) ||
-	(selectedGenres == undefined) ||
+	(selectedGenres == undefined) || //TODO: add location filtering 
 	(selectedLocation == undefined) //TODO: Benedict, add checking if any of the arrays contain invalid entries, like numbers for genres. Check your old homeworks for thats
 	){ //TODO: test this checking for invalid requests before deployment
 		res.status(400).json({error: "Not all post request fields were populated!"});
@@ -259,7 +259,14 @@ app.post('/tmEvents', (req, res) => {//find query parameters here: https://devel
 	}
 	// console.log(combinedGenres);
 
-	
+	let city = ''
+	let state = ''
+
+	let splitLocation = selectedLocation.split(",")
+	if (splitLocation.length == 2){ //
+		city = splitLocation[0]
+		state = splitLocation[1]
+	}
 
 	let allRequestResults = []
 
@@ -269,8 +276,13 @@ app.post('/tmEvents', (req, res) => {//find query parameters here: https://devel
 			let urlBase = `https://app.ticketmaster.com/discovery/v2/events.json?&apikey=${ticketmasterAPIkey}&locale=${locale}`
 			let classificationNameQueryParam = `&classificationName=${combinedGenres}`
 			let keywordQueryParam = `&keyword=${element}`;
-			let 
-			let url = urlBase + keywordQueryParam + classificationNameQueryParam;
+			let cityQueryParam = `&city=${city}`
+			let stateQueryParam = `&stateCode=${state}`
+			let url = urlBase + 
+					keywordQueryParam + 
+					classificationNameQueryParam + 
+					cityQueryParam + 
+					stateQueryParam;
 			// axios(url)
 			// .then(response => {
 			// 	// console.log(response.data);
