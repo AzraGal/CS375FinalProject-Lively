@@ -176,7 +176,7 @@ function initMap() {
 
             let table = document.getElementById("eventsTable")
             for (let i = 0; i < table.rows.length; i++) {
-                table.rows[i].addEventListener("click", () => { 
+                table.rows[i].addEventListener("click", () => {
                     let cellLat = table.rows[i].cells[4].textContent;
                     let cellLong = table.rows[i].cells[5].textContent;
                     let cellBanner = table.rows[i].cells[6].textContent;
@@ -189,25 +189,38 @@ function initMap() {
                     deleteSelectedMarker();
                     console.log(selectedMarker)
                     createVenueMarker(cellLat, cellLong, contentString);
-
-                    fetch("/hotels?latitude=" + cellLat + "&longitude=" + cellLong).then((response) => {
-                        return response.json();
-                    }).then((body) => {
-                        console.log("goes here")
-                        console.log(body.searchResults)
-                    });
-
-
                 })
-            }
+            };
 
-        })
+        });
     });
 
     spotifyButton.addEventListener("click", () => {
         if (cookies.cookieConsent !== "" && window.localStorage.getItem("spotifyEvents")) {
             let spotifyEvents = JSON.parse(window.localStorage.getItem("spotifyEvents"));
-            showVenueMarkers(spotifyEvents._embedded.events);
+            let data = spotifyEvents._embedded.events
+            showVenueMarkers(data);
+            allConcerts.addEventListener("click", function () {
+                deleteSelectedMarker()
+                showVenueMarkers(data)
+            })
+            let table = document.getElementById("eventsTable")
+            for (let i = 0; i < table.rows.length; i++) {
+                table.rows[i].addEventListener("click", () => {
+                    let cellLat = table.rows[i].cells[4].textContent;
+                    let cellLong = table.rows[i].cells[5].textContent;
+                    let cellBanner = table.rows[i].cells[6].textContent;
+                    let contentString = `
+                              <center><img src = ${cellBanner} width = "300" height = "150"> </center> <br>
+                              <b>Name: </b> ${table.rows[i].cells[0].textContent} <br>
+                              <b>Address: </b> ${table.rows[i].cells[2].textContent} `;
+
+                    deleteMarkers();
+                    deleteSelectedMarker();
+                    console.log(selectedMarker)
+                    createVenueMarker(cellLat, cellLong, contentString);
+                })
+            };
         }
         else {
             setTimeout(() => {showVenueMarkers(spotify.spotifyEvents._embedded.events);}, 16000);
