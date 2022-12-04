@@ -19,12 +19,6 @@ var cors = require('cors');
 const querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 
-//const env = require("../env.json");
-var client_id = process.env.CLIENT_ID; // Your client id
-var client_secret = process.env.CLIENT_SECRET; // Your secret
-var redirect_uri = process.env.REDIRECT_URI; // Your redirect uri
-var ticketmasterAPIkey = process.env.TICKETMASTERAPIKEY //project ticketmaster API key
-
 /**
 * Generates a random string containing numbers and letters
 * @param  {number} length The length of the string
@@ -58,9 +52,9 @@ app.get('/login', function(req, res) {
 	res.redirect('https://accounts.spotify.com/authorize?' +
 	querystring.stringify({
 		response_type: 'code',
-		client_id: client_id,
+		client_id: process.env.CLIENT_ID,
 		scope: scope,
-		redirect_uri: redirect_uri,
+		redirect_uri: process.env.REDIRECT_URI,
 		state: state
 	}));
 });
@@ -85,11 +79,11 @@ app.get('/callback', function(req, res) {
 		url: 'https://accounts.spotify.com/api/token',
 		form: {
 		code: code,
-		redirect_uri: redirect_uri,
+		redirect_uri: process.env.REDIRECT_URI,
 		grant_type: 'authorization_code'
 		},
 		headers: {
-		'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+		'Authorization': 'Basic ' + (new Buffer(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString('base64'))
 		},
 		json: true
 	};
@@ -137,7 +131,7 @@ app.get('/refresh_token', function(req, res) {
 	var refresh_token = req.query.refresh_token;
 	var authOptions = {
 	url: 'https://accounts.spotify.com/api/token',
-	headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
+	headers: { 'Authorization': 'Basic ' + (new Buffer(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString('base64')) },
 	form: {
 		grant_type: 'refresh_token',
 		refresh_token: refresh_token
@@ -179,7 +173,7 @@ app.get("/artists", async (req, res) => {
 app.get("/artistSearchTicketMaster", async (req, res) => {
   var config = {
     method: 'get',
-    url: `https://app.ticketmaster.com/discovery/v2/attractions.json?apikey=${ticketmasterAPIkey}&keyword=${req.query.artist}&size=10`,
+    url: `https://app.ticketmaster.com/discovery/v2/attractions.json?apikey=${process.env.TICKETMASTERAPIKEY}&keyword=${req.query.artist}&size=10`,
     headers: { 
       'Content-Type': 'application/json'
     }
@@ -213,7 +207,7 @@ app.get("/artistSearchSpotify", async (req, res) => {
 
 app.get("/tmGenres", async (req, res) => {
 	let musicID = "KZFzniwnSyZfZ7v7nJ" //TODO: implement a classification getter so we always have the most up-to-date ID
-	let url = `https://app.ticketmaster.com/discovery/v2/classifications/${musicID}.json?apikey=${ticketmasterAPIkey}`
+	let url = `https://app.ticketmaster.com/discovery/v2/classifications/${musicID}.json?apikey=${process.env.TICKETMASTERAPIKEY}`
 	axios(url)
 	.then(response => {
 		// console.log(response.data);
@@ -232,7 +226,7 @@ app.get("/tmEvents", async (req, res) => {//find query parameters here: https://
 	let indieRockSubGenreId = "KZazBEonSMnZfZ7vAde"
 	let pageSize = 200
 	
-	let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${ticketmasterAPIkey}`
+	let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${process.env.TICKETMASTERAPIKEY}`
 	axios(url)
 	.then(response => {
 		console.log(response.data);
@@ -247,7 +241,7 @@ app.get("/tmEvents", async (req, res) => {//find query parameters here: https://
 app.get("/spotifyArtistEvents", async (req, res) => {
 	let artist = req.query.artist;
 	let size = 200;
-	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=music&size=${size}&keyword=${artist}&apikey=${ticketmasterAPIkey}`;
+	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=music&size=${size}&keyword=${artist}&apikey=${process.env.TICKETMASTERAPIKEY}`;
 	axios(baseURL).then(response => {
 		res.json(response.data)
 	})
@@ -264,7 +258,7 @@ app.get("/spotifyGenreEvents", async (req, res) => {
 		baseURL += `${id},`;
 	}
 	baseURL = baseURL.substring(0, baseURL.length - 1);
-	baseURL += `&apikey=${ticketmasterAPIkey}`;
+	baseURL += `&apikey=${process.env.TICKETMASTERAPIKEY}`;
 	axios(baseURL).then(response => {
 		res.json(response.data)
 	})
