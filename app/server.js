@@ -1,7 +1,7 @@
 let axios = require("axios");
 let express = require("express");
 let app = express();
-let port = 8888;
+let port = process.env.PORT || 8888;
 let hostname = "localhost";
 
 // Spotify Test
@@ -19,11 +19,11 @@ var cors = require('cors');
 const querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 
-const env = require("../env.json");
-var client_id = env.client_id; // Your client id
-var client_secret = env.client_secret; // Your secret
-var redirect_uri = env.redirect_uri; // Your redirect uri
-var ticketmasterAPIkey = env.ticketmaster_api_key //project ticketmaster API key
+//const env = require("../env.json");
+var client_id = process.env.CLIENT_ID; // Your client id
+var client_secret = process.env.CLIENT_SECRET; // Your secret
+var redirect_uri = process.env.REDIRECT_URI; // Your redirect uri
+var ticketmasterAPIkey = process.env.TICKETMASTERAPIKEY //project ticketmaster API key
 
 /**
 * Generates a random string containing numbers and letters
@@ -288,7 +288,7 @@ app.get("/hotelsCoordinates", (req, res) => {
             locale: "en_US"
         }, 
         headers: {
-            "X-RapidAPI-Key": env["hotels_api_key"],
+            "X-RapidAPI-Key": process.env.HOTELS_API_KEY,
             "X-RapidAPI-Host": "hotels-com-provider.p.rapidapi.com"
         }
     }
@@ -311,7 +311,7 @@ app.get("/hotels", (req, res) => {
             adults_number: "2"
         },
         headers: {
-            "X-RapidAPI-Key": env["hotels_api_key"],
+            "X-RapidAPI-Key": process.env.HOTELS_API_KEY,
             "X-RapidAPI-Host": "hotels-com-provider.p.rapidapi.com"
         }
     }
@@ -321,6 +321,10 @@ app.get("/hotels", (req, res) => {
         .catch((error) => { console.log(error); });
 });
 
-app.listen(port, hostname, () => {
-    console.log(`http://${hostname}:${port}`);
+// app.listen(port, hostname, () => {
+//     console.log(`http://${hostname}:${port}`);
+// });
+
+app.listen(port, () => {
+    console.log(`Server is listening on: ${port}`);
 });
