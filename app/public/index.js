@@ -9,7 +9,7 @@ let genre = "";
 let selectedGenres = [];
 let location = "";
 
-let getConcertHotels = document.getElementById("concertRes");
+// let getConcertHotels = document.getElementById("concertRes");
 
 $('input[name="daterange"]').daterangepicker({
     autoUpdateInput: false,
@@ -129,8 +129,8 @@ function submitSearch() {
     }
 }
 
-getConcertHotels.addEventListener("click", () => {
-    console.log(getConcertHotels.value);
-});
+// getConcertHotels.addEventListener("click", () => {
+//     console.log(getConcertHotels.value);
+// });
 
 init();
