@@ -11,7 +11,7 @@ function displayConcertSearchResults(promise) {
     promise.then((body)=>{
         // console.log(body);
 
-        let events = body['_embedded'].events;
+        let events = body;
 
         console.log(events);
 

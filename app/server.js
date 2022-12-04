@@ -287,18 +287,20 @@ app.post('/tmEvents', (req, res) => {//find query parameters here: https://devel
 					pageSizeQueryParam;
 			console.log(url);
 			
-			// axios(url)
-			// .then(response => {
-			// 	// console.log(response.data);
-			// 	//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
-			// console.log(response.data["_embedded"].events);
-			// 	// res.json(response.data)
-				
-			// })
-			// .catch(function (error) {
-			// 	console.log(error);
-			// });
+			axios(url)
+			.then(response => {
+				// console.log(response.data);
+				//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
+				console.log(response.data._embedded.events);
+				// let requestedEvents = response.data._embedded.events;
+				// allRequestResults.push(...requestedEvents);
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
 		});
+		console.log(allRequestResults);
+		// res.json(allRequestResults)
 	}
 })
 
@@ -374,11 +376,11 @@ app.listen(port, hostname, () => {
 });
 
 //backgrounded worker periodic information fetching services
-
-// setInterval(function() {
-// 	console.log(Date.now());
-// }, 1800000); //1800000 is every 30 min
+setInterval(function() {
+	getMusicClassificationId();
+}, 1800000); //1800000 is every 30 min
 getMusicClassificationId()
+
 function getMusicClassificationId() {
 	let url = `https://app.ticketmaster.com/discovery/v2/classifications.json?apikey=${ticketmasterAPIkey}`
 	axios(url)
