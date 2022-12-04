@@ -87,8 +87,12 @@
     text-align: left;
 }
 
-#table_detail .hidden_row {
+.hidden_row {
     display: none;
+}
+
+.show_row {
+    display: block;
 }
 /* ---------------------- */
 
