@@ -5,6 +5,39 @@ let eventTable = document.getElementById('eventsTable');
 let eventTableBody = document.getElementById('eventsTableBody');
 // (eventTable).scrollTableBody();
 
+// 
+// function showHideEventRow(row) {
+//     $("#" + row).toggle();
+// }
+
+let row1 = document.getElementById("row1")
+
+row1.addEventListener("click", () => {
+    $("#" + 'hidden_row1').toggle();
+});
+
+
+eventTable.addEventListener("click", function(event) {
+    let rowid = 'info' + event.target.parentNode.id;
+    let inforow = document.getElementById(rowid);
+
+    if (inforow.className == 'show_row'){
+        inforow.className='hidden_row';
+    }else if (inforow.className == 'hidden_row'){
+        inforow.className='show_row';
+    }
+
+//   while (target && target.tagName !== "TR") {
+//     target = target.parentNode;
+//   }
+//   if (target) {
+//     // target is the clicked row
+//     console.log(target);
+//   }
+});
+
+
+
 tmGetGenreButton.addEventListener("click", () => {
     console.log("fetching Genres from TicketMaster");
     fetch('/tmGenres').then((response) => {
@@ -43,7 +76,6 @@ tmGetEventsButton.addEventListener("click", () => {
                 eventLog  = event["_embedded"].venues[0].location.longitude;
             }
             
-
             let eventPriceRange = '';
             if(event.priceRanges != undefined){
                 let eventPriceRangeCurrency = event.priceRanges[0].currency;
@@ -67,6 +99,7 @@ tmGetEventsButton.addEventListener("click", () => {
             let eventLink = event.url;
 	
 			let row = document.createElement('tr');
+            row.id = `row${i}`;
 
 			let rowData1 = document.createElement('td');
 			let rowData2 = document.createElement('td');
@@ -104,6 +137,17 @@ tmGetEventsButton.addEventListener("click", () => {
 			row.append(rowData8);
 	
 			eventTableBody.append(row);	
+
+            // Dropdown Row
+            let infoRow = document.createElement('tr');
+            infoRow.id = `inforow${i}`;
+            infoRow.className='hidden_row';
+
+            let infoRowData1 = document.createElement('td');
+            infoRowData1.textContent = "example";
+            infoRow.append(infoRowData1);
+            eventTableBody.append(infoRow);	
+
 		}
 
 
