@@ -1,5 +1,7 @@
 // venue concert pins are red
 // hotel pins are purple 
+import * as spotify from "./spotify.js";
+import * as cookies from "./cookies.js";
 
 // ---- dummy data ----
 
@@ -147,8 +149,9 @@ let dummy_hotel_data = [
     }
 ]; 
 
-let searchButton = document.getElementById("buttonTicketMasterEvents")
-let allConcerts = document.getElementById("allConcerts")
+let searchButton = document.getElementById("buttonTicketMasterEvents");
+let allConcerts = document.getElementById("allConcerts");
+let spotifyButton = document.getElementById("buttontopartist");
 
 function initMap() {
 
@@ -201,8 +204,17 @@ function initMap() {
         })
     });
 
-    // --------------- marker creation functions -----------------
+    spotifyButton.addEventListener("click", () => {
+        if (cookies.cookieConsent !== "" && window.localStorage.getItem("spotifyEvents")) {
+            let spotifyEvents = JSON.parse(window.localStorage.getItem("spotifyEvents"));
+            showVenueMarkers(spotifyEvents._embedded.events);
+        }
+        else {
+            setTimeout(() => {showVenueMarkers(spotify.spotifyEvents._embedded.events);}, 16000);
+        }
+    });
 
+  // --------------- marker creation functions -----------------
 
     function showVenueMarkers(data) {
         for (let i = 0; i < data.length; i++) {

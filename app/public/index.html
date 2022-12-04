@@ -97,24 +97,18 @@
           <div class="map" id="map"> Map </div>
           <div class="map" id="legend"><center><h4>Legend</h4></center></div>
           <div class="concerts">
-              <p class="resultHeader">Concerts</p>
-              <button id='allConcerts'>Show all concerts on Map</button>
-              <table id="eventsTable" class="resTable eventsTable">
-                  <tbody id="eventsTableBody">
-                  <thead>
-                      <tr>
-                          <th>Event</th>
-                          <th>Date</th>
-                          <th>Venue</th>
-                          <th>Price Range</th>
-                          <th>Event Link</th>
-                      </tr>
-                  </thead>
-                  <tr id="concertRes">
-                      <td>Artist</td>
-                      <td>Date</td>
-                      <td>Location</td>
-                      <td>Event Link</td>
+            <div id="loadingContainer" style="display: none;">Loading your Events...</div>
+            <p class="resultHeader">Concerts</p>
+            <button id='allConcerts'>Show all concerts on Map</button>
+            <table id="eventsTable" class="resTable eventsTable">
+              <tbody id="eventsTableBody">
+              <thead>
+                  <tr>
+                      <th>Event</th>
+                      <th>Date</th>
+                      <th>Venue</th>
+                      <th>Price Range</th>
+                      <th>Link to Purchase Ticket</th>
                   </tr>
                   <tr id="row1">
                       <!-- <tr onclick="showHideEventRow('hidden_row1');"> -->
