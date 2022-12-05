@@ -326,6 +326,38 @@ app.post('/tmEvents', (req, res) => {//find query parameters here: https://devel
 // 	});
 // })
 
+app.get("/spotifyArtistEvents", async (req, res) => {
+	let artist = req.query.artist;
+	let size = 200;
+	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=music&size=${size}&keyword=${artist}&apikey=${ticketmasterAPIkey}`;
+	axios(baseURL).then(response => {
+		res.json(response.data)
+	})
+	.catch(function (error) {
+		console.log(error);
+	});
+});
+
+app.get("/spotifyGenreEvents", async (req, res) => {
+	let genreIDs = req.query.genreIDs.split(",");
+	let size = 200;
+	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=music&size=${size}&subGenreId=`;
+	for (let id of genreIDs) {
+		baseURL += `${id},`;
+	}
+	baseURL = baseURL.substring(0, baseURL.length - 1);
+	baseURL += `&apikey=${ticketmasterAPIkey}`;
+	axios(baseURL).then(response => {
+		res.json(response.data)
+	})
+	.catch(function (error) {
+		console.log(error);
+	});
+});
+
+app.use(express.static("public"));
+app.use(express.json());
+
 app.get("/", (req, res) => {
     res.send("public/index.html"); 
 });
