@@ -53,12 +53,12 @@ tmGetGenreButton.addEventListener("click", () => {
     })
 })
 
-// tmGetEventsButton.addEventListener("click", () => {
-//     console.log("fetching Events from TicketMaster");
-//     let promise = getTicketmasterEvents();
-//     let displayPromise = displayConcertSearchResults(promise)
-//     console.log(promise);
-// })
+tmGetEventsButton.addEventListener("click", () => {
+    console.log("fetching Events from TicketMaster");
+    let promise = getTicketmasterEvents(["Wage War", "We Came As Romans"], ["Metal"], "Philadelphia,PA");
+    let displayPromise = displayConcertSearchResults(promise)
+    console.log(promise);
+})
 
 function getTicketmasterEvents(selectedArtists, selectedGenres, location) {
 // function getTicketmasterEvents() {

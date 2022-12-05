@@ -20,8 +20,8 @@ function submitSearch(){
     console.log("location:", location)
     
     let eventSearchPromise = getTicketmasterEvents(selectedArtists, selectedGenres, location);
-    clearEventsTable()
-    let displayConcertSearchPromise = displayConcertSearchResults(eventSearchPromise)
+    // clearEventsTable()
+    // let displayConcertSearchPromise = displayConcertSearchResults(eventSearchPromise)
 }
 
 submitSearchButton.addEventListener("click", submitSearch);
