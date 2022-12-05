@@ -20,11 +20,19 @@ $('input[name="daterange"]').daterangepicker({
 
 $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
     $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+    if (cookies.cookieConsent !== "") {
+        cookies.deleteCookie("date_range");
+        cookies.setCookie("date_range", `${picker.startDate.format('MM/DD/YYYY')} - ${picker.endDate.format('MM/DD/YYYY')}`, 30);
+    }
     console.log(picker.startDate.format('MM/DD/YYYY'), picker.endDate.format('MM/DD/YYYY'));
 });
 
 $('input[name="daterange"]').on('cancel.daterangepicker', function(ev, picker) {
     $(this).val('');
+    if (cookies.cookieConsent !== "") {
+        cookies.deleteCookie("date_range");
+        cookies.setCookie("date_range", ``, 30);
+    }
 });
 
 
@@ -91,10 +99,13 @@ function init() {
         if (cookies.getCookie("current_artist_search") !== "") {
             artistInput.value = cookies.getCookie("current_artist_search").substring(1);
             listOfSelectedArtists = JSON.parse(cookies.getCookie("selected_artists").substring(1));
-            select2GenresIDs = JSON.parse(cookies.getCookie("selected_genres").substring(1));
             showSelectedArtists(listOfSelectedArtists);
+        }
+        if (cookies.getCookie("selected_genres") !== "") {
+            select2GenresIDs = JSON.parse(cookies.getCookie("selected_genres").substring(1));
             locationInput.value = cookies.getCookie("location_search").substring(1);
         }
+        locationInput.value = cookies.getCookie("location_search").substring(1);
         locationInput.addEventListener("keyup", (event) => {
             cookies.deleteCookie("location_search");
             cookies.setCookie("location_search", locationInput.value, 30);
@@ -109,6 +120,9 @@ function init() {
             cookies.deleteCookie("selected_genres");
             cookies.setCookie("selected_genres", JSON.stringify(select2GenresIDs), 30);
         });
+        if (cookies.getCookie("date_range") !== "") {
+            $('input[name="daterange"]').val(cookies.getCookie("date_range").substring(1));
+        }
     }
 }
 
