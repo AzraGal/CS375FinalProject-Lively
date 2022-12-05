@@ -212,7 +212,7 @@ app.get("/artistSearchSpotify", async (req, res) => {
 });
 
 app.get("/tmGenres", async (req, res) => {
-	let musicID= "KZFzniwnSyZfZ7v7nJ" //TODO: implement a classification getter so we always have the most up-to-date ID
+	let musicID = "KZFzniwnSyZfZ7v7nJ" //TODO: implement a classification getter so we always have the most up-to-date ID
 	let url = `https://app.ticketmaster.com/discovery/v2/classifications/${musicID}.json?apikey=${ticketmasterAPIkey}`
 	axios(url)
 	.then(response => {
@@ -230,7 +230,7 @@ app.get("/tmEvents", async (req, res) => {//find query parameters here: https://
 	let city = "Philadelphia"
 	let heavyMetalSubGenreId = "KZazBEonSMnZfZ7vkFd"
 	let indieRockSubGenreId = "KZazBEonSMnZfZ7vAde"
-	let pageSize = 100
+	let pageSize = 200
 	
 	let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${ticketmasterAPIkey}`
 	axios(url)
@@ -243,6 +243,35 @@ app.get("/tmEvents", async (req, res) => {//find query parameters here: https://
 		console.log(error);
 	});
 })
+
+app.get("/spotifyArtistEvents", async (req, res) => {
+	let artist = req.query.artist;
+	let size = 200;
+	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=music&size=${size}&keyword=${artist}&apikey=${ticketmasterAPIkey}`;
+	axios(baseURL).then(response => {
+		res.json(response.data)
+	})
+	.catch(function (error) {
+		console.log(error);
+	});
+});
+
+app.get("/spotifyGenreEvents", async (req, res) => {
+	let genreIDs = req.query.genreIDs.split(",");
+	let size = 200;
+	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=music&size=${size}&subGenreId=`;
+	for (let id of genreIDs) {
+		baseURL += `${id},`;
+	}
+	baseURL = baseURL.substring(0, baseURL.length - 1);
+	baseURL += `&apikey=${ticketmasterAPIkey}`;
+	axios(baseURL).then(response => {
+		res.json(response.data)
+	})
+	.catch(function (error) {
+		console.log(error);
+	});
+});
 
 app.use(express.static("public"));
 app.use(express.json());

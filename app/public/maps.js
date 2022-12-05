@@ -1,95 +1,9 @@
 // venue concert pins are red
 // hotel pins are purple 
+import * as spotify from "./spotify.js";
+import * as cookies from "./cookies.js";
 
 // ---- dummy data ----
-let dummy_venue_data = [
-    {
-        "name": "Test Location 1",
-        "type": "venue",
-        "id": "ZFr9jZkevd",
-        "test": false,
-        "locale": "en-us",
-        "postalCode": "19104",
-        "timezone": "America/New_York",
-        "city": {
-            "name": "Philadelphia"
-        },
-        "state": {
-            "name": "Pennsylvania",
-            "stateCode": "PA"
-        },
-        "country": {
-            "name": "United States Of America",
-            "countryCode": "US"
-        },
-        "address": {
-            "line1": "3025 Walnut St",
-            "line2": "Philadelphia, PA"
-        },
-        "location": {
-            "longitude": "-75.199501",
-            "latitude": "39.961601"
-        },
-        "dmas": [
-            {
-                "id": 358
-            }
-        ],
-        "upcomingEvents": {
-            "_total": 14,
-            "tmr": 14,
-            "_filtered": 0
-        },
-        "_links": {
-            "self": {
-                "href": "/discovery/v2/venues/ZFr9jZkevd?locale=en-us"
-            }
-        }
-    },
-    {
-        "name": "Test Location 2",
-        "type": "venue",
-        "id": "ZFr9jZkevd",
-        "test": false,
-        "locale": "en-us",
-        "postalCode": "19104",
-        "timezone": "America/New_York",
-        "city": {
-            "name": "Philadelphia"
-        },
-        "state": {
-            "name": "Pennsylvania",
-            "stateCode": "PA"
-        },
-        "country": {
-            "name": "United States Of America",
-            "countryCode": "US"
-        },
-        "address": {
-            "line1": "3025 Walnut St",
-            "line2": "Philadelphia, PA"
-        },
-        "location": {
-            "longitude": "-75.199501",
-            "latitude": "38.961601"
-        },
-        "dmas": [
-            {
-                "id": 358
-            }
-        ],
-        "upcomingEvents": {
-            "_total": 14,
-            "tmr": 14,
-            "_filtered": 0
-        },
-        "_links": {
-            "self": {
-                "href": "/discovery/v2/venues/ZFr9jZkevd?locale=en-us"
-            }
-        }
-    }
-];
 
 let dummy_hotel_data = [
     {
@@ -235,34 +149,119 @@ let dummy_hotel_data = [
     }
 ]; 
 
-
-
-let searchButton = document.getElementById("submitSearchButton")
+let searchButton = document.getElementById("buttonTicketMasterEvents");
+let allConcerts = document.getElementById("allConcerts");
+let spotifyButton = document.getElementById("buttontopartist");
 
 function initMap() {
 
     //global variables 
 
-    let venueMarkers = [];
-    let hotelMarkers = [];
+    let markers = [];
+    let selectedMarker = [];
     let infowindow = null;
 
-    // ----- all functions -----
+    
 
+    searchButton.addEventListener("click", () => {
+        fetch('/tmEvents').then((response) => {
+            return response.json();
+        }).then((body) => {
+            let data = body['_embedded'].events;
+            deleteMarkers();
+            showVenueMarkers(data)
+            allConcerts.addEventListener("click", function () {
+                deleteMarkers();
+                deleteSelectedMarker()
+                showVenueMarkers(data)
+            })
 
-    function showVenueMarkers() {
-        for (let i = 0; i < dummy_venue_data.length; i++) {
-            let lat = dummy_venue_data[i].location.latitude;
-            let long = dummy_venue_data[i].location.longitude;
-            let contentString = `<b>Name: </b> ${dummy_venue_data[i].name} <br>  
-                              <b>Address: </b> ${dummy_venue_data[i].address.line1}, ${dummy_venue_data[i].address.line2}`;
-            createVenueMarker(lat, long, contentString)
+            let table = document.getElementById("eventsTable")
+            for (let i = 0; i < table.rows.length; i++) {
+                table.rows[i].addEventListener("click", () => {
+                    let cellLat = table.rows[i].cells[4].textContent;
+                    let cellLong = table.rows[i].cells[5].textContent;
+                    let cellBanner = table.rows[i].cells[6].textContent;
+                    let contentString = `
+                              <center><img src = ${cellBanner} width = "300" height = "150"> </center> <br>
+                              <b>Name: </b> ${table.rows[i].cells[0].textContent} <br>
+                              <b>Address: </b> ${table.rows[i].cells[2].textContent} `;
 
+                    deleteMarkers();
+                    deleteSelectedMarker();
+                    console.log(selectedMarker)
+                    createVenueMarker(cellLat, cellLong, contentString);
+                })
+            };
+
+        });
+    });
+
+    spotifyButton.addEventListener("click", () => {
+        if (cookies.cookieConsent !== "" && window.localStorage.getItem("spotifyEvents")) {
+            let spotifyEvents = JSON.parse(window.localStorage.getItem("spotifyEvents"));
+            let data = spotifyEvents._embedded.events
+            deleteMarkers();
+            showVenueMarkers(data);
+            allConcerts.addEventListener("click", function () {
+                deleteMarkers()
+                deleteSelectedMarker()
+                showVenueMarkers(data)
+            })
+            let table = document.getElementById("eventsTable")
+            for (let i = 0; i < table.rows.length; i++) {
+                table.rows[i].addEventListener("click", () => {
+                    let cellLat = table.rows[i].cells[4].textContent;
+                    let cellLong = table.rows[i].cells[5].textContent;
+                    let cellBanner = table.rows[i].cells[6].textContent;
+                    let contentString = `
+                              <center><img src = ${cellBanner} width = "300" height = "150"> </center> <br>
+                              <b>Name: </b> ${table.rows[i].cells[0].textContent} <br>
+                              <b>Address: </b> ${table.rows[i].cells[2].textContent} `;
+
+                    deleteMarkers();
+                    deleteSelectedMarker();
+                    console.log(selectedMarker)
+                    createVenueMarker(cellLat, cellLong, contentString);
+                })
+            };
+        }
+        else {
+            setTimeout(() => {showVenueMarkers(spotify.spotifyEvents._embedded.events);}, 16000);
+        }
+    });
+
+  // --------------- marker creation functions -----------------
+
+    function showVenueMarkers(data) {
+        for (let i = 0; i < data.length; i++) {
+            try {
+                let lat = data[i]._embedded.venues[0].location.latitude;
+                let long = data[i]._embedded.venues[0].location.longitude;
+                let banner = null;
+                for (let j = 0; j < data[i].images.length; j++) {
+                    if (data[i].images[j].ratio == "16_9" && data[i].images[j].width == 2048) {
+                        banner = data[i].images[j].url;
+                        break
+                    }
+                }
+                let contentString = `
+                              <center><img src = ${banner} width = "300" height = "150"> </center> <br>
+                              <b>Name: </b> ${data[i].name} <br>
+                              <b>Address: </b> ${data[i]._embedded.venues[0].address.line1}, ${data[i]._embedded.venues[0].city.name},<br> ${data[i]._embedded.venues[0].country.name} `;
+                createVenueMarker(lat, long, contentString)
+                
+            }
+
+            catch {
+                continue
+            }
+                
         }
     };
 
 
-    function showHotelMarkers() {
+    function showHotelMarkers(data) {
         for (let i = 0; i < dummy_hotel_data.length; i++) {
                 let lat = dummy_hotel_data[i].coordinate.lat;
                 let long = dummy_hotel_data[i].coordinate.lon;
@@ -295,11 +294,16 @@ function initMap() {
             infowindow.open(currentMap, this);
         });
 
+        google.maps.event.addListener(marker, 'dblclick', function () {
+            deleteSelectedMarker()
+            selectedMarker.push(marker);
+            deleteMarkers();
+            showSelectedMarker(currentMap);
+        })
+        markers.push(marker);
         return marker
 
     };
-
-
 
     function createHotelMarker(lat, long, contentString) {
         let pinViewBackground = new google.maps.marker.PinView({
@@ -325,10 +329,41 @@ function initMap() {
         google.maps.event.addListener(marker, 'click', function () {
             infowindow.setContent(contentString);
             infowindow.open(map, this);
-        });
-
+        })
+        markers.push(marker);
     };
 
+
+    // ------------- marker behaviour functions --------------
+
+
+    // Sets the map on all markers in the array.
+    function setMapOnAll(map) {
+        for (let i = 0; i < markers.length; i++) {
+            markers[i].setMap(map);
+        }
+    }
+    function showSelectedMarker(map) {
+        for (let i = 0; i < selectedMarker.length; i++) {
+            selectedMarker[i].setMap(map);
+        }
+    }
+
+    // Removes the markers from the map, but keeps them in the array.
+    function clearMarkers() {
+        setMapOnAll(null);
+    }
+
+    // Deletes all markers in the array by removing references to them.
+    function deleteMarkers() {
+        clearMarkers();
+        markers = [];
+    }
+
+    function deleteSelectedMarker() {
+        showSelectedMarker(null);
+        selectedMarker = [];
+    }
     // -----main-----
 
     let currentMap = new google.maps.Map(document.getElementById("map"), {
@@ -336,12 +371,6 @@ function initMap() {
         zoom: 8,
         mapId: '3c124c6fbfda6d51'
     });
-
-    
-
-    searchButton.addEventListener("click", showVenueMarkers);
-    searchButton.addEventListener("click", showHotelMarkers);
-
 
     let legend = document.getElementById("legend");
     let icons = {
@@ -355,18 +384,22 @@ function initMap() {
         }
 
     };
+
     for (let key in icons) {
-        const type = icons[key];
-        const name = type.name;
-        const icon = type.icon;
-        const div = document.createElement("div");
+        let type = icons[key];
+        let name = type.name;
+        let icon = type.icon;
+        let div = document.createElement("div");
 
         div.innerHTML = '<img src="' + icon + '" width="30" height="30"> ' + name;
         legend.appendChild(div);
     }
 
     currentMap.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
+
 };
+
+
 
 //Calling the map
 window.initMap = initMap;

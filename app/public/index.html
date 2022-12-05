@@ -3,21 +3,30 @@
 <head>
     <meta charset="utf-8">
     <title>Lively</title>
+    
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <!-- <style src="style.css" type="text/css"> </style> -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plaster&display=swap" rel="stylesheet">
     <!-- Select2 -->
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- date range-->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 </head>
 <body class='bodyStyle'>
     <div class='header'>
-      <p class="headerTitle">Lively</p>
+        <p class="headerTitle">LIVELY</p>
     </div>
     <h1>Welcome to Lively</h1>
     <h4>
-        Everything you need to see your favorite artists in real life.</h4>
+        Everything you need to see your favorite Spotify artists in real life.</h4>
 
         <h3>Search by</h3>
         <div class="filterRow">
@@ -32,17 +41,13 @@
                     <select class="js-example-basic-multiple genreSelect" name="genres[]" multiple="multiple" id="genre">
                     </select>
                 </div>
-
-                <!-- <select id="genre" name="genre" size="1" multiple>
-                <option value="rock">Rock</option>
-                <option value="pop">Pop</option>
-                <option value="hip-hop">Hip Hop</option>
-                <option value="country">Country</option>
-            </select> -->
             </div>
             <div>
                 <label for="location">Location</label>
                 <input id="location" type="text" name="location">
+            </div>
+            <div>
+                <input type="text" name="daterange" value="01/01/2023 - 01/15/2023" />
             </div>
             <button id="submitSearchButton">Search</button>
             <h3>or</h3>
@@ -92,7 +97,9 @@
           <div class="map" id="map"> Map </div>
           <div class="map" id="legend"><center><h4>Legend</h4></center></div>
           <div class="concerts">
+            <div id="loadingContainer" style="display: none;">Loading your Events...</div>
             <p class="resultHeader">Concerts</p>
+            <button id='allConcerts'>Show all concerts on Map</button>
             <table id="eventsTable" class="resTable eventsTable">
               <tbody id="eventsTableBody">
               <thead>
@@ -101,57 +108,47 @@
                       <th>Date</th>
                       <th>Venue</th>
                       <th>Price Range</th>
-                      <th>Event Link</th>
+                      <th>Link to Purchase Ticket</th>
                   </tr>
-              </thead>
-              <tr id="concertRes">
-                  <td>Artist</td>
-                  <td>Date</td>
-                  <td>Location</td>
-                  <td>Event Link</td>
-              </tr>
-              <tr id="row1">
-              <!-- <tr onclick="showHideEventRow('hidden_row1');"> -->
-                <td>Artist</td>
-                <td>Date</td>
-                <td>Location</td>
-                <td>Event Link</td>
-              </tr>
-              <tr id="hidden_row1" class="hidden_row">
-                <td colspan=4>
-                  <p>Line Up</p>
-                  <ul>xx</ul>
-                  <ul>xx</ul>
-                  <ul>xx</ul>
-                </td>
-              </tr>
+                  <tr id="row1">
+                      <!-- <tr onclick="showHideEventRow('hidden_row1');"> -->
+                      <td>Artist</td>
+                      <td>Date</td>
+                      <td>Location</td>
+                      <td>Event Link</td>
+                  </tr>
+                  <tr id="hidden_row1" class="hidden_row">
+                      <td colspan=4>
+                          <p>Line Up</p>
+                          <ul>xx</ul>
+                          <ul>xx</ul>
+                          <ul>xx</ul>
+                      </td>
+                  </tr>
 
-              </tbody>
-          </table>
+                  </tbody>
+              </table>
           </div>
         </div>
+        <div id="hotelLocations"></div>
         <div class="results">
           <!-- Table Code -->
           <div>
-              <p class="resultHeader">Hotels</p>
+              <p class="resultHeader" id="hotelResults">Hotels</p>
        
                 <table class="resTable">
-                    <tbody>
                     <thead>
                         <tr>
-                            <th>Artist Name</th>
-                            <th>Genre</th>
-                            <th>Location</th>
-                            <th>Event Link</th>
-                            <th>Hotels Link</th>
+                            <th>Hotel Name</th>
+                            <th>Address</th>
+                            <th>Price Per Night</th>
                         </tr>
                     </thead>
+                    <tbody id="hotelBody">
                     <tr>
-                        <td>Artist Name</td>
-                        <td>Genre</td>
-                        <td>Location</td>
-                        <td>Event Link</td>
-                        <td>Hotels Link</td>
+                        <td>Hotel Name</td>
+                        <td>Address</td>
+                        <td>Price Per Night</td>
                     </tr>
                     </tbody>
                 </table>
@@ -172,15 +169,19 @@
             <button id="declineCookieButton" class="cookieButton">Decline</button>
         </div>
         <script type="module" src="cookies.js"></script>
+        <script type="module" src="ticketmaster.js"></script>
         <script type="module" src="index.js"></script>
         <script type="module" src="spotify.js"></script>
+
         <script type="module" src="artistSearch.js"></script>
         <script type="module" src="ticketmaster.js"></script>
+
         <script type="module" src="maps.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=***REMOVED***&v=beta&libraries=marker&callback=initMap" defer></script>
+        <script type="module" src="hotels.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ5ulv-oR0cVSQkN_x6gBjIWw-itZzOC0&v=beta&libraries=marker&callback=initMap" defer></script>
 
         <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
-        <script>
+       <script>
             (function () {
                 /**
                  * Obtains parameters from the hash of the URL

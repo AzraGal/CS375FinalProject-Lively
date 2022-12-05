@@ -9,22 +9,27 @@ let listOfSelectedArtists = [];
 let selectedGenres = [];
 let location = "";
 
-let getConcertHotels = document.getElementById("concertRes");
+// let getConcertHotels = document.getElementById("concertRes");
 
-// 
-// function showHideEventRow(row) {
-//     $("#" + row).toggle();
-// }
-
-let row1 = document.getElementById("row1")
-
-row1.addEventListener("click", () => {
-    $("#" + 'hidden_row1').toggle();
+$('input[name="daterange"]').daterangepicker({
+    autoUpdateInput: false,
+    locale: {
+        cancelLabel: 'Clear'
+    }
 });
 
+$('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
+    $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+    console.log(picker.startDate.format('MM/DD/YYYY'), picker.endDate.format('MM/DD/YYYY'));
+});
+
+$('input[name="daterange"]').on('cancel.daterangepicker', function(ev, picker) {
+    $(this).val('');
+});
+
+
 var optionsData = [];
-// inset Ticket master genres here
-var createData = ["traditional pop", "jazz", "blues", "country", "rock", "rock and roll", "R&B", "pop", "hip hop", "soul"];
+
 function createSelectOptions(data){
     for (let i = 0; i < data.length; i++) {
         const element = data[i];
@@ -33,13 +38,43 @@ function createSelectOptions(data){
             text: element
         })
     }
+    // console.log(optionsData);
 }
-console.log(optionsData);
 
+var createData = [];
+
+const TMgenreMap = new Map(); //TMgenreMap exists so that genre ID's can be easily recalled later for event search functionality
+
+//TODO: use this map below to filter for against selection of a genre Category vs a subcategory of the same name; 
+/*when TWO event searches are made and the corresponding name for genreId and subGenreId are the same (yet each with different Id), the search with the genreId ought to be given preference, as it returns more accurate results
+*/
+export const TMsubGenreMap = new Map(); //TMsubGenreMap exists so that subGenre ID's can be easily recalled later for event search functionality
 
 $(document).ready(function() {
-    createSelectOptions(createData);
-    $(".js-example-basic-multiple").select2({data: optionsData})
+    fetch('/tmGenres').then((response) => {
+        return response.json();
+    }).then((body)=>{
+        console.log(body);
+        let a = "a"
+        body.forEach(genre => {
+            genre._embedded.subgenres.forEach(subGenre => {
+                // console.log(subGenre);
+                if (!createData.includes(subGenre.name)) {
+                    createData.push(subGenre.name);
+                }
+                TMsubGenreMap.set(subGenre.name, subGenre.id)
+            });
+            // createData.push(genre.name)
+            TMgenreMap.set(genre.name, genre.id)
+        });
+        // console.log(TMgenreMap);
+        // console.log(TMsubGenreMap);
+        createSelectOptions(createData);
+        $(".js-example-basic-multiple").select2({data: optionsData, multiple: true, MultipleSelection: true})
+	}).catch(error => {
+		console.error(error);
+        throw error;
+	});	
 });
 
 function init() {
@@ -51,6 +86,7 @@ function init() {
         locationInput.value = cookies.getCookie("location_search").substring(1);
     }
 }
+
 
 function getSelectedGenres(){
     let data = $('.js-example-basic-multiple').select2('data');
@@ -90,8 +126,8 @@ function showSelectedArtists(selectedArtists) {
     }
 }
 
-getConcertHotels.addEventListener("click", () => {
-    console.log(getConcertHotels.value);
-});
+// getConcertHotels.addEventListener("click", () => {
+//     console.log(getConcertHotels.value);
+// });
 
 init();
