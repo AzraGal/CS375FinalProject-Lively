@@ -181,7 +181,7 @@ app.get("/artists", async (req, res) => {
 app.get("/artistSearchTicketMaster", async (req, res) => {
   var config = {
     method: 'get',
-    url: `https://app.ticketmaster.com/discovery/v2/attractions.json?apikey=${ticketmasterAPIkey}&keyword=${req.query.artist}&size=10`,
+    url: `https://app.ticketmaster.com/discovery/v2/attractions.json?classificationName=music&apikey=${ticketmasterAPIkey}&keyword=${req.query.artist}&size=10`,
     headers: { 
       'Content-Type': 'application/json'
     }
