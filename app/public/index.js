@@ -85,6 +85,12 @@ function init() {
         showSelectedArtists(listOfSelectedArtists);
         locationInput.value = cookies.getCookie("location_search").substring(1);
     }
+    locationInput.addEventListener("keyup", (event) => {
+        if (cookies.cookieConsent !== "") {
+            cookies.deleteCookie("location_search");
+            cookies.setCookie("location_search", locationInput.value, 30);
+        }
+    });
 }
 
 
