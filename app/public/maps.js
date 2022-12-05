@@ -1,5 +1,7 @@
 // venue concert pins are red
 // hotel pins are purple 
+import * as spotify from "./spotify.js";
+import * as cookies from "./cookies.js";
 
 // ---- dummy data ----
 
@@ -147,45 +149,89 @@ let dummy_hotel_data = [
     }
 ]; 
 
-
-
-let searchButton = document.getElementById("buttonTicketMasterEvents")
-
+let searchButton = document.getElementById("buttonTicketMasterEvents");
+let allConcerts = document.getElementById("allConcerts");
+let spotifyButton = document.getElementById("buttontopartist");
 
 function initMap() {
 
     //global variables 
 
-    let venueMarkers = [];
-    let hotelMarkers = [];
+    let markers = [];
+    let selectedMarker = [];
     let infowindow = null;
 
+    
 
     searchButton.addEventListener("click", () => {
-        console.log("Mapping Events from TicketMaster");
         fetch('/tmEvents').then((response) => {
             return response.json();
         }).then((body) => {
             let data = body['_embedded'].events;
+            deleteMarkers();
             showVenueMarkers(data)
-        })
+            allConcerts.addEventListener("click", function () {
+                deleteMarkers();
+                deleteSelectedMarker()
+                showVenueMarkers(data)
+            })
+
+            let table = document.getElementById("eventsTable")
+            for (let i = 0; i < table.rows.length; i++) {
+                table.rows[i].addEventListener("click", () => {
+                    let cellLat = table.rows[i].cells[4].textContent;
+                    let cellLong = table.rows[i].cells[5].textContent;
+                    let cellBanner = table.rows[i].cells[6].textContent;
+                    let contentString = `
+                              <center><img src = ${cellBanner} width = "300" height = "150"> </center> <br>
+                              <b>Name: </b> ${table.rows[i].cells[0].textContent} <br>
+                              <b>Address: </b> ${table.rows[i].cells[2].textContent} `;
+
+                    deleteMarkers();
+                    deleteSelectedMarker();
+                    console.log(selectedMarker)
+                    createVenueMarker(cellLat, cellLong, contentString);
+                })
+            };
+
+        });
     });
 
-    //does not get hotel data from the server yet, have to fix server side issues
+    spotifyButton.addEventListener("click", () => {
+        if (cookies.cookieConsent !== "" && window.localStorage.getItem("spotifyEvents")) {
+            let spotifyEvents = JSON.parse(window.localStorage.getItem("spotifyEvents"));
+            let data = spotifyEvents._embedded.events
+            deleteMarkers();
+            showVenueMarkers(data);
+            allConcerts.addEventListener("click", function () {
+                deleteMarkers()
+                deleteSelectedMarker()
+                showVenueMarkers(data)
+            })
+            let table = document.getElementById("eventsTable")
+            for (let i = 0; i < table.rows.length; i++) {
+                table.rows[i].addEventListener("click", () => {
+                    let cellLat = table.rows[i].cells[4].textContent;
+                    let cellLong = table.rows[i].cells[5].textContent;
+                    let cellBanner = table.rows[i].cells[6].textContent;
+                    let contentString = `
+                              <center><img src = ${cellBanner} width = "300" height = "150"> </center> <br>
+                              <b>Name: </b> ${table.rows[i].cells[0].textContent} <br>
+                              <b>Address: </b> ${table.rows[i].cells[2].textContent} `;
 
-    //searchButton.addEventListener("click", () => {
-    //    console.log("Mapping Hotes from Hotels.com");
-    //    fetch('/hotelsCoordinates').then((response) => {
-    //        return response.json();
-    //    }).then((body) => {
-    //        console.log("todoloo")
-    //        console.log(body);
-    //    })
-    //});
+                    deleteMarkers();
+                    deleteSelectedMarker();
+                    console.log(selectedMarker)
+                    createVenueMarker(cellLat, cellLong, contentString);
+                })
+            };
+        }
+        else {
+            setTimeout(() => {showVenueMarkers(spotify.spotifyEvents._embedded.events);}, 16000);
+        }
+    });
 
-
-    // ----- all functions -----
-
+  // --------------- marker creation functions -----------------
 
     function showVenueMarkers(data) {
         for (let i = 0; i < data.length; i++) {
@@ -204,6 +250,7 @@ function initMap() {
                               <b>Name: </b> ${data[i].name} <br>
                               <b>Address: </b> ${data[i]._embedded.venues[0].address.line1}, ${data[i]._embedded.venues[0].city.name},<br> ${data[i]._embedded.venues[0].country.name} `;
                 createVenueMarker(lat, long, contentString)
+                
             }
 
             catch {
@@ -247,11 +294,16 @@ function initMap() {
             infowindow.open(currentMap, this);
         });
 
+        google.maps.event.addListener(marker, 'dblclick', function () {
+            deleteSelectedMarker()
+            selectedMarker.push(marker);
+            deleteMarkers();
+            showSelectedMarker(currentMap);
+        })
+        markers.push(marker);
         return marker
 
     };
-
-
 
     function createHotelMarker(lat, long, contentString) {
         let pinViewBackground = new google.maps.marker.PinView({
@@ -277,10 +329,41 @@ function initMap() {
         google.maps.event.addListener(marker, 'click', function () {
             infowindow.setContent(contentString);
             infowindow.open(map, this);
-        });
-
+        })
+        markers.push(marker);
     };
 
+
+    // ------------- marker behaviour functions --------------
+
+
+    // Sets the map on all markers in the array.
+    function setMapOnAll(map) {
+        for (let i = 0; i < markers.length; i++) {
+            markers[i].setMap(map);
+        }
+    }
+    function showSelectedMarker(map) {
+        for (let i = 0; i < selectedMarker.length; i++) {
+            selectedMarker[i].setMap(map);
+        }
+    }
+
+    // Removes the markers from the map, but keeps them in the array.
+    function clearMarkers() {
+        setMapOnAll(null);
+    }
+
+    // Deletes all markers in the array by removing references to them.
+    function deleteMarkers() {
+        clearMarkers();
+        markers = [];
+    }
+
+    function deleteSelectedMarker() {
+        showSelectedMarker(null);
+        selectedMarker = [];
+    }
     // -----main-----
 
     let currentMap = new google.maps.Map(document.getElementById("map"), {
@@ -288,12 +371,6 @@ function initMap() {
         zoom: 8,
         mapId: '3c124c6fbfda6d51'
     });
-
-    
-
-    searchButton.addEventListener("click", showVenueMarkers);
-    searchButton.addEventListener("click", showHotelMarkers);
-
 
     let legend = document.getElementById("legend");
     let icons = {
@@ -307,18 +384,22 @@ function initMap() {
         }
 
     };
+
     for (let key in icons) {
-        const type = icons[key];
-        const name = type.name;
-        const icon = type.icon;
-        const div = document.createElement("div");
+        let type = icons[key];
+        let name = type.name;
+        let icon = type.icon;
+        let div = document.createElement("div");
 
         div.innerHTML = '<img src="' + icon + '" width="30" height="30"> ' + name;
         legend.appendChild(div);
     }
 
     currentMap.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
+
 };
+
+
 
 //Calling the map
 window.initMap = initMap;
