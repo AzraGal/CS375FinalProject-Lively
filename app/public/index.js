@@ -1,11 +1,11 @@
 import * as cookies from "./cookies.js";
+import * as artistSearch from "./artistSearch.js";
 
 let submitSearchButton = document.getElementById("submitSearchButton");
 let artistInput = document.getElementById("artist");
-let genreInput = document.getElementById("genre");
 let locationInput = document.getElementById("location");
 let artist = "";
-let genre = "";
+let listOfSelectedArtists = [];
 let selectedGenres = [];
 let location = "";
 
@@ -20,11 +20,19 @@ $('input[name="daterange"]').daterangepicker({
 
 $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
     $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+    if (cookies.cookieConsent !== "") {
+        cookies.deleteCookie("date_range");
+        cookies.setCookie("date_range", `${picker.startDate.format('MM/DD/YYYY')} - ${picker.endDate.format('MM/DD/YYYY')}`, 30);
+    }
     console.log(picker.startDate.format('MM/DD/YYYY'), picker.endDate.format('MM/DD/YYYY'));
 });
 
 $('input[name="daterange"]').on('cancel.daterangepicker', function(ev, picker) {
     $(this).val('');
+    if (cookies.cookieConsent !== "") {
+        cookies.deleteCookie("date_range");
+        cookies.setCookie("date_range", ``, 30);
+    }
 });
 
 
@@ -70,19 +78,51 @@ $(document).ready(function() {
         // console.log(TMgenreMap);
         // console.log(TMsubGenreMap);
         createSelectOptions(createData);
-        $(".js-example-basic-multiple").select2({data: optionsData, multiple: true, MultipleSelection: true})
+        $(".js-example-basic-multiple").select2({data: optionsData, multiple: true, MultipleSelection: true});
+        $(".js-example-basic-multiple").val("Alternative");
+        $(".js-example-basic-multiple").trigger("change");
+        if (cookies.cookieConsent !== "") {
+            $(".js-example-basic-multiple").val(select2GenresIDs);
+            $(".js-example-basic-multiple").trigger("change");
+        }
 	}).catch(error => {
 		console.error(error);
         throw error;
 	});	
 });
 
+let select2GenresIDs = [];
+
 function init() {
     submitSearchButton.addEventListener("click", submitSearch);
     if (cookies.cookieConsent !== "") {
-        artistInput.value = cookies.getCookie("artist_search").substring(1);
-        //genreInput.value = cookies.getCookie("genre_search").substring(1);
+        if (cookies.getCookie("current_artist_search") !== "") {
+            artistInput.value = cookies.getCookie("current_artist_search").substring(1);
+            listOfSelectedArtists = JSON.parse(cookies.getCookie("selected_artists").substring(1));
+            showSelectedArtists(listOfSelectedArtists);
+        }
+        if (cookies.getCookie("selected_genres") !== "") {
+            select2GenresIDs = JSON.parse(cookies.getCookie("selected_genres").substring(1));
+            locationInput.value = cookies.getCookie("location_search").substring(1);
+        }
         locationInput.value = cookies.getCookie("location_search").substring(1);
+        locationInput.addEventListener("keyup", (event) => {
+            cookies.deleteCookie("location_search");
+            cookies.setCookie("location_search", locationInput.value, 30);
+        });
+        $(".js-example-basic-multiple").on("select2:select", function (sel) {
+            select2GenresIDs.push(sel.params.data.id);
+            cookies.deleteCookie("selected_genres");
+            cookies.setCookie("selected_genres", JSON.stringify(select2GenresIDs), 30);
+        });
+        $(".js-example-basic-multiple").on("select2:unselect", function (sel) {
+            select2GenresIDs = select2GenresIDs.filter(function(id) {return id !== sel.params.data.id;});
+            cookies.deleteCookie("selected_genres");
+            cookies.setCookie("selected_genres", JSON.stringify(select2GenresIDs), 30);
+        });
+        if (cookies.getCookie("date_range") !== "") {
+            $('input[name="daterange"]').val(cookies.getCookie("date_range").substring(1));
+        }
     }
 }
 
@@ -102,18 +142,24 @@ function getSelectedGenres(){
 function submitSearch() {
 
     artist = artistInput.value;
-    genre = genreInput.value;
+    listOfSelectedArtists = artistSearch.listOfSelectedArtists;
     selectedGenres = getSelectedGenres();
     location = locationInput.value;
     document.getElementById("suggestedArtists").style.display = "none";
 
     if (cookies.cookieConsent !== "") {
-        cookies.deleteCookie("artist_search");
-        cookies.deleteCookie("genre_search");
+        cookies.deleteCookie("current_artist_search");
+        cookies.deleteCookie("selected_artists");
         cookies.deleteCookie("location_search");
-        cookies.setCookie("artist_search", artist, 30);
-        cookies.setCookie("genre_search", genre, 30);
+        cookies.setCookie("current_artist_search", artist, 30);
+        cookies.setCookie("selected_artists", JSON.stringify(listOfSelectedArtists), 30);
         cookies.setCookie("location_search", location, 30);
+    }
+}
+
+function showSelectedArtists(selectedArtists) {
+    for (let artist of selectedArtists) {
+        artistSearch.addToSelectedArtists(artist);
     }
 }
 
