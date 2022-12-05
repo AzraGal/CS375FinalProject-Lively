@@ -292,19 +292,24 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 			.then(response => {
 				// console.log(response.data);
 				//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
-				console.log(response.data._embedded.events);
+				console.log("TM response events.length", response.data._embedded.events.length);
+				return response.data._embedded.events
 				// let requestedEvents = response.data._embedded.events;
-				// allRequestResults.push(...requestedEvents);
+				
 			})
 			.catch(function (error) {
 				console.log(error);
 			});
-			console.log(requestPromise);
+			// console.log(requestPromise);
 			allRequestPromises.push(requestPromise)
 		});
-		console.log("allRequestResults", allRequestResults);
-		
-		// res.json(allRequestResults)
+		Promise.all(allRequestPromises).then((arrayOfRequestedEvents) => {
+			// console.log(arrayOfRequestedEvents[2].length);
+			allRequestResults.push(...arrayOfRequestedEvents);
+		}).then( () => {
+			// console.log("allRequestResults length", allRequestResults);
+			res.json(allRequestResults)
+		})
 	}
 })
 
