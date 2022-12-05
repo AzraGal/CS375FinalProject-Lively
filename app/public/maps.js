@@ -168,8 +168,10 @@ function initMap() {
             return response.json();
         }).then((body) => {
             let data = body['_embedded'].events;
+            deleteMarkers();
             showVenueMarkers(data)
             allConcerts.addEventListener("click", function () {
+                deleteMarkers();
                 deleteSelectedMarker()
                 showVenueMarkers(data)
             })
@@ -199,8 +201,10 @@ function initMap() {
         if (cookies.cookieConsent !== "" && window.localStorage.getItem("spotifyEvents")) {
             let spotifyEvents = JSON.parse(window.localStorage.getItem("spotifyEvents"));
             let data = spotifyEvents._embedded.events
+            deleteMarkers();
             showVenueMarkers(data);
             allConcerts.addEventListener("click", function () {
+                deleteMarkers()
                 deleteSelectedMarker()
                 showVenueMarkers(data)
             })
