@@ -79,8 +79,6 @@ $(document).ready(function() {
         // console.log(TMsubGenreMap);
         createSelectOptions(createData);
         $(".js-example-basic-multiple").select2({data: optionsData, multiple: true, MultipleSelection: true});
-        $(".js-example-basic-multiple").val("Alternative");
-        $(".js-example-basic-multiple").trigger("change");
         if (cookies.cookieConsent !== "") {
             $(".js-example-basic-multiple").val(select2GenresIDs);
             $(".js-example-basic-multiple").trigger("change");
