@@ -10,6 +10,7 @@ let artistInput = document.getElementById("artist");
 let genreInput = document.getElementById("genre");
 let locationInput = document.getElementById("location");
 
+let eventTable = document.getElementById("eventsTableBody")
 // 
 // function showHideEventRow(row) {
 //     $("#" + row).toggle();
@@ -52,12 +53,12 @@ tmGetGenreButton.addEventListener("click", () => {
     })
 })
 
-// tmGetEventsButton.addEventListener("click", () => {
-//     console.log("fetching Events from TicketMaster");
-//     let promise = getTicketmasterEvents();
-//     let displayPromise = displayConcertSearchResults(promise)
-//     console.log(promise);
-// })
+tmGetEventsButton.addEventListener("click", () => {
+    console.log("fetching Events from TicketMaster");
+    let promise = getTicketmasterEvents(["Wage War", "We Came As Romans"], ["Metal"], "Philadelphia,PA");
+    let displayPromise = displayConcertSearchResults(promise)
+    console.log(promise);
+})
 
 function getTicketmasterEvents(selectedArtists, selectedGenres, location) {
 // function getTicketmasterEvents() {
@@ -78,7 +79,7 @@ function getTicketmasterEvents(selectedArtists, selectedGenres, location) {
         // console.log(body);
         populateEventsTable(body);
     })
-});
+};
 
 export function populateEventsTable(body) {
     let events = body['_embedded'].events;
