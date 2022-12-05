@@ -233,7 +233,7 @@ app.get("/tmGenres", async (req, res) => {
 })
 
 // app.post("/tmEvents", async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
-app.post('/tmEvents', (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
+app.post('/tmEvents', async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
 	console.log(req.body, req.body.selectedArtists.length);
 	let selectedArtists = req.body.selectedArtists;
 	let selectedGenres = req.body.selectedGenres;
@@ -268,6 +268,7 @@ app.post('/tmEvents', (req, res) => {//find query parameters here: https://devel
 		state = splitLocation[1]
 	}
 
+	let allRequestPromises = []
 	let allRequestResults = []
 
 	if ( !(selectedArtists.length <= 0) ){
@@ -287,7 +288,7 @@ app.post('/tmEvents', (req, res) => {//find query parameters here: https://devel
 					pageSizeQueryParam;
 			console.log(url);
 			
-			axios(url)
+			let requestPromise = axios(url)
 			.then(response => {
 				// console.log(response.data);
 				//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
@@ -298,8 +299,11 @@ app.post('/tmEvents', (req, res) => {//find query parameters here: https://devel
 			.catch(function (error) {
 				console.log(error);
 			});
+			console.log(requestPromise);
+			allRequestPromises.push(requestPromise)
 		});
-		console.log(allRequestResults);
+		console.log("allRequestResults", allRequestResults);
+		
 		// res.json(allRequestResults)
 	}
 })
