@@ -1,3 +1,5 @@
+import * as cookies from "./cookies.js";
+
 let suggestedArtists = document.getElementById("suggestedArtists");
 let artistInput = document.getElementById("artist");
 let selectedArtists = document.getElementById("selectedArtists");
@@ -44,18 +46,22 @@ function populateSuggestedArtistsList(body) {
     artistOptionsData = [];
     suggestedArtists.textContent = "Searching for: " + artistInput.value;
     for (let i = 0; i < body.length; i++) {
-        artistOptionsData.push({
-            id: i,
-            text: body[i].name
-        });
-        let div = document.createElement("div");
-        div.textContent = artistOptionsData[i].text;
-        div.className = "suggestedArtist";
-        div.addEventListener("click", () => {   
-            artistInput.value = artistOptionsData[i].text;
-            addToSelectedArtists(artistOptionsData[i].text);
-        });
-        suggestedArtists.append(div);
+        let artistName = body[i].name;
+        if (!artistOptionsData.includes(artistName)) {
+            artistOptionsData.push(artistName);
+            let div = document.createElement("div");
+            div.textContent = artistName;
+            div.className = "suggestedArtist";
+            div.addEventListener("click", () => {   
+                artistInput.value = artistName;
+                addToSelectedArtists(artistName);
+                if (cookies.cookieConsent !== "") {
+                    cookies.deleteCookie("selected_artists");
+                    cookies.setCookie("selected_artists", JSON.stringify(artistOptionsData), 30);
+                }
+            });
+            suggestedArtists.append(div);
+        }
     }
     suggestedArtists.style = "block"; 
 }
@@ -70,6 +76,10 @@ export function addToSelectedArtists(artistName) {
         div.addEventListener("click", () => {   
             div.remove();
             listOfSelectedArtists = listOfSelectedArtists.filter(function(artist) {return artist !== artistName;});
+            if (cookies.cookieConsent !== "") {
+                cookies.deleteCookie("selected_artists");
+                cookies.setCookie("selected_artists", JSON.stringify(listOfSelectedArtists), 30);
+            }
         });
     }
 }
