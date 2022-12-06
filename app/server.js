@@ -255,7 +255,7 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 		res.status(400).json({error: "Not all post request fields were populated!"});
 	}
 
-	let combinedGenres = ""
+	let combinedGenres = "music,"
 	if ( !(selectedGenres.length <= 0) ){
 		combinedGenres = selectedGenres[0]
 		for (let index = 1; index < selectedGenres.length; index++) {
@@ -263,7 +263,7 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 			combinedGenres = combinedGenres + ',' + element;
 		}
 	}
-	// console.log(combinedGenres);
+	console.log(combinedGenres);
 
 	let city = ''
 	let state = ''
@@ -277,21 +277,26 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 	let urlBase = `https://app.ticketmaster.com/discovery/v2/events.json?&apikey=${ticketmasterAPIkey}&locale=${locale}`
 	let cityQueryParam = `&city=${city}`
 	let stateQueryParam = `&stateCode=${state}`
-
+	let keywordQueryParam = '&keyword=';
+	let pageSizeQueryParam = `&size=${pageSize}`;
 	let allRequestPromises = []
 	let allRequestResults = {_embedded:{events:[]}}
+	let classificationNameQueryParam = `&classificationName=${combinedGenres}`
+
+	let url = urlBase + 
+				keywordQueryParam + 
+				classificationNameQueryParam + 
+				cityQueryParam + 
+				stateQueryParam + 
+				pageSizeQueryParam;
 
 	if ( !(selectedArtists.length <= 0) ){
-		// selectedArtists.forEach(element => {
 		for (let index = 0; index < selectedArtists.length; index++) {
 			const element = selectedArtists[index];
-			
-			let classificationNameQueryParam = `&classificationName=${combinedGenres}`
-			let keywordQueryParam = `&keyword=${element}`;
-
-			pageSize = 20
-			let pageSizeQueryParam = `&size=${pageSize}`;
-			let url = urlBase + 
+			keywordQueryParam = `&keyword=${element}`;
+			// pageSize = 20
+			pageSizeQueryParam = `&size=${pageSize}`;
+			url = urlBase + 
 					keywordQueryParam + 
 					classificationNameQueryParam + 
 					cityQueryParam + 
@@ -337,6 +342,14 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 			console.log(allRequestResults);
 		})
 	} else {
+		let requestPromise = axios(url)
+		.then(response => {
+			console.log("Single TM response events.length", response.data._embedded.events.length);
+			res.json(response.data) 
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
 		console.log("TODO!!!");
 		//TODO: write this functionality
 	}
