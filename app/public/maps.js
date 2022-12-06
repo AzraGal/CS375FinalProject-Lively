@@ -201,7 +201,7 @@ function initMap() {
         deleteMarkers();
         let data = spotify.spotifyEvents._embedded.events;
         if (cookies.cookieConsent !== "" && window.localStorage.getItem("spotifyEvents")) {
-            spotifyEvents = JSON.parse(window.localStorage.getItem("spotifyEvents"));
+            let spotifyEvents = JSON.parse(window.localStorage.getItem("spotifyEvents"));
             data = spotifyEvents._embedded.events;
         }
         showVenueMarkers(data);
