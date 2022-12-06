@@ -29,6 +29,8 @@ app.use(express.static(__dirname + '/public'))
 
 var musicID = "" 
 
+var TMtimeoutCounter = 5;
+
 var client_id = env.client_id; // Your client id
 var client_secret = env.client_secret; // Your secret
 var redirect_uri = env.redirect_uri; // Your redirect uri
@@ -446,6 +448,11 @@ setInterval(function() {
 	getMusicClassificationId();
 }, 1800000); //1800000 is every 30 min
 getMusicClassificationId()
+
+
+// setInterval(() => {
+// 	console.log(TMtimeoutCounter = 5);
+// }, 1000);
 
 function getMusicClassificationId() {
 	let url = `https://app.ticketmaster.com/discovery/v2/classifications.json?apikey=${ticketmasterAPIkey}`
