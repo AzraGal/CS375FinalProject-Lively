@@ -56,23 +56,23 @@ const states = {
     wisconsin: "WI",
     wyoming: "WY"
 };
+//commented out for the Search-functionality branch to save our API requests
+// search.addEventListener("click", () => {
+//     let searchLocationVal = searchLocation.value;
 
-search.addEventListener("click", () => {
-    let searchLocationVal = searchLocation.value;
+//     fetch("/hotelsCoordinates?searchLocation=" + searchLocationVal).then((response) => {
+//         return response.json(); 
+//     }).then((body) => {
+//         let cities = body.suggestions[0].entities;
 
-    fetch("/hotelsCoordinates?searchLocation=" + searchLocationVal).then((response) => {
-        return response.json(); 
-    }).then((body) => {
-        let cities = body.suggestions[0].entities;
+//         for (let i = 0; i < cities.length; i ++) {
+//             let city = [cities[i].caption, cities[i].latitude, cities[i].longitude];
+//             locations[cities[i].geoId] = city; 
+//         }
 
-        for (let i = 0; i < cities.length; i ++) {
-            let city = [cities[i].caption, cities[i].latitude, cities[i].longitude];
-            locations[cities[i].geoId] = city; 
-        }
-
-        generateLocations();
-    }); 
-});
+//         generateLocations();
+//     }); 
+// });
 
 function formatStateName(name) {
     name = name.toLowerCase().replace(" ", "_");

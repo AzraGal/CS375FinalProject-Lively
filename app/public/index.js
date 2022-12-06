@@ -71,8 +71,10 @@ $(document).ready(function() {
                     createData.push(subGenre.name);
                 }
                 TMsubGenreMap.set(subGenre.name, subGenre.id)
+                createData.push(subGenre.name)
             });
             // createData.push(genre.name)
+
             TMgenreMap.set(genre.name, genre.id)
         });
         // console.log(TMgenreMap);
@@ -124,6 +126,7 @@ function init() {
     }
 }
 
+export { getSelectedGenres }
 
 function getSelectedGenres(){
     let data = $('.js-example-basic-multiple').select2('data');
@@ -166,3 +169,4 @@ function showSelectedArtists(selectedArtists) {
 // });
 
 init();
+// console.log(artistOptionsData);
