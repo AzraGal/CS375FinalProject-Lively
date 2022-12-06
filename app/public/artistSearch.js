@@ -5,6 +5,7 @@ let artistInput = document.getElementById("artist");
 let selectedArtists = document.getElementById("selectedArtists");
 
 export let listOfSelectedArtists = [];
+let numberOfSelectedArtists = 0;
 
 var artistOptionsData = [];
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -55,11 +56,17 @@ function populateSuggestedArtistsList(body) {
             div.textContent = artistName;
             div.className = "suggestedArtist";
             div.addEventListener("click", () => {   
-                artistInput.value = artistName;
-                addToSelectedArtists(artistName);
-                if (cookies.cookieConsent !== "") {
-                    cookies.deleteCookie("selected_artists");
-                    cookies.setCookie("selected_artists", JSON.stringify(artistOptionsData), 30);
+                if (numberOfSelectedArtists < 5) {
+                    numberOfSelectedArtists++;
+                    artistInput.value = artistName;
+                    addToSelectedArtists(artistName);
+                    if (cookies.cookieConsent !== "") {
+                        cookies.deleteCookie("selected_artists");
+                        cookies.setCookie("selected_artists", JSON.stringify(artistOptionsData), 30);
+                    }
+                }
+                else {
+                    alert("You can only search for up to five artists at a time! Please remove an artist or search for your current selected artists.")
                 }
             });
             suggestedArtists.append(div);
@@ -76,6 +83,7 @@ export function addToSelectedArtists(artistName) {
         div.textContent = "X   " + artistName;
         selectedArtists.append(div);
         div.addEventListener("click", () => {   
+            numberOfSelectedArtists--;
             div.remove();
             listOfSelectedArtists = listOfSelectedArtists.filter(function(artist) {return artist !== artistName;});
             if (cookies.cookieConsent !== "") {
