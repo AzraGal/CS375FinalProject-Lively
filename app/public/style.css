@@ -82,7 +82,7 @@
     font-weight: 600;
 }
 
-.genreSelect{
+.genreInput{
     min-width: 20rem;
 }
 
@@ -222,6 +222,12 @@
     width: 20rem;
     overflow-y: scroll;
     position: absolute;
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  
+}
+
+#selectedArtists::-webkit-scrollbar {
+    display: none;
 }
 
 .selectedArtist {
@@ -285,6 +291,7 @@
     border: 1px solid #acacac;
     /* border-top: none; */
     border-radius: 0px 5px 5px 5px;
+    height: 15rem;
   }
 
   .spotifyContent{
