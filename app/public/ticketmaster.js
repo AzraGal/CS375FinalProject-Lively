@@ -18,12 +18,6 @@ let eventTableBody = document.getElementById("eventsTableBody")
 //     $("#" + row).toggle();
 // }
 
-let row1 = document.getElementById("row1")
-
-row1.addEventListener("click", () => {
-    $("#" + 'hidden_row1').toggle();
-});
-
 
 eventTable.addEventListener("click", function(event) {
     let rowid = 'info' + event.target.parentNode.id;
