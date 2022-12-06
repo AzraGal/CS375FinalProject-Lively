@@ -293,3 +293,8 @@
       margin-top: 1rem;
       margin-bottom: 1.5rem;
   }
+
+  .col2container {
+    column-count: 2;
+    column-gap: 5px;
+}

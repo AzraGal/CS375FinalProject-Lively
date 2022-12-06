@@ -83,13 +83,31 @@ export function populateEventsTable(body) {
         eventTableBody.firstElementChild.remove();
     }
 
-    // console.log(events);
+    console.log(events);
 
     for (let i = 0; i < events.length; i++) {
         let event = events[i];
 
         let eventName = event.name;
+        
+        let otherEvents = document.createElement('div');
+        otherEvents.className = 'col2container';
+        let attractions = event["_embedded"].attractions;
+
+        let otherEventsheader = document.createElement('h5');        
+        if (attractions != undefined && 
+            attractions.length  > 1){
+            otherEventsheader.textContent = "Other Attractions:";
+            for (let i = 1; i < attractions.length; i++) {
+                const event = attractions[i];
+                let eventLine = document.createElement('p');
+                eventLine.textContent = event.name;
+                otherEvents.append(eventLine)
+            }
+        }
+
         let eventDate = event.dates.start.localDate;
+        let eventStatus = event.dates.status.code;
         let eventVenue ='';
         if(event["_embedded"].venues !=undefined){
             eventVenue = event["_embedded"].venues[0].name;
@@ -151,7 +169,14 @@ export function populateEventsTable(body) {
         link.textContent = "Link to Purchase Ticket";
         link.target = "_blank";
         link.href = eventLink;
-        rowData5.append(link);
+        
+        let info = document.createElement('h5');
+        info.textContent = eventStatus + ":";
+        info.append(link);
+        
+        rowData5.append(info);
+        rowData5.append(otherEventsheader);
+        rowData5.append(otherEvents);
         
         rowData6.textContent = eventLat;
         rowData7.textContent = eventLog;
@@ -161,7 +186,6 @@ export function populateEventsTable(body) {
         row.append(rowData2);
         row.append(rowData3);
         row.append(rowData4);
-        // row.append(rowData5);
         row.append(rowData6);
         row.append(rowData7);
         row.append(rowData8);
