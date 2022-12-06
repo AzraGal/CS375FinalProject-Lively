@@ -61,25 +61,23 @@ const states = {
     wyoming: "WY"
 };
 
-search.addEventListener("click", () => {
-    let searchLocationVal = searchLocation.value;
+//commented out for the Search-functionality branch to save our API requests
+// search.addEventListener("click", () => {
+//     let searchLocationVal = searchLocation.value;
 
-    fetch("/hotelsCoordinates?searchLocation=" + searchLocationVal).then((response) => {
-        return response.json(); 
-    }).then((body) => {
-        console.log(body);
-        let cities = body.data;
+//     fetch("/hotelsCoordinates?searchLocation=" + searchLocationVal).then((response) => {
+//         return response.json(); 
+//     }).then((body) => {
+//         let cities = body.suggestions[0].entities;
 
-        for (let i = 0; i < cities.length; i ++) {
-            if (cities[i].type === "CITY") {
-                let city = [cities[i].regionNames.displayName, cities[i].coordinates.latitude, cities[i].coordinates.longitude];
-                locations[cities[i].gaiaId] = city; 
-            }
-        }
+//         for (let i = 0; i < cities.length; i ++) {
+//             let city = [cities[i].caption, cities[i].latitude, cities[i].longitude];
+//             locations[cities[i].geoId] = city; 
+//         }
 
-        generateLocations();
-    }); 
-});
+//         generateLocations();
+//     }); 
+// });
 
 function formatStateName(name) {
     name = name.toLowerCase().replace(" ", "_");

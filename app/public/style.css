@@ -15,19 +15,51 @@
   }
 
 #cookieConsentContainer {
-    background-color: lightgray;
-    display: none;
+    background-color: #d6d6d6;
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    padding: 1rem 0;
+    width: 50rem;
+    text-align: center;
 }
 
 .header{
+    display: flex;
+    justify-content: space-between;
     width:100%;
     height:5rem;
     border-bottom: 1px solid lightgray;
+    align-items: center;
+    margin-top: .5rem;
+}
+
+.spotifybtn{
+    color: #fff;
+    background-color:#1DB954 ;
+    padding:1rem;
+    border-radius: 5px;
+    text-decoration:none;
+}
+.spotifybtn a {
+    color: #fff ;
+    text-decoration:none;
+}
+
+.spotifybtn :hover{
+    background-color:#199745 ;
+}
+
+.loggedin{
+    display: flex !important;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
 }
 
 .headerTitle{
     color: #c902b9;
-    font-size: 30px;
+    font-size: 40px;
     font-weight: 500;
     font-family: 'Plaster', cursive;
     /* padding-top: 2rem;
@@ -38,12 +70,24 @@
 .filterRow{
     display:flex;
     flex-direction: row;
-    align-items: center;
+    align-items: start;
     column-gap: 2rem;
-    margin-bottom: 5rem;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
 }
 
-.genreSelect{
+.filterRow input {
+    width: 100%;
+}
+
+.submitSearchButton, #acceptCookieButton, #declineCookieButton {
+    background-color: #c902b9;
+    color: #fff;
+    padding: 0px 8px;
+    font-weight: 600;
+}
+
+.genreInput{
     min-width: 20rem;
 }
 
@@ -52,6 +96,10 @@
     margin-top: 2rem;
     display:flex;
     flex-direction: row;
+}
+
+.genreInput span{
+    width:100% !important;
 }
 
 /* ---------ARTISTS TABLE ------------- */
@@ -69,11 +117,15 @@
     text-align: left;
     font-size: 16px;
 }
+.resTable thead tr th {
+    padding: 10px 14px;
+}
 .resTable tbody tr {
     border-bottom: 1px solid #dddddd;
 }
 
-.resTable tbody tr:hover {
+.resTable tbody tr:hover:nth-child(1) {
+    
     background-color: #f3f3f3;
 }
 
@@ -87,8 +139,16 @@
     text-align: left;
 }
 
-#table_detail .hidden_row {
+.hidden_row {
     display: none;
+}
+
+.show_row {
+    /* display: block; */
+    width:100%
+}
+.show_row :hover {
+    background-color: #fff;
 }
 /* ---------------------- */
 
@@ -101,10 +161,22 @@
     display:flex;
 }
 
+
 .concerts{
-    margin:2rem;
+    margin-left:2rem;
     height:60vh;
     width:40%;
+    /* overflow-y: scroll; */
+}
+
+.concertTableHeader{
+    height:10%;
+    width: 100%;
+}
+
+.concertTable{
+    height:90%;
+    width:100%;
     overflow-y: scroll;
 }
 
@@ -155,6 +227,12 @@
     width: 20rem;
     overflow-y: scroll;
     position: absolute;
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  
+}
+
+#selectedArtists::-webkit-scrollbar {
+    display: none;
 }
 
 .selectedArtist {
@@ -178,4 +256,70 @@
     top: 0; 
     z-index: 1; 
     background-color: #cecece;
+}
+
+.nolabel{
+    visibility: hidden;
+}
+
+.tabs{
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+}
+
+/* Style the tab */
+/* https://www.w3schools.com/howto/howto_js_tabs.asps */
+.tab {
+    display: flex;
+    justify-content: flex-start;
+    column-gap: 10px;
+    cursor: pointer;
+}
+  
+  /* Style the buttons that are used to open the tab content */
+  .tablinks{
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 8px 16px 5px 14px;
+    transition: 0.3s;
+    border: 1px solid #acacac;
+    border-bottom: none;
+    border-radius: 5px 5px 0px 0px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  /* Change background color of buttons on hover */
+  .tablinks:hover {
+    background-color: #ddd;
+  }
+  
+  /* Create an active/current tablink class */
+  .tablinks.active {
+    background-color: #ccc;
+  }
+  
+  /* Style the tab content */
+  .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #acacac;
+    /* border-top: none; */
+    border-radius: 0px 5px 5px 5px;
+    height: 15rem;
+  }
+
+  .spotifyContent{
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+      margin-bottom: 1.5rem;
+  }
+
+  .col2container {
+    column-count: 2;
+    column-gap: 5px;
 }

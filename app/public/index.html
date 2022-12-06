@@ -22,62 +22,79 @@
 </head>
 <body class='bodyStyle'>
     <div class='header'>
-        <p class="headerTitle">LIVELY</p>
-    </div>
-    <h1>Welcome to Lively</h1>
-    <h4>
-        Everything you need to see your favorite Spotify artists in real life.</h4>
-
-        <h3>Search by</h3>
-        <div class="filterRow">
-            <div>
-                <label for="artist">Artist</label>
-                <input id="artist" type="text" name="artist">
-                <div id="selectedArtists"></div>
-            </div>
-            <div>
-                <div class="">
-                    <label for="genre">Genre</label>
-                    <select class="js-example-basic-multiple genreSelect" name="genres[]" multiple="multiple" id="genre">
-                    </select>
-                </div>
-            </div>
-            <div>
-                <label for="location">Location</label>
-                <input id="location" type="text" name="location">
-            </div>
-            <div>
-                <input type="text" name="daterange" value="01/01/2023 - 01/15/2023" />
-            </div>
-            <button id="submitSearchButton">Search</button>
-            <h3>or</h3>
-            <div class="container">
-                <div id="login">
-                    <a href="/login" class="btn btn-primary">Log in with Spotify</a>
+        <div>
+            <p class="headerTitle">LIVELY</p>
+        </div>
+        <div>
+            <div class="xcontainer">
+                <div id="login" class='spotifybtn'>
+                    <a href="/login" class="">Log in with Spotify</a>
                 </div>
                 <!-- <button id="loginSpotify" >Log In to Spotify</button> -->
-                <div id="loggedin">
+                <div id="loggedin" class="loggedin">
                     <div id="user-profile">
                     </div>
                     <div id="oauth">
                     </div>
-                    <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
+                    <button class="btn btn-default" id="obtain-new-token">Refresh Token</button>
                 </div>
             </div>
-        </div>
-        <!-- <button>Search with Spotify</button> -->
+            <script id="user-profile-template" type="text/x-handlebars-template">
+                <div>Logged in as {{display_name}}</div>
+            </script>
 
-        <script id="user-profile-template" type="text/x-handlebars-template">
-            <h1>Logged in as {{display_name}}</h1>
-            <div class="media">
-                <div class="media-body">
-                    <dl class="dl-horizontal">
-                        <dt>Id</dt>
-                        <dd>{{id}}</dd>
-                    </dl>
+        </div>
+    </div>
+
+    <h3>Lively! Everything you need to see your favorite artists in real life.</h3>
+        <div class='tabs'>
+            <div class="tab">
+                <div id='customSearch' class="tablinks">
+                    Custom Search
+                </div>
+                <div id='spotifySearch' class="tablinks">
+                    Use My Spotify
                 </div>
             </div>
-        </script>
+    
+              <!-- Tab content https://www.w3schools.com/howto/howto_js_tabs.asp-->
+              <div id="customContent" class="tabcontent">
+                <div class="filterRow">
+                    <div>
+                        <label for="artist">Artist</label>
+                        <input id="artist" type="text" name="artist">
+                        <div id="selectedArtists"></div>
+                    </div>
+                    <div class="genreInput">
+                        <label for="genre">Genre</label>
+                        <select class="js-example-basic-multiple genreSelect" name="genres[]" multiple="multiple" id="genre">
+                        </select>
+                    </div>
+                    <div>
+                        <label for="location">Location (City, State)</label>
+                        <input id="location" type="text" name="location">
+                    </div>
+                    <div>
+                        <label for="daterange">Dates</label>
+                        <input type="text" name="daterange" value="01/01/2023 - 01/15/2023" />
+                    </div>
+                    <div>
+                        <label class='nolabel'>Search</label>
+                        <button id="submitSearchButton" class="submitSearchButton">Search</button>
+                    </div>
+                </div>
+              </div>
+              
+              <div id="spotifyContent" class="tabcontent">
+                <div class="spotifyContent">
+                    <label>See events with your top artists and generes from Spotify </label>
+                    <button id='buttontopartist' class="submitSearchButton">Fetch Events</button>
+                </div>
+              </div>
+
+        </div>
+
+
 
         <!-- <script id="oauth-template" type="text/x-handlebars-template">
       <h2>oAuth info</h2>
@@ -87,7 +104,7 @@
       </dl>
     </script> -->
         <!-- this button will get you top arists and genres -->
-        <button id='buttontopartist'>Use my spotify!</button>
+        
         <button id='buttonTicketMasterGenres'>Get TicketMaster Genres</button>
         <button id='buttonTicketMasterEvents'>Get TicketMaster Events</button>
         <br>
@@ -97,37 +114,25 @@
           <div class="map" id="map"> Map </div>
           <div class="map" id="legend"><center><h4>Legend</h4></center></div>
           <div class="concerts">
-            <div id="loadingContainer" style="display: none;">Loading your Events...</div>
-            <p class="resultHeader">Concerts</p>
-            <button id='allConcerts'>Show all concerts on Map</button>
-            <table id="eventsTable" class="resTable eventsTable">
-              <tbody id="eventsTableBody">
-              <thead>
-                  <tr>
-                      <th>Event</th>
-                      <th>Date</th>
-                      <th>Venue</th>
-                      <th>Price Range</th>
-                      <th>Link to Purchase Ticket</th>
-                  </tr>
-                  <tr id="row1">
-                      <!-- <tr onclick="showHideEventRow('hidden_row1');"> -->
-                      <td>Artist</td>
-                      <td>Date</td>
-                      <td>Location</td>
-                      <td>Event Link</td>
-                  </tr>
-                  <tr id="hidden_row1" class="hidden_row">
-                      <td colspan=4>
-                          <p>Line Up</p>
-                          <ul>xx</ul>
-                          <ul>xx</ul>
-                          <ul>xx</ul>
-                      </td>
-                  </tr>
-
-                  </tbody>
-              </table>
+              <div class="concertTableHeader">
+                  <p class="resultHeader">Concerts</p>
+                  <button id='allConcerts'>Show all concerts on Map</button>
+              </div>
+            <div class="concertTable">
+                <table id="eventsTable" class="resTable eventsTable">
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Date</th>
+                            <th>Venue</th>
+                            <th>Price</th>
+                            <!-- <th>Link to Purchase Ticket</th> -->
+                        </tr>
+                    </thead>
+                    <tbody id="eventsTableBody">
+                    </tbody>
+                  </table>
+            </div>
           </div>
         </div>
         <div id="hotelLocations"></div>
@@ -169,11 +174,14 @@
         </div>
         <script type="module" src="cookies.js"></script>
         <script type="module" src="ticketmaster.js"></script>
-        <script type="module" src="index.js"></script>
-        <script type="module" src="spotify.js"></script>
+        <script type="module" src="spotify.js"></script>     
 
         <script type="module" src="artistSearch.js"></script>
         <script type="module" src="ticketmaster.js"></script>
+        
+        <script type="module" src="index.js"></script>
+        
+        <script type="module" src="search.js"></script>
 
         <script type="module" src="maps.js"></script>
         <script type="module" src="hotels.js"></script>

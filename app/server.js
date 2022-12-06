@@ -4,6 +4,19 @@ let app = express();
 let port = 8888;
 let hostname = "localhost";
 
+//Middleware
+var request = require('request'); // "Request" library
+var cors = require('cors');
+const querystring = require('querystring');
+var cookieParser = require('cookie-parser');
+const env = require("../env.json");
+const { log } = require("console");
+app.use(express.static("public"));
+app.use(express.json());
+app.use(express.static(__dirname + '/public'))
+	.use(cors())
+	.use(cookieParser());
+
 // Spotify Test
 /**
  * This is an example of a basic node.js script that performs
@@ -14,12 +27,10 @@ let hostname = "localhost";
  * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
  */
 
-var request = require('request'); // "Request" library
-var cors = require('cors');
-const querystring = require('querystring');
-var cookieParser = require('cookie-parser');
+var musicID = "" 
 
-const env = require("../env.json");
+var TMtimeoutCounter = 5;
+
 var client_id = env.client_id; // Your client id
 var client_secret = env.client_secret; // Your secret
 var redirect_uri = env.redirect_uri; // Your redirect uri
@@ -41,14 +52,9 @@ var generateRandomString = function(length) {
 };
 
 var stateKey = 'spotify_auth_state';
-var  user_access_token = null;
-
-app.use(express.static(__dirname + '/public'))
-	.use(cors())
-	.use(cookieParser());
+var user_access_token = null;
 
 app.get('/login', function(req, res) {
-
 	var state = generateRandomString(16);
 	res.cookie(stateKey, state);
 
@@ -66,10 +72,8 @@ app.get('/login', function(req, res) {
 });
 
 app.get('/callback', function(req, res) {
-
 	// your application requests refresh and access tokens
 	// after checking the state parameter
-
 	var code = req.query.code || null;
 	var state = req.query.state || null;
 	var storedState = req.cookies ? req.cookies[stateKey] : null;
@@ -179,7 +183,7 @@ app.get("/artists", async (req, res) => {
 app.get("/artistSearchTicketMaster", async (req, res) => {
   var config = {
     method: 'get',
-    url: `https://app.ticketmaster.com/discovery/v2/attractions.json?apikey=${ticketmasterAPIkey}&keyword=${req.query.artist}&size=10`,
+    url: `https://app.ticketmaster.com/discovery/v2/attractions.json?classificationName=music&apikey=${ticketmasterAPIkey}&keyword=${req.query.artist}&size=10`,
     headers: { 
       'Content-Type': 'application/json'
     }
@@ -212,7 +216,11 @@ app.get("/artistSearchSpotify", async (req, res) => {
 });
 
 app.get("/tmGenres", async (req, res) => {
-	let musicID = "KZFzniwnSyZfZ7v7nJ" //TODO: implement a classification getter so we always have the most up-to-date ID
+	// let musicID = "KZFzniwnSyZfZ7v7nJ" //TODO: implement a classification getter so we always have the most up-to-date ID. use the below comment code outside of any function in this file to accomlish this on a time-based methodology:
+	// console.log(Date.now());
+	// setInterval(function() {
+	// 	console.log(Date.now());
+	// }, 1800000); //1800000 is every 30 min
 	let url = `https://app.ticketmaster.com/discovery/v2/classifications/${musicID}.json?apikey=${ticketmasterAPIkey}`
 	axios(url)
 	.then(response => {
@@ -226,28 +234,155 @@ app.get("/tmGenres", async (req, res) => {
 	});
 })
 
-app.get("/tmEvents", async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
-	let city = "Philadelphia"
-	let heavyMetalSubGenreId = "KZazBEonSMnZfZ7vkFd"
-	let indieRockSubGenreId = "KZazBEonSMnZfZ7vAde"
+const delay = (delayInms) => {
+	return new Promise(resolve => setTimeout(resolve, delayInms));
+}
+
+// app.post("/tmEvents", async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
+app.post('/tmEvents', async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
+	console.log(req.body, req.body.selectedArtists.length);
+	let selectedArtists = req.body.selectedArtists;
+	let selectedGenres = req.body.selectedGenres;
+	let selectedLocation = req.body.location;
+	let locale = "en-us";
+
 	let pageSize = 200
-	
-	let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${ticketmasterAPIkey}`
-	axios(url)
-	.then(response => {
-		console.log(response.data);
-		//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
-		res.json(response.data)
-	})
-	.catch(function (error) {
-		console.log(error);
-	});
+
+	if ( (selectedArtists == undefined) ||
+	(selectedGenres == undefined) || //TODO: add location filtering 
+	(selectedLocation == undefined) //TODO: Benedict, add checking if any of the arrays contain invalid entries, like numbers for genres. Check your old homeworks for thats
+	){ //TODO: test this checking for invalid requests before deployment
+		res.status(400).json({error: "Not all post request fields were populated!"});
+	}
+
+	let combinedGenres = "music,"
+	if ( !(selectedGenres.length <= 0) ){
+		combinedGenres = selectedGenres[0]
+		for (let index = 1; index < selectedGenres.length; index++) {
+			const element = selectedGenres[index];
+			combinedGenres = combinedGenres + ',' + element;
+		}
+	}
+	console.log(combinedGenres);
+
+	let city = ''
+	let state = ''
+
+	let splitLocation = selectedLocation.split(",")
+	if (splitLocation.length == 2){ //
+		city = splitLocation[0]
+		state = splitLocation[1]
+	}
+
+	let urlBase = `https://app.ticketmaster.com/discovery/v2/events.json?&apikey=${ticketmasterAPIkey}&locale=${locale}`
+	let countryCodeQueryParam = "&countryCode=US"
+	let cityQueryParam = `&city=${city}`
+	let stateQueryParam = `&stateCode=${state}`
+	let keywordQueryParam = '&keyword=';
+	let pageSizeQueryParam = `&size=${pageSize}`;
+	let allRequestPromises = []
+	let allRequestResults = {_embedded:{events:[]}}
+	let classificationNameQueryParam = `&classificationName=${combinedGenres}`
+
+	let url = urlBase + 
+				countryCodeQueryParam + 
+				keywordQueryParam + 
+				classificationNameQueryParam + 
+				cityQueryParam + 
+				stateQueryParam + 
+				pageSizeQueryParam;
+
+	if ( !(selectedArtists.length <= 0) ){
+		for (let index = 0; index < selectedArtists.length; index++) {
+			const element = selectedArtists[index];
+			keywordQueryParam = `&keyword=${element}`;
+			pageSize = 20
+			pageSizeQueryParam = `&size=${pageSize}`;
+			url = urlBase + 
+				countryCodeQueryParam + 
+				keywordQueryParam + 
+				classificationNameQueryParam + 
+				cityQueryParam + 
+				stateQueryParam + 
+				pageSizeQueryParam;
+			console.log(url);
+			// while(TMtimeoutCounter==0){console.log(TMtimeoutCounter);};
+			// TMtimeoutCounter--;
+
+			let delayres = await delay(250);
+
+			let requestPromise = axios(url)
+			.then(response => {
+				// console.log(response.data);
+				//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
+				// console.log(Object.getOwnPropertyNames(response.headers));
+				// console.log(response);
+				console.log("TM response events.length", response.data._embedded.events.length);
+				return response.data._embedded.events
+				// let requestedEvents = response.data._embedded.events;
+			})
+			.catch(function (error) {
+				// console.log(Object.getOwnPropertyNames(error.response.headers));
+				console.log(error);
+				// if (error.response.header)
+			});
+			// console.log(requestPromise);
+			allRequestPromises.push(requestPromise)
+		// });
+		}
+		Promise.all(allRequestPromises).then((arrayOfRequestedEvents) => {
+			// console.log(arrayOfRequestedEvents[2].length);
+			// allRequestResults.push(...arrayOfRequestedEvents);
+			arrayOfRequestedEvents.forEach(requestedEventSet => {
+				requestedEventSet.forEach(event => {
+					allRequestResults["_embedded"].events.push(event)
+				});
+				
+			});
+		}).then( () => {
+			// console.log("allRequestResults length", allRequestResults);
+			res.json(allRequestResults)
+			// console.log(allRequestResults);
+		})
+	} else {
+		let requestPromise = axios(url)
+		.then(response => {
+			console.log("Single TM response events.length", response.data._embedded.events.length);
+			res.json(response.data) 
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
+	}
 })
+
+// app.post("/tmEvents", async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
+// app.post('/tmEvents', (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
+// 	console.log(req.body, req.body.selectedArtists.length);
+// 	let city = "Philadelphia"
+// 	let heavyMetalSubGenreId = "KZazBEonSMnZfZ7vkFd"
+// 	let indieRockSubGenreId = "KZazBEonSMnZfZ7vAde"
+// 	let artistName = "Wage War"
+// 	let pageSize = 200
+	
+// 	let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${ticketmasterAPIkey}`
+// 	axios(url)
+// 	.then(response => {
+// 		// console.log(response.data);
+// 		//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
+// 		console.log(response.data["_embedded"].events);
+// 		res.json(response.data)
+// 	})
+// 	.catch(function (error) {
+// 		console.log(error);
+// 	});
+// })
 
 app.get("/spotifyArtistEvents", async (req, res) => {
 	let artist = req.query.artist;
 	let size = 200;
-	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=music&size=${size}&keyword=${artist}&apikey=${ticketmasterAPIkey}`;
+	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=music&countryCode=US&size=${size}&keyword=${artist}&apikey=${ticketmasterAPIkey}`;
+	console.log(baseURL);
 	axios(baseURL).then(response => {
 		res.json(response.data)
 	})
@@ -259,7 +394,7 @@ app.get("/spotifyArtistEvents", async (req, res) => {
 app.get("/spotifyGenreEvents", async (req, res) => {
 	let genreIDs = req.query.genreIDs.split(",");
 	let size = 200;
-	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=music&size=${size}&subGenreId=`;
+	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=music&countryCode=US&size=${size}&subGenreId=`;
 	for (let id of genreIDs) {
 		baseURL += `${id},`;
 	}
@@ -341,3 +476,26 @@ app.get("/hotelDetails", (req, res) => {
 app.listen(port, hostname, () => {
     console.log(`http://${hostname}:${port}`);
 });
+
+//backgrounded worker periodic information fetching services
+setInterval(function() {
+	getMusicClassificationId();
+}, 1800000); //1800000 is every 30 min
+getMusicClassificationId()
+
+
+// setInterval(() => {
+// 	console.log(TMtimeoutCounter = 5);
+// }, 1000);
+
+function getMusicClassificationId() {
+	let url = `https://app.ticketmaster.com/discovery/v2/classifications.json?apikey=${ticketmasterAPIkey}`
+	axios(url)
+	.then(response => {
+		musicID = response.data._embedded.classifications[2].segment.id;
+		// console.log(musicID)
+	})
+	.catch(function (error) {
+		console.log(error);
+	});
+}
