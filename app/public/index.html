@@ -22,8 +22,28 @@
 </head>
 <body class='bodyStyle'>
     <div class='header'>
+        <div>
+            <p class="headerTitle">LIVELY</p>
+        </div>
+        <div>
+            <div class="xcontainer">
+                <div id="login" class='spotifybtn'>
+                    <a href="/login" class="">Log in with Spotify</a>
+                </div>
+                <!-- <button id="loginSpotify" >Log In to Spotify</button> -->
+                <div id="loggedin" class="loggedin">
+                    <div id="user-profile">
+                    </div>
+                    <div id="oauth">
+                    </div>
+                    <button class="btn btn-default" id="obtain-new-token">Refresh Token</button>
+                </div>
+            </div>
+            <script id="user-profile-template" type="text/x-handlebars-template">
+                <div>Logged in as {{display_name}}</div>
+            </script>
 
-        <p class="headerTitle">LIVELY</p>
+        </div>
     </div>
 
     <h3>Lively! Everything you need to see your favorite artists in real life.</h3>
