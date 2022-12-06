@@ -29,6 +29,8 @@ app.use(express.static(__dirname + '/public'))
 
 var musicID = "" 
 
+var TMtimeoutCounter = 5;
+
 var client_id = env.client_id; // Your client id
 var client_secret = env.client_secret; // Your secret
 var redirect_uri = env.redirect_uri; // Your redirect uri
@@ -232,8 +234,12 @@ app.get("/tmGenres", async (req, res) => {
 	});
 })
 
+const delay = (delayInms) => {
+	return new Promise(resolve => setTimeout(resolve, delayInms));
+}
+
 // app.post("/tmEvents", async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
-app.post('/tmEvents', (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
+app.post('/tmEvents', async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
 	console.log(req.body, req.body.selectedArtists.length);
 	let selectedArtists = req.body.selectedArtists;
 	let selectedGenres = req.body.selectedGenres;
@@ -268,16 +274,20 @@ app.post('/tmEvents', (req, res) => {//find query parameters here: https://devel
 		state = splitLocation[1]
 	}
 
-	let allRequestResults = []
+	let allRequestPromises = []
+	let allRequestResults = {_embedded:{events:[]}}
 
 	if ( !(selectedArtists.length <= 0) ){
-		selectedArtists.forEach(element => {
+		// selectedArtists.forEach(element => {
+		for (let index = 0; index < selectedArtists.length; index++) {
+			const element = selectedArtists[index];
 			// let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${ticketmasterAPIkey}`
 			let urlBase = `https://app.ticketmaster.com/discovery/v2/events.json?&apikey=${ticketmasterAPIkey}&locale=${locale}`
 			let classificationNameQueryParam = `&classificationName=${combinedGenres}`
 			let keywordQueryParam = `&keyword=${element}`;
 			let cityQueryParam = `&city=${city}`
 			let stateQueryParam = `&stateCode=${state}`
+			pageSize = 20
 			let pageSizeQueryParam = `&size=${pageSize}`;
 			let url = urlBase + 
 					keywordQueryParam + 
@@ -286,21 +296,47 @@ app.post('/tmEvents', (req, res) => {//find query parameters here: https://devel
 					stateQueryParam + 
 					pageSizeQueryParam;
 			console.log(url);
-			
-			axios(url)
+			// while(TMtimeoutCounter==0){console.log(TMtimeoutCounter);};
+			// TMtimeoutCounter--;
+
+			let delayres = await delay(250);
+
+			let requestPromise = axios(url)
 			.then(response => {
 				// console.log(response.data);
 				//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
-				console.log(response.data._embedded.events);
+				// console.log(Object.getOwnPropertyNames(response.headers));
+				// console.log(response);
+				console.log("TM response events.length", response.data._embedded.events.length);
+				return response.data._embedded.events
 				// let requestedEvents = response.data._embedded.events;
-				// allRequestResults.push(...requestedEvents);
 			})
 			.catch(function (error) {
-				console.log(error);
+				console.log(Object.getOwnPropertyNames(error.response.headers));
+				// console.log(error);
+				// if (error.response.header)
 			});
-		});
-		console.log(allRequestResults);
-		// res.json(allRequestResults)
+			// console.log(requestPromise);
+			allRequestPromises.push(requestPromise)
+		// });
+		}
+		Promise.all(allRequestPromises).then((arrayOfRequestedEvents) => {
+			// console.log(arrayOfRequestedEvents[2].length);
+			// allRequestResults.push(...arrayOfRequestedEvents);
+			arrayOfRequestedEvents.forEach(requestedEventSet => {
+				requestedEventSet.forEach(event => {
+					allRequestResults["_embedded"].events.push(event)
+				});
+				
+			});
+		}).then( () => {
+			// console.log("allRequestResults length", allRequestResults);
+			res.json(allRequestResults)
+			console.log(allRequestResults);
+		})
+	} else {
+		console.log("TODO!!!");
+		//TODO: write this functionality
 	}
 })
 
@@ -413,12 +449,17 @@ setInterval(function() {
 }, 1800000); //1800000 is every 30 min
 getMusicClassificationId()
 
+
+// setInterval(() => {
+// 	console.log(TMtimeoutCounter = 5);
+// }, 1000);
+
 function getMusicClassificationId() {
 	let url = `https://app.ticketmaster.com/discovery/v2/classifications.json?apikey=${ticketmasterAPIkey}`
 	axios(url)
 	.then(response => {
 		musicID = response.data._embedded.classifications[2].segment.id;
-		console.log(musicID)
+		// console.log(musicID)
 	})
 	.catch(function (error) {
 		console.log(error);

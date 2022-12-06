@@ -10,8 +10,20 @@ let artistInput = document.getElementById("artist");
 let genreInput = document.getElementById("genre");
 let locationInput = document.getElementById("location");
 
-let eventTable = document.getElementById('eventsTable');
-let eventTableBody = document.getElementById('eventsTableBody');
+let eventTable = document.getElementById("eventsTable")
+let eventTableBody = document.getElementById("eventsTableBody")
+
+// 
+// function showHideEventRow(row) {
+//     $("#" + row).toggle();
+// }
+
+let row1 = document.getElementById("row1")
+
+row1.addEventListener("click", () => {
+    $("#" + 'hidden_row1').toggle();
+});
+
 
 eventTable.addEventListener("click", function(event) {
     let rowid = 'info' + event.target.parentNode.id;
@@ -66,7 +78,7 @@ function getTicketmasterEvents(selectedArtists, selectedGenres, location) {
     }).then((response) => {
         return response.json();
     }).then((body)=>{
-        // console.log(body);
+        console.log(body);
         populateEventsTable(body);
     })
 };

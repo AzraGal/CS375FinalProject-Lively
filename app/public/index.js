@@ -44,7 +44,7 @@ $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
         cookies.deleteCookie("date_range");
         cookies.setCookie("date_range", `${picker.startDate.format('MM/DD/YYYY')} - ${picker.endDate.format('MM/DD/YYYY')}`, 30);
     }
-    console.log(picker.startDate.format('MM/DD/YYYY'), picker.endDate.format('MM/DD/YYYY'));
+    console.log(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
 });
 
 $('input[name="daterange"]').on('cancel.daterangepicker', function(ev, picker) {
