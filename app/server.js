@@ -275,6 +275,7 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 	}
 
 	let urlBase = `https://app.ticketmaster.com/discovery/v2/events.json?&apikey=${ticketmasterAPIkey}&locale=${locale}`
+	let countryCodeQueryParam = "&countryCode=US"
 	let cityQueryParam = `&city=${city}`
 	let stateQueryParam = `&stateCode=${state}`
 	let keywordQueryParam = '&keyword=';
@@ -284,6 +285,7 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 	let classificationNameQueryParam = `&classificationName=${combinedGenres}`
 
 	let url = urlBase + 
+				countryCodeQueryParam + 
 				keywordQueryParam + 
 				classificationNameQueryParam + 
 				cityQueryParam + 
@@ -297,11 +299,12 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 			// pageSize = 20
 			pageSizeQueryParam = `&size=${pageSize}`;
 			url = urlBase + 
-					keywordQueryParam + 
-					classificationNameQueryParam + 
-					cityQueryParam + 
-					stateQueryParam + 
-					pageSizeQueryParam;
+				countryCodeQueryParam + 
+				keywordQueryParam + 
+				classificationNameQueryParam + 
+				cityQueryParam + 
+				stateQueryParam + 
+				pageSizeQueryParam;
 			console.log(url);
 			// while(TMtimeoutCounter==0){console.log(TMtimeoutCounter);};
 			// TMtimeoutCounter--;
@@ -339,7 +342,7 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 		}).then( () => {
 			// console.log("allRequestResults length", allRequestResults);
 			res.json(allRequestResults)
-			console.log(allRequestResults);
+			// console.log(allRequestResults);
 		})
 	} else {
 		let requestPromise = axios(url)
@@ -350,8 +353,6 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 		.catch(function (error) {
 			console.log(error);
 		});
-		console.log("TODO!!!");
-		//TODO: write this functionality
 	}
 })
 
@@ -380,7 +381,7 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 app.get("/spotifyArtistEvents", async (req, res) => {
 	let artist = req.query.artist;
 	let size = 200;
-	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=music&size=${size}&keyword=${artist}&apikey=${ticketmasterAPIkey}`;
+	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=music&countryCode=US&size=${size}&keyword=${artist}&apikey=${ticketmasterAPIkey}`;
 	axios(baseURL).then(response => {
 		res.json(response.data)
 	})
