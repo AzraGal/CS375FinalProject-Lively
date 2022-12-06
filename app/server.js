@@ -243,7 +243,8 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 	console.log(req.body, req.body.selectedArtists.length);
 	let selectedArtists = req.body.selectedArtists;
 	let selectedGenres = req.body.selectedGenres;
-	let selectedLocation = req.body.location;
+	let city = req.body.city;
+	let state= req.body.state;
 	let locale = "en-us";
 
 	let pageSize = 200
@@ -265,14 +266,14 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 	}
 	console.log(combinedGenres);
 
-	let city = ''
-	let state = ''
+	// let city = ''
+	// let state = ''
 
-	let splitLocation = selectedLocation.split(",")
-	if (splitLocation.length == 2){ //
-		city = splitLocation[0]
-		state = splitLocation[1]
-	}
+	// let splitLocation = selectedLocation.split(",")
+	// if (splitLocation.length == 2){ //
+	// 	city = splitLocation[0]
+	// 	state = splitLocation[1]
+	// }
 
 	let urlBase = `https://app.ticketmaster.com/discovery/v2/events.json?&apikey=${ticketmasterAPIkey}&locale=${locale}`
 	let countryCodeQueryParam = "&countryCode=US"
