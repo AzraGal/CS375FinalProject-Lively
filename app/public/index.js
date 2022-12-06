@@ -91,7 +91,7 @@ $(document).ready(function() {
                     createData.push(subGenre.name);
                 }
                 TMsubGenreMap.set(subGenre.name, subGenre.id)
-                createData.push(subGenre.name)
+                // createData.push(subGenre.name)
             });
             // createData.push(genre.name)
 
