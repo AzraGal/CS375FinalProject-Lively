@@ -312,8 +312,8 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 				// let requestedEvents = response.data._embedded.events;
 			})
 			.catch(function (error) {
-				console.log(Object.getOwnPropertyNames(error.response.headers));
-				// console.log(error);
+				// console.log(Object.getOwnPropertyNames(error.response.headers));
+				console.log(error);
 				// if (error.response.header)
 			});
 			// console.log(requestPromise);
