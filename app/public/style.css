@@ -15,8 +15,13 @@
   }
 
 #cookieConsentContainer {
-    background-color: lightgray;
-    display: none;
+    background-color: #d6d6d6;
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    padding: 1rem 0;
+    width: 50rem;
+    text-align: center;
 }
 
 .header{
@@ -75,7 +80,7 @@
     width: 100%;
 }
 
-.submitSearchButton{
+.submitSearchButton, #acceptCookieButton, #declineCookieButton {
     background-color: #c902b9;
     color: #fff;
     padding: 0px 8px;
