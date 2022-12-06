@@ -35,45 +35,11 @@ export let spotifyEvents = {_embedded: {"events": []}};
 let eventsTimer = null;
 
 vicbutton.addEventListener("click", () => {
-    if (cookies.cookieConsent !== "" && window.localStorage.getItem("spotifyEvents")) {
-        ticketmaster.populateEventsTable(spotifyEvents);
-    }
-    else {
-      fetch('/artists').then((response) => {
-        return response.json();
-      }).then((body) => {
-
-        for (let i = 0; i < body.items.length; i++) {
-            const element = body.items[i];
-            spotifyTopArtists.push(element.name);
-
-            for (let g = 0; g < element.genres.length; g++) {
-                const genre = element.genres[g];
-
-                if(!spotifyTopGenres.includes(genre)){
-                    spotifyTopGenres.push(genre);
-                }
-            }
-        }
-        if (cookies.cookieConsent !== "") {
-            cookies.deleteCookie("spotifyTopArtists");
-            cookies.deleteCookie("spotifyTopGenres");
-            cookies.setCookie("spotifyTopArtists", JSON.stringify(spotifyTopArtists), 30);
-            cookies.setCookie("spotifyTopGenres", JSON.stringify(spotifyTopGenres), 30);
-        }
-        console.log("spotifyTopArtists", spotifyTopArtists);
-        console.log("spotifyTopGenres", spotifyTopGenres);
-        convertSpotifyToTicketMasterGenre();
-        eventsTimer = setInterval(fetchEvents, 750);
-      });
-    }
+  ticketmaster.populateEventsTable(spotifyEvents);
 });
 
 let artistCount = 0;
-let loadingContainer = document.getElementById("loadingContainer");
-
 function fetchEvents() {
-  loadingContainer.style.display = "";
   let artist = spotifyTopArtists[artistCount];
   fetch(`/spotifyArtistEvents?artist=${artist}`).then((response) => {
       return response.json();
@@ -90,7 +56,6 @@ function fetchEvents() {
       if (cookies.cookieConsent !== "") {
           window.localStorage.setItem("spotifyEvents", JSON.stringify(spotifyEvents));
       }
-      ticketmaster.populateEventsTable(spotifyEvents);
     });
   }
 }
@@ -208,12 +173,45 @@ function capitalize(words) {
   return capitalized.substring(1);
 }
 
+function loadSpotifyEvents() {
+  fetch('/artists').then((response) => {
+    return response.json();
+  }).then((body) => {
+
+    for (let i = 0; i < body.items.length; i++) {
+        const element = body.items[i];
+        spotifyTopArtists.push(element.name);
+
+        for (let g = 0; g < element.genres.length; g++) {
+            const genre = element.genres[g];
+
+            if(!spotifyTopGenres.includes(genre)){
+                spotifyTopGenres.push(genre);
+            }
+        }
+    }
+    if (cookies.cookieConsent !== "") {
+        cookies.deleteCookie("spotifyTopArtists");
+        cookies.deleteCookie("spotifyTopGenres");
+        cookies.setCookie("spotifyTopArtists", JSON.stringify(spotifyTopArtists), 30);
+        cookies.setCookie("spotifyTopGenres", JSON.stringify(spotifyTopGenres), 30);
+    }
+    console.log("spotifyTopArtists", spotifyTopArtists);
+    console.log("spotifyTopGenres", spotifyTopGenres);
+    convertSpotifyToTicketMasterGenre();
+    eventsTimer = setInterval(fetchEvents, 250);
+  });
+}
+
 function init() {
   if (cookies.cookieConsent !== "" && window.localStorage.getItem("spotifyEvents")) {
       spotifyTopArtists = JSON.parse(cookies.getCookie("spotifyTopArtists").substring(1));
       spotifyTopGenres = JSON.parse(cookies.getCookie("spotifyTopGenres").substring(1));
       convertedGenreIDs = JSON.parse(cookies.getCookie("convertedGenreIDs").substring(1));
       spotifyEvents = JSON.parse(window.localStorage.getItem("spotifyEvents"));
+  }
+  else {
+    loadSpotifyEvents();
   }
 }
 

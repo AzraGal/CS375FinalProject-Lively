@@ -139,7 +139,7 @@ export function populateEventsTable(body) {
         let rowData2 = document.createElement('td');
         let rowData3 = document.createElement('td');
         let rowData4 = document.createElement('td');
-        let rowData5 = document.createElement('a');
+        let rowData5 = document.createElement('td');
         
         let rowData6 = document.createElement('td');
         rowData6.style.cssText = 'display:none;';
@@ -153,9 +153,11 @@ export function populateEventsTable(body) {
         rowData3.textContent = eventVenue;
         rowData4.textContent = eventPriceRange;
         
-        rowData5.textContent = "L";
-        rowData5.target = "_blank";
-        rowData5.href = eventLink;
+        let link = document.createElement('a')
+        link.textContent = "Link to Purchase Ticket";
+        link.target = "_blank";
+        link.href = eventLink;
+        rowData5.append(link);
         
         rowData6.textContent = eventLat;
         rowData7.textContent = eventLog;
@@ -165,7 +167,7 @@ export function populateEventsTable(body) {
         row.append(rowData2);
         row.append(rowData3);
         row.append(rowData4);
-        row.append(rowData5);
+        // row.append(rowData5);
         row.append(rowData6);
         row.append(rowData7);
         row.append(rowData8);
@@ -177,11 +179,10 @@ export function populateEventsTable(body) {
         infoRow.id = `inforow${i}`;
         infoRow.className='hidden_row';
 
-        let infoRowData1 = document.createElement('td');
-        infoRowData1.textContent = "example";
-        infoRow.append(infoRowData1);
+        rowData5.colSpan = "4";
+        infoRow.append(rowData5);
+
         eventTableBody.append(infoRow);	
             
     }
-    document.getElementById("loadingContainer").style.display = "none";
 } 

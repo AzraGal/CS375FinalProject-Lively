@@ -11,8 +11,25 @@ let location = "";
 
 // let getConcertHotels = document.getElementById("concertRes");
 
-console.log($('input[name="daterange"]').data('daterangepicker'));
+let spotifySearch = document.getElementById("spotifySearch");
+let customSearch = document.getElementById("customSearch");
 
+customSearch.addEventListener("click", () => {
+    let spotifyContent = document.getElementById('spotifyContent');
+    spotifyContent.style.display = "none";
+    let customContent = document.getElementById('customContent');
+    customContent.style.display = "block";
+    customContent.className += " active";
+
+})
+spotifySearch.addEventListener("click", () => {
+    let customContent = document.getElementById('customContent');
+    customContent.style.display = "none";
+
+    let spotifyContent = document.getElementById('spotifyContent');
+    spotifyContent.style.display = "block";
+    spotifyContent.className += " active";
+})
 
 $('input[name="daterange"]').daterangepicker({
     autoUpdateInput: false,
@@ -97,6 +114,10 @@ $(document).ready(function() {
 let select2GenresIDs = [];
 
 function init() {
+    let customContent = document.getElementById('customContent');
+    customContent.style.display = "block";
+    customContent.className += " active";
+    
     submitSearchButton.addEventListener("click", submitSearch);
     if (cookies.cookieConsent !== "") {
         if (cookies.getCookie("current_artist_search") !== "") {

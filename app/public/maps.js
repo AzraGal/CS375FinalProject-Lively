@@ -198,37 +198,35 @@ function initMap() {
     });
 
     spotifyButton.addEventListener("click", () => {
+        deleteMarkers();
+        let data = spotify.spotifyEvents._embedded.events;
         if (cookies.cookieConsent !== "" && window.localStorage.getItem("spotifyEvents")) {
             let spotifyEvents = JSON.parse(window.localStorage.getItem("spotifyEvents"));
-            let data = spotifyEvents._embedded.events
-            deleteMarkers();
-            showVenueMarkers(data);
-            allConcerts.addEventListener("click", function () {
-                deleteMarkers()
-                deleteSelectedMarker()
-                showVenueMarkers(data)
-            })
-            let table = document.getElementById("eventsTable")
-            for (let i = 0; i < table.rows.length; i++) {
-                table.rows[i].addEventListener("click", () => {
-                    let cellLat = table.rows[i].cells[4].textContent;
-                    let cellLong = table.rows[i].cells[5].textContent;
-                    let cellBanner = table.rows[i].cells[6].textContent;
-                    let contentString = `
-                              <center><img src = ${cellBanner} width = "300" height = "150"> </center> <br>
-                              <b>Name: </b> ${table.rows[i].cells[0].textContent} <br>
-                              <b>Address: </b> ${table.rows[i].cells[2].textContent} `;
+            data = spotifyEvents._embedded.events;
+        }
+        showVenueMarkers(data);
+        allConcerts.addEventListener("click", function () {
+            deleteMarkers()
+            deleteSelectedMarker()
+            showVenueMarkers(data)
+        })
+        let table = document.getElementById("eventsTable")
+        for (let i = 0; i < table.rows.length; i++) {
+            table.rows[i].addEventListener("click", () => {
+                let cellLat = table.rows[i].cells[4].textContent;
+                let cellLong = table.rows[i].cells[5].textContent;
+                let cellBanner = table.rows[i].cells[6].textContent;
+                let contentString = `
+                          <center><img src = ${cellBanner} width = "300" height = "150"> </center> <br>
+                          <b>Name: </b> ${table.rows[i].cells[0].textContent} <br>
+                          <b>Address: </b> ${table.rows[i].cells[2].textContent} `;
 
-                    deleteMarkers();
-                    deleteSelectedMarker();
-                    console.log(selectedMarker)
-                    createVenueMarker(cellLat, cellLong, contentString);
-                })
-            };
-        }
-        else {
-            setTimeout(() => {showVenueMarkers(spotify.spotifyEvents._embedded.events);}, 16000);
-        }
+                deleteMarkers();
+                deleteSelectedMarker();
+                console.log(selectedMarker)
+                createVenueMarker(cellLat, cellLong, contentString);
+            });
+        };
     });
 
   // --------------- marker creation functions -----------------
