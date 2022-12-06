@@ -166,3 +166,16 @@
     background-color: #cecece;
     cursor: pointer;
 }
+
+.results {
+    overflow: scroll;
+    height: 200px;
+    width: auto;
+}
+
+.results thead th { 
+    position: sticky; 
+    top: 0; 
+    z-index: 1; 
+    background-color: #cecece;
+}

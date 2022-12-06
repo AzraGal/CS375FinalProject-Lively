@@ -3,6 +3,10 @@ let searchLocation = document.getElementById("location");
 let hotelLocations = document.getElementById("hotelLocations");
 let hotelTableBody = document.getElementById("hotelBody");
 let locations = {}; 
+let populated = false; 
+let maxHotelResults = 20; 
+let visibleHotelDetails = false; 
+let selectedHotelRow, selectedHotelRowId;
 
 const states = {
     alabama: "AL",
@@ -119,25 +123,75 @@ function fetchHotels(locationId) {
 
         let searchResults = body.properties;
 
-        console.log(hotelTableBody.rows.length);
-
         while (hotelTableBody.rows.length > 0) {
             console.log("delete");
             hotelTableBody.deleteRow(0);
         }
 
-        for (let i = 0; i < searchResults.length; i++) {
+        for (let i = 0; i < maxHotelResults; i++) {
             let row = document.createElement("tr");
+            let hiddenRow = document.createElement("tr");
             hotelTableBody.append(row);
+            hotelTableBody.append(hiddenRow);
 
             let hotelName = document.createElement("td");
             let hotelDistance = document.createElement("td");
+            let hotelPrice = document.createElement("td");
             row.append(hotelName);
             row.append(hotelDistance);
+            row.append(hotelPrice);
 
             row.setAttribute("id", searchResults[i].id);
             hotelName.textContent = searchResults[i].name;
             hotelDistance.textContent = searchResults[i].destinationInfo.distanceFromDestination.value + " miles";
+            hotelPrice.textContent = searchResults[i].price.options[0].formattedDisplayPrice;
+
+            hiddenRow.setAttribute("id", searchResults[i].id + "hidden");
+            hiddenRow.setAttribute("hidden", true);
         }
+
+        populated = true; 
     });
 }
+
+hotelTableBody.addEventListener("click", (e) => {
+    const hotelCell = e.target.closest('td');
+
+    if (!hotelCell || populated === false) { return}
+    
+    let hotelRow = hotelCell.parentElement;
+    let row = document.getElementById(hotelRow.id + "hidden");
+    
+    if (selectedHotelRow) {
+        $("#" + selectedHotelRowId + "hidden").toggle();
+    }
+
+    $("#" + hotelRow.id + "hidden").toggle();
+    selectedHotelRow = row;
+    selectedHotelRowId = hotelRow.id;
+    
+    console.log("clicked!", hotelRow.id);
+
+    
+    fetch("/hotelDetails?hotelId=" + hotelRow.id).then((response) => {
+        return response.json();
+    }).then((body) => {
+        console.log(body);
+
+        let details = body.summary; 
+        
+        let tagline = document.createElement("ul");
+        let detailCell = document.createElement("td");
+        let detailList = document.createElement("ul"); 
+        row.append(tagline);
+        row.append(detailCell);
+        detailCell.append(detailList);
+
+        tagline.textContent = details.tagline;
+
+        detailList.textContent = "Address";
+        let address = document.createElement("li");
+        detailList.append(address);
+        address.textContent = details.location.address.addressLine; 
+    });
+});
