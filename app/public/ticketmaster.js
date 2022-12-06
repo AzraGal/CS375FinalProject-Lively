@@ -92,31 +92,44 @@ export function populateEventsTable(body) {
         
         let otherEvents = document.createElement('div');
         otherEvents.className = 'col2container';
-        let attractions = event["_embedded"].attractions;
-
-        let otherEventsheader = document.createElement('h5');        
-        if (attractions != undefined && 
-            attractions.length  > 1){
-            otherEventsheader.textContent = "Other Attractions:";
-            for (let i = 1; i < attractions.length; i++) {
-                const event = attractions[i];
-                let eventLine = document.createElement('p');
-                eventLine.textContent = event.name;
-                otherEvents.append(eventLine)
+        // console.log(event);
+        // console.log(event["_embedded"]);
+        let otherEventsheader = document.createElement('h5');     
+        if (event["_embedded"] != undefined && event["_embedded"]["attractions"] != undefined) {
+        // if (event["_embedded"].hasOwnProperty("attractions")) {
+            let attractions = event["_embedded"].attractions;   
+            if (attractions != undefined && 
+                attractions.length  > 1){
+                otherEventsheader.textContent = "Other Attractions:";
+                for (let i = 1; i < attractions.length; i++) {
+                    const event = attractions[i];
+                    let eventLine = document.createElement('p');
+                    eventLine.textContent = event.name;
+                    otherEvents.append(eventLine)
+                }
             }
         }
 
         let eventDate = event.dates.start.localDate;
         let eventStatus = event.dates.status.code;
         let eventVenue ='';
-        if(event["_embedded"].venues !=undefined){
-            eventVenue = event["_embedded"].venues[0].name;
-        }else{
+        if(event["_embedded"] != undefined && event["_embedded"]["venues"] != undefined){
+            if (event["_embedded"]["venues"][0]["name"] != undefined) {
+                eventVenue = event["_embedded"].venues[0].name;
+            }
+            else if (event["_embedded"]["venues"][0]["address"] != undefined && event["_embedded"]["venues"][0]["address"]["line1"] != undefined) {
+                eventVenue = event["_embedded"]["venues"][0]["address"]["line1"];
+            }
+            else {
+                eventVenue = "N/A";
+            }
+        }
+        else {
             eventVenue = "N/A"
         }
         let eventLat ='' ;
         let eventLog='';
-        if(event["_embedded"].venues !=undefined){
+        if(event["_embedded"] != undefined && event["_embedded"]["venues"] != undefined && event["_embedded"]["venues"][0].location != undefined){
             eventLat  = event["_embedded"].venues[0].location.latitude;
             eventLog  = event["_embedded"].venues[0].location.longitude;
         }

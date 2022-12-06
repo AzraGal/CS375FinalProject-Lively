@@ -246,7 +246,7 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 		res.status(400).json({error: "Not all post request fields were populated!"});
 	}
 
-	let combinedGenres = ""
+	let combinedGenres = "music,"
 	if ( !(selectedGenres.length <= 0) ){
 		combinedGenres = selectedGenres[0]
 		for (let index = 1; index < selectedGenres.length; index++) {
@@ -254,7 +254,7 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 			combinedGenres = combinedGenres + ',' + element;
 		}
 	}
-	// console.log(combinedGenres);
+	console.log(combinedGenres);
 
 	let city = ''
 	let state = ''
@@ -265,27 +265,37 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 		state = splitLocation[1]
 	}
 
+	let urlBase = `https://app.ticketmaster.com/discovery/v2/events.json?&apikey=${process.env.TICKETMASTERAPIKEY}&locale=${locale}`
+	let countryCodeQueryParam = "&countryCode=US"
+	let cityQueryParam = `&city=${city}`
+	let stateQueryParam = `&stateCode=${state}`
+	let keywordQueryParam = '&keyword=';
+	let pageSizeQueryParam = `&size=${pageSize}`;
 	let allRequestPromises = []
 	let allRequestResults = {_embedded:{events:[]}}
+	let classificationNameQueryParam = `&classificationName=${combinedGenres}`
+
+	let url = urlBase + 
+				countryCodeQueryParam + 
+				keywordQueryParam + 
+				classificationNameQueryParam + 
+				cityQueryParam + 
+				stateQueryParam + 
+				pageSizeQueryParam;
 
 	if ( !(selectedArtists.length <= 0) ){
-		// selectedArtists.forEach(element => {
 		for (let index = 0; index < selectedArtists.length; index++) {
 			const element = selectedArtists[index];
-			// let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${ticketmasterAPIkey}`
-			let urlBase = `https://app.ticketmaster.com/discovery/v2/events.json?&apikey=${process.env.TICKETMASTERAPIKEY}&locale=${locale}`
-			let classificationNameQueryParam = `&classificationName=${combinedGenres}`
-			let keywordQueryParam = `&keyword=${element}`;
-			let cityQueryParam = `&city=${city}`
-			let stateQueryParam = `&stateCode=${state}`
+			keywordQueryParam = `&keyword=${element}`;
 			pageSize = 20
-			let pageSizeQueryParam = `&size=${pageSize}`;
-			let url = urlBase + 
-					keywordQueryParam + 
-					classificationNameQueryParam + 
-					cityQueryParam + 
-					stateQueryParam + 
-					pageSizeQueryParam;
+			pageSizeQueryParam = `&size=${pageSize}`;
+			url = urlBase + 
+				countryCodeQueryParam + 
+				keywordQueryParam + 
+				classificationNameQueryParam + 
+				cityQueryParam + 
+				stateQueryParam + 
+				pageSizeQueryParam;
 			console.log(url);
 			// while(TMtimeoutCounter==0){console.log(TMtimeoutCounter);};
 			// TMtimeoutCounter--;
@@ -323,11 +333,17 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 		}).then( () => {
 			// console.log("allRequestResults length", allRequestResults);
 			res.json(allRequestResults)
-			console.log(allRequestResults);
+			// console.log(allRequestResults);
 		})
 	} else {
-		console.log("TODO!!!");
-		//TODO: write this functionality
+		let requestPromise = axios(url)
+		.then(response => {
+			console.log("Single TM response events.length", response.data._embedded.events.length);
+			res.json(response.data) 
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
 	}
 })
 
@@ -356,7 +372,8 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 app.get("/spotifyArtistEvents", async (req, res) => {
 	let artist = req.query.artist;
 	let size = 200;
-	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=music&size=${size}&keyword=${artist}&apikey=${process.env.TICKETMASTERAPIKEY}`;
+	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=music&countryCode=US&size=${size}&keyword=${artist}&apikey=${process.env.TICKETMASTERAPIKEY}`;
+	console.log(baseURL);
 	axios(baseURL).then(response => {
 		res.json(response.data)
 	})
@@ -368,7 +385,7 @@ app.get("/spotifyArtistEvents", async (req, res) => {
 app.get("/spotifyGenreEvents", async (req, res) => {
 	let genreIDs = req.query.genreIDs.split(",");
 	let size = 200;
-	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=music&size=${size}&subGenreId=`;
+	let baseURL = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=music&countryCode=US&size=${size}&subGenreId=`;
 	for (let id of genreIDs) {
 		baseURL += `${id},`;
 	}
