@@ -234,6 +234,10 @@ app.get("/tmGenres", async (req, res) => {
 	});
 })
 
+const delay = (delayInms) => {
+	return new Promise(resolve => setTimeout(resolve, delayInms));
+}
+
 // app.post("/tmEvents", async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
 app.post('/tmEvents', async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
 	console.log(req.body, req.body.selectedArtists.length);
@@ -271,16 +275,19 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 	}
 
 	let allRequestPromises = []
-	let allRequestResults = []
+	let allRequestResults = {_embedded:{events:[]}}
 
 	if ( !(selectedArtists.length <= 0) ){
-		selectedArtists.forEach(element => {
+		// selectedArtists.forEach(element => {
+		for (let index = 0; index < selectedArtists.length; index++) {
+			const element = selectedArtists[index];
 			// let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${ticketmasterAPIkey}`
 			let urlBase = `https://app.ticketmaster.com/discovery/v2/events.json?&apikey=${ticketmasterAPIkey}&locale=${locale}`
 			let classificationNameQueryParam = `&classificationName=${combinedGenres}`
 			let keywordQueryParam = `&keyword=${element}`;
 			let cityQueryParam = `&city=${city}`
 			let stateQueryParam = `&stateCode=${state}`
+			pageSize = 20
 			let pageSizeQueryParam = `&size=${pageSize}`;
 			let url = urlBase + 
 					keywordQueryParam + 
@@ -291,27 +298,41 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 			console.log(url);
 			// while(TMtimeoutCounter==0){console.log(TMtimeoutCounter);};
 			// TMtimeoutCounter--;
+
+			let delayres = await delay(250);
+
 			let requestPromise = axios(url)
 			.then(response => {
 				// console.log(response.data);
 				//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
+				// console.log(Object.getOwnPropertyNames(response.headers));
+				// console.log(response);
 				console.log("TM response events.length", response.data._embedded.events.length);
 				return response.data._embedded.events
 				// let requestedEvents = response.data._embedded.events;
-				
 			})
 			.catch(function (error) {
-				console.log(error);
+				console.log(Object.getOwnPropertyNames(error.response.headers));
+				// console.log(error);
+				// if (error.response.header)
 			});
 			// console.log(requestPromise);
 			allRequestPromises.push(requestPromise)
-		});
+		// });
+		}
 		Promise.all(allRequestPromises).then((arrayOfRequestedEvents) => {
 			// console.log(arrayOfRequestedEvents[2].length);
-			allRequestResults.push(...arrayOfRequestedEvents);
+			// allRequestResults.push(...arrayOfRequestedEvents);
+			arrayOfRequestedEvents.forEach(requestedEventSet => {
+				requestedEventSet.forEach(event => {
+					allRequestResults["_embedded"].events.push(event)
+				});
+				
+			});
 		}).then( () => {
 			// console.log("allRequestResults length", allRequestResults);
 			res.json(allRequestResults)
+			console.log(allRequestResults);
 		})
 	} else {
 		console.log("TODO!!!");
