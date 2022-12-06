@@ -25,55 +25,7 @@
 
         <p class="headerTitle">LIVELY</p>
     </div>
-    <h1>Welcome to Lively</h1>
-    <h4>
-        Everything you need to see your favorite Spotify artists in real life.</h4>
 
-        <h3>Search by</h3>
-        <div class="filterRow">
-            <div>
-                <label for="artist">Artist</label>
-                <input id="artist" type="text" name="artist">
-                <div id="selectedArtists"></div>
-            </div>
-            <div>
-                <div class="">
-                    <label for="genre">Genre</label>
-                    <select class="js-example-basic-multiple genreSelect" name="genres[]" multiple="multiple" id="genre">
-                    </select>
-                </div>
-            </div>
-            <div>
-                <label for="location">Location (City, State)</label>
-                <input id="location" type="text" name="location">
-            </div>
-            <div>
-                <!-- <input type="text" name="daterange" value="01/01/2023 - 01/15/2023" /> -->
-                <label for="datepicker">Date Range</label>
-                <input id=datepicker type="text" name="daterange" value="" /> 
-            </div>
-            <button id="submitSearchButton">Search</button>
-            <h3>or</h3>
-            <div class="container">
-                <div id="login">
-                    <a href="/login" class="btn btn-primary">Log in with Spotify</a>
-
-                </div>
-                <!-- <button id="loginSpotify" >Log In to Spotify</button> -->
-                <div id="loggedin" class="loggedin">
-                    <div id="user-profile">
-                    </div>
-                    <div id="oauth">
-                    </div>
-                    <button class="btn btn-default" id="obtain-new-token">Refresh Token</button>
-                </div>
-            </div>
-            <script id="user-profile-template" type="text/x-handlebars-template">
-                <div>Logged in as {{display_name}}</div>
-            </script>
-
-        </div>
-    </div>
     <h3>Lively! Everything you need to see your favorite artists in real life.</h3>
         <div class='tabs'>
             <div class="tab">
