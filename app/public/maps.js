@@ -5,151 +5,8 @@ import * as cookies from "./cookies.js";
 
 // ---- dummy data ----
 
-let dummy_hotel_data = [
-    {
-        "id": 105991,
-        "name": "Royal Garden Hotel",
-        "starRating": 5,
-        "urls": {},
-        "address": {
-            "streetAddress": "2-24 Kensington High Street",
-            "extendedAddress": "",
-            "locality": "London",
-            "postalCode": "W8 4PT",
-            "region": "England",
-            "countryName": "United Kingdom",
-            "countryCode": "gb",
-            "obfuscate": false
-        },
-        "welcomeRewards": {
-            "collect": true
-        },
-        "guestReviews": {
-            "unformattedRating": 4.4,
-            "rating": "4.4",
-            "total": 1197,
-            "scale": 5,
-            "badge": "fabulous",
-            "badgeText": "Fabulous"
-        },
-        "landmarks": [
-            {
-                "label": "8 Victoria Embankment, London WC2R 2AB, UK",
-                "distance": "3.1 miles"
-            },
-            {
-                "label": "London",
-                "distance": "2.6 miles"
-            }
-        ],
-        "geoBullets": [],
-        "ratePlan": {
-            "price": {
-                "current": "$391",
-                "exactCurrent": 391.28,
-                "old": "$435",
-                "fullyBundledPricePerStay": "total $470"
-            },
-            "features": {
-                "freeCancellation": false,
-                "paymentPreference": false,
-                "noCCRequired": false
-            },
-            "type": "EC"
-        },
-        "neighbourhood": "Royal Borough of Kensington and Chelsea",
-        "deals": {
-            "secretPrice": {
-                "dealText": "Save more with Secret Prices"
-            },
-            "priceReasoning": "DRR-443"
-        },
-        "messaging": {
-            "scarcity": "1 left on our app"
-        },
-        "badging": {},
-        "pimmsAttributes": "DoubleStamps|D13|TESCO",
-        "coordinate": {
-            "lat": 51.502392,
-            "lon": -0.188608
-        },
-        "roomsLeft": 1,
-        "providerType": "LOCAL",
-        "supplierHotelId": 54987,
-        "isAlternative": false,
-        "optimizedThumbUrls": {
-            "srpDesktop": "https://exp.cdn-hotels.com/hotels/1000000/60000/55000/54987/08dd57c0_z.jpg?impolicy=fcrop&w=250&h=140&q=high"
-        }
-    },
-    {
-        "id": 360456,
-        "name": "St. Pancras Renaissance Hotel London",
-        "starRating": 5,
-        "urls": {},
-        "address": {
-            "streetAddress": "Euston Road",
-            "extendedAddress": "",
-            "locality": "London",
-            "postalCode": "NW1 2AR",
-            "region": "England",
-            "countryName": "United Kingdom",
-            "countryCode": "gb",
-            "obfuscate": false
-        },
-        "welcomeRewards": {
-            "collect": true
-        },
-        "guestReviews": {
-            "unformattedRating": 4.3,
-            "rating": "4.3",
-            "total": 1084,
-            "scale": 5,
-            "badge": "fabulous",
-            "badgeText": "Fabulous"
-        },
-        "landmarks": [
-            {
-                "label": "8 Victoria Embankment, London WC2R 2AB, UK",
-                "distance": "1.4 miles"
-            },
-            {
-                "label": "London",
-                "distance": "1.5 miles"
-            }
-        ],
-        "geoBullets": [],
-        "ratePlan": {
-            "price": {
-                "current": "$431",
-                "exactCurrent": 430.7,
-                "fullyBundledPricePerStay": "total $517"
-            },
-            "features": {
-                "freeCancellation": false,
-                "paymentPreference": false,
-                "noCCRequired": false
-            },
-            "type": "EC"
-        },
-        "neighbourhood": "Kings Cross St. Pancras",
-        "deals": {},
-        "messaging": {},
-        "badging": {},
-        "pimmsAttributes": "DoubleStamps|MESOTESTUK|TESCO",
-        "coordinate": {
-            "lat": 51.529412,
-            "lon": -0.125847
-        },
-        "providerType": "LOCAL",
-        "supplierHotelId": 3907784,
-        "isAlternative": false,
-        "optimizedThumbUrls": {
-            "srpDesktop": "https://exp.cdn-hotels.com/hotels/4000000/3910000/3907800/3907784/5fc0845f_z.jpg?impolicy=fcrop&w=250&h=140&q=high"
-        }
-    }
-]; 
 
-let searchButton = document.getElementById("buttonTicketMasterEvents");
+let searchButton = document.getElementById("submitSearchButton");
 let allConcerts = document.getElementById("allConcerts");
 let spotifyButton = document.getElementById("buttontopartist");
 
@@ -160,42 +17,51 @@ function initMap() {
     let markers = [];
     let selectedMarker = [];
     let infowindow = null;
+    let table = document.getElementById("eventsTable")
 
-    
+
+    searchButton.click();
 
     searchButton.addEventListener("click", () => {
-        fetch('/tmEvents').then((response) => {
-            return response.json();
-        }).then((body) => {
-            let data = body['_embedded'].events;
-            deleteMarkers();
-            showVenueMarkers(data)
-            allConcerts.addEventListener("click", function () {
-                deleteMarkers();
-                deleteSelectedMarker()
-                showVenueMarkers(data)
+        deleteMarkers();
+        deleteSelectedMarker();
+        for (let i = 0; i < table.rows.length; i++) {
+            table.rows[i].addEventListener("click", () => {
+                console.log(table.rows[i])
+                let cellLat = table.rows[i].cells[4].textContent;
+                let cellLong = table.rows[i].cells[5].textContent;
+                let cellBanner = table.rows[i].cells[6].textContent;
+                let contentString = `
+                            <center><img src = ${cellBanner} width = "300" height = "150"> </center> <br>
+                            <b>Name: </b> ${table.rows[i].cells[0].textContent} <br>
+                            <b>Address: </b> ${table.rows[i].cells[2].textContent} `;
+
+                createVenueMarker(cellLat, cellLong, contentString);
             })
-
-            let table = document.getElementById("eventsTable")
-            for (let i = 0; i < table.rows.length; i++) {
-                table.rows[i].addEventListener("click", () => {
-                    let cellLat = table.rows[i].cells[4].textContent;
-                    let cellLong = table.rows[i].cells[5].textContent;
-                    let cellBanner = table.rows[i].cells[6].textContent;
-                    let contentString = `
-                              <center><img src = ${cellBanner} width = "300" height = "150"> </center> <br>
-                              <b>Name: </b> ${table.rows[i].cells[0].textContent} <br>
-                              <b>Address: </b> ${table.rows[i].cells[2].textContent} `;
-
-                    deleteMarkers();
-                    deleteSelectedMarker();
-                    console.log(selectedMarker)
-                    createVenueMarker(cellLat, cellLong, contentString);
-                })
-            };
-
-        });
+        };
+        showTableData(table);
     });
+
+    allConcerts.addEventListener("click", function () {
+        deleteMarkers();
+        deleteSelectedMarker();
+        console.log(table.rows)
+        for (let i = 0; i < table.rows.length; i++) {
+            table.rows[i].addEventListener("click", () => {
+                console.log(table.rows[i])
+                let cellLat = table.rows[i].cells[4].textContent;
+                let cellLong = table.rows[i].cells[5].textContent;
+                let cellBanner = table.rows[i].cells[6].textContent;
+                let contentString = `
+                            <center><img src = ${cellBanner} width = "300" height = "150"> </center> <br>
+                            <b>Name: </b> ${table.rows[i].cells[0].textContent} <br>
+                            <b>Address: </b> ${table.rows[i].cells[2].textContent} `;
+
+                createVenueMarker(cellLat, cellLong, contentString);
+            })
+        };
+        showTableData(table);
+    })
 
     spotifyButton.addEventListener("click", () => {
         deleteMarkers();
@@ -204,7 +70,6 @@ function initMap() {
             let spotifyEvents = JSON.parse(window.localStorage.getItem("spotifyEvents"));
             data = spotifyEvents._embedded.events;
         }
-        showVenueMarkers(data);
         allConcerts.addEventListener("click", function () {
             deleteMarkers()
             deleteSelectedMarker()
@@ -258,6 +123,21 @@ function initMap() {
         }
     };
 
+    function showTableData(table) {
+        for (let i = 1; i < table.rows.length; i += 2) {
+            let cellLat = table.rows[i].cells[4].textContent;
+            let cellLong = table.rows[i].cells[5].textContent;
+            let cellBanner = table.rows[i].cells[6].textContent;
+            let contentString = `
+                            <center><img src = ${cellBanner} width = "300" height = "150"> </center> <br>
+                            <b>Name: </b> ${table.rows[i].cells[0].textContent} <br>
+                            <b>Address: </b> ${table.rows[i].cells[2].textContent} `;
+
+            createVenueMarker(cellLat, cellLong, contentString);
+
+        };
+
+    }
 
     function showHotelMarkers(data) {
         for (let i = 0; i < dummy_hotel_data.length; i++) {
