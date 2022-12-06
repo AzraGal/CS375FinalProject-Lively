@@ -57,7 +57,6 @@ function populateSuggestedArtistsList(body) {
             div.className = "suggestedArtist";
             div.addEventListener("click", () => {   
                 if (numberOfSelectedArtists < 5) {
-                    numberOfSelectedArtists++;
                     artistInput.value = artistName;
                     addToSelectedArtists(artistName);
                     if (cookies.cookieConsent !== "") {
@@ -77,6 +76,7 @@ function populateSuggestedArtistsList(body) {
 
 export function addToSelectedArtists(artistName) {
     if (!listOfSelectedArtists.includes(artistName)) {
+        numberOfSelectedArtists++;
         listOfSelectedArtists.push(artistName);
         let div = document.createElement("div");
         div.className = "selectedArtist";

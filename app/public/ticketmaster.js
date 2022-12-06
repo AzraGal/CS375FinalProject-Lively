@@ -114,13 +114,22 @@ export function populateEventsTable(body) {
         let eventStatus = event.dates.status.code;
         let eventVenue ='';
         if(event["_embedded"] != undefined && event["_embedded"]["venues"] != undefined){
-            eventVenue = event["_embedded"].venues[0].name;
-        }else{
+            if (event["_embedded"]["venues"][0]["name"] != undefined) {
+                eventVenue = event["_embedded"].venues[0].name;
+            }
+            else if (event["_embedded"]["venues"][0]["address"] != undefined && event["_embedded"]["venues"][0]["address"]["line1"] != undefined) {
+                eventVenue = event["_embedded"]["venues"][0]["address"]["line1"];
+            }
+            else {
+                eventVenue = "N/A";
+            }
+        }
+        else {
             eventVenue = "N/A"
         }
         let eventLat ='' ;
         let eventLog='';
-        if(event["_embedded"] != undefined && event["_embedded"]["venues"] != undefined){
+        if(event["_embedded"] != undefined && event["_embedded"]["venues"] != undefined && event["_embedded"]["venues"][0].location != undefined){
             eventLat  = event["_embedded"].venues[0].location.latitude;
             eventLog  = event["_embedded"].venues[0].location.longitude;
         }
