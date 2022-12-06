@@ -10,18 +10,13 @@ let artistInput = document.getElementById("artist");
 let genreInput = document.getElementById("genre");
 let locationInput = document.getElementById("location");
 
-let eventTable = document.getElementById('eventsTable');
-let eventTableBody = document.getElementById('eventsTableBody');
+let eventTable = document.getElementById("eventsTable")
+let eventTableBody = document.getElementById("eventsTableBody")
+
 // 
 // function showHideEventRow(row) {
 //     $("#" + row).toggle();
 // }
-
-let row1 = document.getElementById("row1")
-
-row1.addEventListener("click", () => {
-    $("#" + 'hidden_row1').toggle();
-});
 
 
 eventTable.addEventListener("click", function(event) {
@@ -77,7 +72,7 @@ function getTicketmasterEvents(selectedArtists, selectedGenres, location) {
     }).then((response) => {
         return response.json();
     }).then((body)=>{
-        // console.log(body);
+        console.log(body);
         populateEventsTable(body);
     })
 };
@@ -88,13 +83,31 @@ export function populateEventsTable(body) {
         eventTableBody.firstElementChild.remove();
     }
 
-    // console.log(events);
+    console.log(events);
 
     for (let i = 0; i < events.length; i++) {
         let event = events[i];
 
         let eventName = event.name;
+        
+        let otherEvents = document.createElement('div');
+        otherEvents.className = 'col2container';
+        let attractions = event["_embedded"].attractions;
+
+        let otherEventsheader = document.createElement('h5');        
+        if (attractions != undefined && 
+            attractions.length  > 1){
+            otherEventsheader.textContent = "Other Attractions:";
+            for (let i = 1; i < attractions.length; i++) {
+                const event = attractions[i];
+                let eventLine = document.createElement('p');
+                eventLine.textContent = event.name;
+                otherEvents.append(eventLine)
+            }
+        }
+
         let eventDate = event.dates.start.localDate;
+        let eventStatus = event.dates.status.code;
         let eventVenue ='';
         if(event["_embedded"].venues !=undefined){
             eventVenue = event["_embedded"].venues[0].name;
@@ -138,7 +151,7 @@ export function populateEventsTable(body) {
         let rowData2 = document.createElement('td');
         let rowData3 = document.createElement('td');
         let rowData4 = document.createElement('td');
-        let rowData5 = document.createElement('a');
+        let rowData5 = document.createElement('td');
         
         let rowData6 = document.createElement('td');
         rowData6.style.cssText = 'display:none;';
@@ -152,9 +165,18 @@ export function populateEventsTable(body) {
         rowData3.textContent = eventVenue;
         rowData4.textContent = eventPriceRange;
         
-        rowData5.textContent = "L";
-        rowData5.target = "_blank";
-        rowData5.href = eventLink;
+        let link = document.createElement('a')
+        link.textContent = "Link to Purchase Ticket";
+        link.target = "_blank";
+        link.href = eventLink;
+        
+        let info = document.createElement('h5');
+        info.textContent = eventStatus + ":";
+        info.append(link);
+        
+        rowData5.append(info);
+        rowData5.append(otherEventsheader);
+        rowData5.append(otherEvents);
         
         rowData6.textContent = eventLat;
         rowData7.textContent = eventLog;
@@ -164,7 +186,6 @@ export function populateEventsTable(body) {
         row.append(rowData2);
         row.append(rowData3);
         row.append(rowData4);
-        row.append(rowData5);
         row.append(rowData6);
         row.append(rowData7);
         row.append(rowData8);
@@ -176,9 +197,9 @@ export function populateEventsTable(body) {
         infoRow.id = `inforow${i}`;
         infoRow.className='hidden_row';
 
-        let infoRowData1 = document.createElement('td');
-        infoRowData1.textContent = "example";
-        infoRow.append(infoRowData1);
+        rowData5.colSpan = "4";
+        infoRow.append(rowData5);
+
         eventTableBody.append(infoRow);	
             
     }

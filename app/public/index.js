@@ -11,6 +11,26 @@ let location = "";
 
 // let getConcertHotels = document.getElementById("concertRes");
 
+let spotifySearch = document.getElementById("spotifySearch");
+let customSearch = document.getElementById("customSearch");
+
+customSearch.addEventListener("click", () => {
+    let spotifyContent = document.getElementById('spotifyContent');
+    spotifyContent.style.display = "none";
+    let customContent = document.getElementById('customContent');
+    customContent.style.display = "block";
+    customContent.className += " active";
+
+})
+spotifySearch.addEventListener("click", () => {
+    let customContent = document.getElementById('customContent');
+    customContent.style.display = "none";
+
+    let spotifyContent = document.getElementById('spotifyContent');
+    spotifyContent.style.display = "block";
+    spotifyContent.className += " active";
+})
+
 $('input[name="daterange"]').daterangepicker({
     autoUpdateInput: false,
     locale: {
@@ -24,7 +44,7 @@ $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
         cookies.deleteCookie("date_range");
         cookies.setCookie("date_range", `${picker.startDate.format('MM/DD/YYYY')} - ${picker.endDate.format('MM/DD/YYYY')}`, 30);
     }
-    console.log(picker.startDate.format('MM/DD/YYYY'), picker.endDate.format('MM/DD/YYYY'));
+    console.log(picker.startDate.format('YYYY-MM-DD'), picker.endDate.format('YYYY-MM-DD'));
 });
 
 $('input[name="daterange"]').on('cancel.daterangepicker', function(ev, picker) {
@@ -71,7 +91,7 @@ $(document).ready(function() {
                     createData.push(subGenre.name);
                 }
                 TMsubGenreMap.set(subGenre.name, subGenre.id)
-                createData.push(subGenre.name)
+                // createData.push(subGenre.name)
             });
             // createData.push(genre.name)
 
@@ -94,6 +114,10 @@ $(document).ready(function() {
 let select2GenresIDs = [];
 
 function init() {
+    let customContent = document.getElementById('customContent');
+    customContent.style.display = "block";
+    customContent.className += " active";
+    
     submitSearchButton.addEventListener("click", submitSearch);
     if (cookies.cookieConsent !== "") {
         if (cookies.getCookie("current_artist_search") !== "") {
