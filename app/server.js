@@ -29,6 +29,8 @@ app.use(express.static(__dirname + '/public'))
 
 var musicID = "" 
 
+var TMtimeoutCounter = 5;
+
 var client_id = env.client_id; // Your client id
 var client_secret = env.client_secret; // Your secret
 var redirect_uri = env.redirect_uri; // Your redirect uri
@@ -287,7 +289,8 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 					stateQueryParam + 
 					pageSizeQueryParam;
 			console.log(url);
-			
+			// while(TMtimeoutCounter==0){console.log(TMtimeoutCounter);};
+			// TMtimeoutCounter--;
 			let requestPromise = axios(url)
 			.then(response => {
 				// console.log(response.data);
@@ -310,6 +313,9 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 			// console.log("allRequestResults length", allRequestResults);
 			res.json(allRequestResults)
 		})
+	} else {
+		console.log("TODO!!!");
+		//TODO: write this functionality
 	}
 })
 
@@ -422,12 +428,17 @@ setInterval(function() {
 }, 1800000); //1800000 is every 30 min
 getMusicClassificationId()
 
+
+// setInterval(() => {
+// 	console.log(TMtimeoutCounter = 5);
+// }, 1000);
+
 function getMusicClassificationId() {
 	let url = `https://app.ticketmaster.com/discovery/v2/classifications.json?apikey=${ticketmasterAPIkey}`
 	axios(url)
 	.then(response => {
 		musicID = response.data._embedded.classifications[2].segment.id;
-		console.log(musicID)
+		// console.log(musicID)
 	})
 	.catch(function (error) {
 		console.log(error);

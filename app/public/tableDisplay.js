@@ -70,6 +70,6 @@ function displayConcertSearchResults(promise) {
 
 function clearEventsTable() {
     while (eventTableBody.childElementCount > 0) {
-        eventTableBody.firstElementChild.remove();
+        eventTableBody.firstElementChild.remove();   
     }
 }

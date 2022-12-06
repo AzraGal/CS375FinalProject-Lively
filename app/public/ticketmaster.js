@@ -10,7 +10,9 @@ let artistInput = document.getElementById("artist");
 let genreInput = document.getElementById("genre");
 let locationInput = document.getElementById("location");
 
-let eventTable = document.getElementById("eventsTableBody")
+let eventTable = document.getElementById("eventsTable")
+let eventTableBody = document.getElementById("eventsTableBody")
+
 // 
 // function showHideEventRow(row) {
 //     $("#" + row).toggle();
