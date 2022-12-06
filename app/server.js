@@ -274,6 +274,10 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 		state = splitLocation[1]
 	}
 
+	let urlBase = `https://app.ticketmaster.com/discovery/v2/events.json?&apikey=${ticketmasterAPIkey}&locale=${locale}`
+	let cityQueryParam = `&city=${city}`
+	let stateQueryParam = `&stateCode=${state}`
+
 	let allRequestPromises = []
 	let allRequestResults = {_embedded:{events:[]}}
 
@@ -281,12 +285,10 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 		// selectedArtists.forEach(element => {
 		for (let index = 0; index < selectedArtists.length; index++) {
 			const element = selectedArtists[index];
-			// let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${ticketmasterAPIkey}`
-			let urlBase = `https://app.ticketmaster.com/discovery/v2/events.json?&apikey=${ticketmasterAPIkey}&locale=${locale}`
+			
 			let classificationNameQueryParam = `&classificationName=${combinedGenres}`
 			let keywordQueryParam = `&keyword=${element}`;
-			let cityQueryParam = `&city=${city}`
-			let stateQueryParam = `&stateCode=${state}`
+
 			pageSize = 20
 			let pageSizeQueryParam = `&size=${pageSize}`;
 			let url = urlBase + 
