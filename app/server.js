@@ -301,13 +301,12 @@ app.get("/hotelsCoordinates", (req, res) => {
 app.get("/hotels", (req, res) => {
     const hotelConfig = {
         params: {
-            latitude: req.query.latitude,
-            longitude: req.query.longitude,
+			region_id: req.query.regionId,
             domain: "US",
             locale: "en_US",
             checkin_date: "2022-12-29",
             checkout_date: "2022-12-30",
-            sort_order: "PRICE",
+            sort_order: "PRICE_RELEVANT",
             adults_number: "2"
         },
         headers: {

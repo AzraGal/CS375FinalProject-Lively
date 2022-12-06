@@ -112,12 +112,12 @@ function generateLocations() {
 
 function fetchHotels(locationId) {
 
-    fetch("/hotels?latitude=" + locations[locationId][1] + "&longitude=" + locations[locationId][2]).then((response) => {
+    fetch("/hotels?regionId=" + locationId).then((response) => {
         return response.json();
     }).then((body) => {
         console.log(body);
 
-        let searchResults = body.searchResults.results;
+        let searchResults = body.properties;
 
         console.log(hotelTableBody.rows.length);
 
@@ -131,15 +131,13 @@ function fetchHotels(locationId) {
             hotelTableBody.append(row);
 
             let hotelName = document.createElement("td");
-            let hotelAddress = document.createElement("td");
-            let hotelPrice = document.createElement("td");
+            let hotelDistance = document.createElement("td");
             row.append(hotelName);
-            row.append(hotelAddress);
-            row.append(hotelPrice);
+            row.append(hotelDistance);
 
+            row.setAttribute("id", searchResults[i].id);
             hotelName.textContent = searchResults[i].name;
-            hotelAddress.textContent = searchResults[i].address.streetAddress + ", " + searchResults[i].address.locality + " " + searchResults[i].address.region; 
-            hotelPrice.textContent = searchResults[i].ratePlan.price.current; 
+            hotelDistance.textContent = searchResults[i].destinationInfo.distanceFromDestination.value + " miles";
         }
     });
 }
