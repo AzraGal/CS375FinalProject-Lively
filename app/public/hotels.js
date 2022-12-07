@@ -3,6 +3,10 @@ let searchLocation = document.getElementById("location");
 let hotelLocations = document.getElementById("hotelLocations");
 let hotelTableBody = document.getElementById("hotelBody");
 let locations = {}; 
+let populated = false; 
+let maxHotelResults = 20; 
+let visibleHotelDetails = false; 
+let selectedHotelRow, selectedHotelRowId;
 
 const states = {
     alabama: "AL",
@@ -56,6 +60,7 @@ const states = {
     wisconsin: "WI",
     wyoming: "WY"
 };
+
 //commented out for the Search-functionality branch to save our API requests
 // search.addEventListener("click", () => {
 //     let searchLocationVal = searchLocation.value;
@@ -63,11 +68,14 @@ const states = {
 //     fetch("/hotelsCoordinates?searchLocation=" + searchLocationVal).then((response) => {
 //         return response.json(); 
 //     }).then((body) => {
-//         let cities = body.suggestions[0].entities;
+//         console.log(body);
+//         let cities = body.data;
 
 //         for (let i = 0; i < cities.length; i ++) {
-//             let city = [cities[i].caption, cities[i].latitude, cities[i].longitude];
-//             locations[cities[i].geoId] = city; 
+//             if (cities[i].type === "CITY") {
+//                 let city = [cities[i].regionNames.displayName, cities[i].coordinates.latitude, cities[i].coordinates.longitude];
+//                 locations[cities[i].gaiaId] = city; 
+//             }
 //         }
 
 //         generateLocations();
@@ -109,34 +117,82 @@ function generateLocations() {
 
 function fetchHotels(locationId) {
 
-    fetch("/hotels?latitude=" + locations[locationId][1] + "&longitude=" + locations[locationId][2]).then((response) => {
+    fetch("/hotels?regionId=" + locationId).then((response) => {
         return response.json();
     }).then((body) => {
-        console.log(body.searchResults);
+        console.log(body);
 
-        let searchResults = body.searchResults.results;
-
-        console.log(hotelTableBody.rows.length);
+        let searchResults = body.properties;
 
         while (hotelTableBody.rows.length > 0) {
             console.log("delete");
             hotelTableBody.deleteRow(0);
         }
 
-        for (let i = 0; i < searchResults.length; i++) {
+        for (let i = 0; i < maxHotelResults; i++) {
             let row = document.createElement("tr");
+            let hiddenRow = document.createElement("tr");
             hotelTableBody.append(row);
+            hotelTableBody.append(hiddenRow);
 
             let hotelName = document.createElement("td");
-            let hotelAddress = document.createElement("td");
+            let hotelDistance = document.createElement("td");
             let hotelPrice = document.createElement("td");
             row.append(hotelName);
-            row.append(hotelAddress);
+            row.append(hotelDistance);
             row.append(hotelPrice);
 
+            row.setAttribute("id", searchResults[i].id);
             hotelName.textContent = searchResults[i].name;
-            hotelAddress.textContent = searchResults[i].address.streetAddress + ", " + searchResults[i].address.locality + " " + searchResults[i].address.region; 
-            hotelPrice.textContent = searchResults[i].ratePlan.price.current; 
+            hotelDistance.textContent = searchResults[i].destinationInfo.distanceFromDestination.value + " miles";
+            hotelPrice.textContent = searchResults[i].price.options[0].formattedDisplayPrice;
+
+            hiddenRow.setAttribute("id", searchResults[i].id + "hidden");
+            hiddenRow.setAttribute("hidden", true);
         }
+
+        populated = true; 
     });
 }
+
+hotelTableBody.addEventListener("click", (e) => {
+    const hotelCell = e.target.closest('td');
+
+    if (!hotelCell || populated === false) { return}
+    
+    let hotelRow = hotelCell.parentElement;
+    let row = document.getElementById(hotelRow.id + "hidden");
+    
+    if (selectedHotelRow) {
+        $("#" + selectedHotelRowId + "hidden").toggle();
+    }
+
+    $("#" + hotelRow.id + "hidden").toggle();
+    selectedHotelRow = row;
+    selectedHotelRowId = hotelRow.id;
+    
+    console.log("clicked!", hotelRow.id);
+
+    
+    fetch("/hotelDetails?hotelId=" + hotelRow.id).then((response) => {
+        return response.json();
+    }).then((body) => {
+        console.log(body);
+
+        let details = body.summary; 
+        
+        let tagline = document.createElement("ul");
+        let detailCell = document.createElement("td");
+        let detailList = document.createElement("ul"); 
+        row.append(tagline);
+        row.append(detailCell);
+        detailCell.append(detailList);
+
+        tagline.textContent = details.tagline;
+
+        detailList.textContent = "Address";
+        let address = document.createElement("li");
+        detailList.append(address);
+        address.textContent = details.location.address.addressLine; 
+    });
+});
