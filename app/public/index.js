@@ -127,7 +127,7 @@ function init() {
             listOfSelectedArtists = JSON.parse(cookies.getCookie("selected_artists").substring(1));
             showSelectedArtists(listOfSelectedArtists);
         }
-        if (cookies.getCookie("selected_genres") !== "") {
+        if (cookies.getCookie("selected_genres") !== "" && cookies.getCookie("selected_genres") !== "[]") {
             select2GenresIDs = JSON.parse(cookies.getCookie("selected_genres").substring(1));
         }
         cityInput.value = cookies.getCookie("city").substring(1);
