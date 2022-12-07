@@ -16,12 +16,12 @@ function artistSearch(key) {
         while (suggestedArtists.firstChild) {
             suggestedArtists.removeChild(suggestedArtists.firstChild);
         }
-        if (document.getElementById("user-profile").childElementCount !== 0) {
-            artistSearchSpotify();
-        }
-        else {
-            artistSearchTicketMaster();
-        }
+        // if (document.getElementById("user-profile").childElementCount !== 0) {
+        //     artistSearchSpotify();
+        // }
+        // else {
+        artistSearchTicketMaster();
+        // }
     }
 }
 
