@@ -252,7 +252,11 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 	let pageSize = 200
 
 	if ( (selectedArtists == undefined) ||
-	(selectedGenres == undefined) //TODO: Benedict, add checking if any of the arrays contain invalid entries, like numbers for genres. Check your old homeworks for thats
+			(selectedGenres == undefined) || //TODO: Benedict, add checking if any of the arrays contain invalid entries, like numbers for genres. Check your old homeworks for thats
+			(startDate == undefined) || 
+			(endDate == undefined) || 
+			(city == undefined) || 
+			(state == undefined)
 	){
 		res.status(400).json({error: "Not all post request fields were populated!"});
 	}
@@ -348,7 +352,6 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 	} else {
 		let requestPromise = axios(url)
 		.then(response => {
-			console.log("Single TM response events.length", response.data._embedded.events.length);
 			res.json(response.data) 
 		})
 		.catch(function (error) {

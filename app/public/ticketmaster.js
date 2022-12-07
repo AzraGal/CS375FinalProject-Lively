@@ -83,11 +83,17 @@ function getTicketmasterEvents(selectedArtists, selectedGenres, city, state, sta
 };
 
 export function populateEventsTable(body) {
+    
+    clearEventsTable();
+    
+    if (body['_embedded'] == undefined ||
+        (body['_embedded'].events == undefined)
+    ){
+        console.error("Server reply contains no _embedded object or no _embedded.events object")
+        return;
+    } 
+    
     let events = body['_embedded'].events;
-    while (eventTableBody.childElementCount > 0) {
-        eventTableBody.firstElementChild.remove();
-    }
-
     console.log(events);
 
     for (let i = 0; i < events.length; i++) {
@@ -222,3 +228,9 @@ export function populateEventsTable(body) {
             
     }
 } 
+
+function clearEventsTable() {
+    while (eventTableBody.childElementCount > 0) {
+        eventTableBody.firstElementChild.remove();   
+    }
+}

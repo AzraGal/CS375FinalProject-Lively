@@ -31,7 +31,15 @@ function submitSearch(){
     var endDate = drp.endDate.format('YYYY-MM-DD');
     let dateRangeVal = daterange.value;
     
-    let eventSearchPromise = getTicketmasterEvents(selectedArtists, selectedGenres, location);
+    if (dateRangeVal == ""){
+        startDate = ""
+        endDate = ""
+    } else {
+        startDate = startDate + "T00:00:00Z";
+        endDate = endDate + "T23:59:00Z";
+    }
+
+    let eventSearchPromise = getTicketmasterEvents(selectedArtists, selectedGenres, city, state, startDate, endDate);
     eventSearchPromise.then((body) => {
         console.log(body);
         populateEventsTable(body);
