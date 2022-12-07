@@ -21,13 +21,7 @@ function initMap() {
 
 
     searchButton.click();
-
-    searchButton.addEventListener("click", () => {
-        deleteMarkers();
-        deleteSelectedMarker();
-        allConcerts.click();
-    });
-
+    
     allConcerts.addEventListener("click", function () {
         for (let i = 0; i < table.rows.length; i++) {
             eventClicked(i);
@@ -36,7 +30,6 @@ function initMap() {
     })
 
     spotifyButton.addEventListener("click", () => {
-        deleteMarkers();
         let data = spotify.spotifyEvents._embedded.events;
         if (cookies.cookieConsent !== "" && window.localStorage.getItem("spotifyEvents")) {
             let spotifyEvents = JSON.parse(window.localStorage.getItem("spotifyEvents"));

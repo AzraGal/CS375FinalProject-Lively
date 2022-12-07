@@ -72,8 +72,9 @@ function getTicketmasterEvents(selectedArtists, selectedGenres, location) {
     }).then((response) => {
         return response.json();
     }).then((body)=>{
-        console.log(body);
-        populateEventsTable(body);
+        // console.log(body);
+        // populateEventsTable(body);
+        return body;
     })
 };
 
