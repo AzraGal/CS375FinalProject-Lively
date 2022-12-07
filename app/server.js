@@ -253,7 +253,7 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 
 	if ( (selectedArtists == undefined) ||
 	(selectedGenres == undefined) //TODO: Benedict, add checking if any of the arrays contain invalid entries, like numbers for genres. Check your old homeworks for thats
-	){ //TODO: test this checking for invalid requests before deployment
+	){
 		res.status(400).json({error: "Not all post request fields were populated!"});
 	}
 
@@ -266,15 +266,6 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 		}
 	}
 	console.log(combinedGenres);
-
-	// let city = ''
-	// let state = ''
-
-	// let splitLocation = selectedLocation.split(",")
-	// if (splitLocation.length == 2){ //
-	// 	city = splitLocation[0]
-	// 	state = splitLocation[1]
-	// }
 
 	let urlBase = `https://app.ticketmaster.com/discovery/v2/events.json?&apikey=${ticketmasterAPIkey}&locale=${locale}`
 	let countryCodeQueryParam = "&countryCode=US"
@@ -325,8 +316,13 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 				//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
 				// console.log(Object.getOwnPropertyNames(response.headers));
 				console.log(response);
-				console.log("TM response events.length", response.data._embedded.events.length);
-				return response.data._embedded.events
+				// console.log("TM response events.length", response.data._embedded.events.length);
+				if ( !(response.data._embedded == undefined) ){
+					return response.data._embedded.events
+				} else {
+					return null
+				}
+				
 				// let requestedEvents = response.data._embedded.events;
 			})
 			.catch(function (error) {
@@ -342,7 +338,9 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 			console.log("arrayOfRequestedEvents", arrayOfRequestedEvents);
 			// allRequestResults.push(...arrayOfRequestedEvents);
 			arrayOfRequestedEvents.forEach(requestedEventSet => {
-				if ( !(requestedEventSet == undefined)){
+				if ( !(requestedEventSet == undefined) ||
+						!(requestedEventSet == null)
+				){
 					requestedEventSet.forEach(event => {
 						allRequestResults["_embedded"].events.push(event)
 					});
