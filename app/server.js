@@ -316,27 +316,21 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 				//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
 				// console.log(Object.getOwnPropertyNames(response.headers));
 				console.log(response);
-				// console.log("TM response events.length", response.data._embedded.events.length);
 				if ( !(response.data._embedded == undefined) ){
 					return response.data._embedded.events
 				} else {
 					return null
 				}
-				
-				// let requestedEvents = response.data._embedded.events;
 			})
 			.catch(function (error) {
 				// console.log(Object.getOwnPropertyNames(error.response.headers));
 				console.log(error);
-				// if (error.response.header)
 			});
 			// console.log(requestPromise);
 			allRequestPromises.push(requestPromise)
-		// });
 		}
 		Promise.all(allRequestPromises).then((arrayOfRequestedEvents) => {
 			console.log("arrayOfRequestedEvents", arrayOfRequestedEvents);
-			// allRequestResults.push(...arrayOfRequestedEvents);
 			arrayOfRequestedEvents.forEach(requestedEventSet => {
 				if ( !(requestedEventSet == undefined) ||
 						!(requestedEventSet == null)
@@ -362,28 +356,6 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 		});
 	}
 })
-
-// app.post("/tmEvents", async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
-// app.post('/tmEvents', (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
-// 	console.log(req.body, req.body.selectedArtists.length);
-// 	let city = "Philadelphia"
-// 	let heavyMetalSubGenreId = "KZazBEonSMnZfZ7vkFd"
-// 	let indieRockSubGenreId = "KZazBEonSMnZfZ7vAde"
-// 	let artistName = "Wage War"
-// 	let pageSize = 200
-	
-// 	let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${ticketmasterAPIkey}`
-// 	axios(url)
-// 	.then(response => {
-// 		// console.log(response.data);
-// 		//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
-// 		console.log(response.data["_embedded"].events);
-// 		res.json(response.data)
-// 	})
-// 	.catch(function (error) {
-// 		console.log(error);
-// 	});
-// })
 
 app.get("/spotifyArtistEvents", async (req, res) => {
 	let artist = req.query.artist;
