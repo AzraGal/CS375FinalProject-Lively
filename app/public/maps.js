@@ -2,6 +2,7 @@
 // hotel pins are purple 
 import * as spotify from "./spotify.js";
 import * as cookies from "./cookies.js";
+import * as hotels from "./hotels.js";
 
 // ---- dummy data ----
 
@@ -63,6 +64,7 @@ function initMap() {
                       <b>Address: </b> ${table.rows[i].cells[2].textContent} `;
             let currentMarker = createVenueMarker(cellLat, cellLong, contentString);
             currentMap.panTo(new google.maps.LatLng(cellLat, cellLong));
+            hotels.convertCoordinates(cellLat, cellLong);
             infowindow.open(currentMap, currentMarker);
         });
     }

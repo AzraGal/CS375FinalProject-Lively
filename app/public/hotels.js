@@ -63,24 +63,41 @@ const states = {
 };
 
 //commented out for the Search-functionality branch to save our API requests
-search.addEventListener("click", () => {
-    let searchCityVal = searchCity.value;
-    let searchStateVal = searchState.value;
+// search.addEventListener("click", () => {
+//     let searchCityVal = searchCity.value;
+//     let searchStateVal = searchState.value;
 
-    fetch("/hotelsCoordinates?searchCity=" + searchCityVal).then((response) => {
+//     hotelRegion(searchCityVal, searchStateVal);
+// });
+
+
+export function convertCoordinates(cellLat, cellLong) {
+    fetch("/hotelCoordinates?lat=" + cellLat + "&long=" + cellLong).then((response) => {
+        return response.json();
+    }).then((body) => {
+        let searchCityVal = body[0].name;
+        let searchStateVal = body[0].state;
+
+        hotelRegion(searchCityVal, searchStateVal);
+    });
+}
+
+function hotelRegion(searchCityVal, searchStateVal) {
+    fetch("/hotelRegion?searchCity=" + searchCityVal).then((response) => {
         return response.json(); 
     }).then((body) => {
-        console.log(body);
         let cities = body.data;
+        let state; 
+
+        (searchStateVal in states) ? state = states[searchStateVal] : state = searchStateVal;
 
         for (let i = 0; i < cities.length; i ++) {
-            if (cities[i].type === "CITY" && cities[i].regionNames.displayName.includes(states[searchStateVal])) {
-                console.log("neato");
+            if (cities[i].type === "CITY" && cities[i].regionNames.displayName.includes(state)) {
                 fetchHotels(cities[i].gaiaId);
             }
         }
     }); 
-});
+}
 
 function formatStateName(name) {
     name = name.toLowerCase().replace(" ", "_");
@@ -120,8 +137,6 @@ function fetchHotels(locationId) {
     fetch("/hotels?regionId=" + locationId).then((response) => {
         return response.json();
     }).then((body) => {
-        console.log(body);
-
         let searchResults = body.properties;
 
         while (hotelTableBody.rows.length > 0) {
@@ -169,15 +184,10 @@ hotelTableBody.addEventListener("click", (e) => {
     $("#" + hotelRow.id + "hidden").toggle();
     selectedHotelRow = row;
     selectedHotelRowId = hotelRow.id;
-    
-    console.log("clicked!", hotelRow.id);
 
-    
     fetch("/hotelDetails?hotelId=" + hotelRow.id).then((response) => {
         return response.json();
     }).then((body) => {
-        console.log(body);
-
         let details = body.summary; 
         
         let tagline = document.createElement("ul");

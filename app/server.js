@@ -422,8 +422,19 @@ app.get("/", (req, res) => {
     res.send("public/index.html"); 
 });
 
-app.get("/hotelsCoordinates", (req, res) => {
-	console.log("help");
+app.get("/hotelCoordinates", (req, res) => {
+	const hotelCoordConfig = {
+		headers: {
+			'X-Api-Key': env["geocoding_key"]
+		}
+	}
+
+	axios.get('https://api.api-ninjas.com/v1/reversegeocoding?lat=' + req.query.lat + '&lon=' + req.query.long, hotelCoordConfig)
+        .then((response) => { res.json(response.data); })
+        .catch((error) => { console.log(error); });
+});
+
+app.get("/hotelRegion", (req, res) => {
     const hotelDestConfig = {
         params: {
             query: req.query.searchCity,
@@ -447,8 +458,8 @@ app.get("/hotels", (req, res) => {
 			region_id: req.query.regionId,
             domain: "US",
             locale: "en_US",
-            checkin_date: "2022-12-29",
-            checkout_date: "2022-12-30",
+            checkin_date: "2023-06-29",
+            checkout_date: "2023-06-30",
             sort_order: "DISTANCE",
             adults_number: "2"
         },

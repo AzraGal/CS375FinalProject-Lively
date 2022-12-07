@@ -119,6 +119,10 @@
 }
 .resTable thead tr th {
     padding: 10px 14px;
+    position: sticky; 
+    top: 0; 
+    z-index: 1; 
+    background-color: #cecece;
 }
 .resTable tbody tr {
     border-bottom: 1px solid #dddddd;
@@ -249,13 +253,6 @@
     overflow: scroll;
     height: 200px;
     width: auto;
-}
-
-.results thead th { 
-    position: sticky; 
-    top: 0; 
-    z-index: 1; 
-    background-color: #cecece;
 }
 
 .nolabel{
