@@ -68,11 +68,14 @@ const states = {
 //     fetch("/hotelsCoordinates?searchLocation=" + searchLocationVal).then((response) => {
 //         return response.json(); 
 //     }).then((body) => {
-//         let cities = body.suggestions[0].entities;
+//         console.log(body);
+//         let cities = body.data;
 
 //         for (let i = 0; i < cities.length; i ++) {
-//             let city = [cities[i].caption, cities[i].latitude, cities[i].longitude];
-//             locations[cities[i].geoId] = city; 
+//             if (cities[i].type === "CITY") {
+//                 let city = [cities[i].regionNames.displayName, cities[i].coordinates.latitude, cities[i].coordinates.longitude];
+//                 locations[cities[i].gaiaId] = city; 
+//             }
 //         }
 
 //         generateLocations();
