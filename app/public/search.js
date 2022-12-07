@@ -1,7 +1,9 @@
 import {getTicketmasterEvents} from "./ticketmaster.js";
+import {populateEventsTable} from "./ticketmaster.js";
 import {listOfSelectedArtists} from "./artistSearch.js";
 import {getSelectedGenres} from "./index.js";
 import {displayConcertSearchResults, clearEventsTable} from "./tableDisplay.js";
+
 
 let submitSearchButton = document.getElementById("submitSearchButton");
 let artistInput = document.getElementById("artist");
@@ -38,12 +40,16 @@ function submitSearch(){
     }
 
     let eventSearchPromise = getTicketmasterEvents(selectedArtists, selectedGenres, city, state, startDate, endDate);
+
     // clearEventsTable()
     // let displayConcertSearchPromise = displayConcertSearchResults(eventSearchPromise)
 
-    //we get the search results as var here
-    //submit to populate table
-    //submit to populate map
+    // eventSearchPromise.then({body} => {
+    //     //submit to populate table
+    //     //submit to populate map
+    // })
+
+
 }
 
 submitSearchButton.addEventListener("click", submitSearch);

@@ -25,76 +25,47 @@ function initMap() {
     searchButton.addEventListener("click", () => {
         deleteMarkers();
         deleteSelectedMarker();
-        for (let i = 0; i < table.rows.length; i++) {
-            table.rows[i].addEventListener("click", () => {
-                console.log(table.rows[i])
-                let cellLat = table.rows[i].cells[4].textContent;
-                let cellLong = table.rows[i].cells[5].textContent;
-                let cellBanner = table.rows[i].cells[6].textContent;
-                let contentString = `
-                            <center><img src = ${cellBanner} width = "300" height = "150"> </center> <br>
-                            <b>Name: </b> ${table.rows[i].cells[0].textContent} <br>
-                            <b>Address: </b> ${table.rows[i].cells[2].textContent} `;
+    });
 
-                createVenueMarker(cellLat, cellLong, contentString);
-            })
+    allConcerts.addEventListener("click", function () {
+        for (let i = 0; i < table.rows.length; i++) {
+            eventClicked(i);
         };
         showTableData(table);
     });
 
-    allConcerts.addEventListener("click", function () {
-        deleteMarkers();
-        deleteSelectedMarker();
-        console.log(table.rows)
-        for (let i = 0; i < table.rows.length; i++) {
-            table.rows[i].addEventListener("click", () => {
-                console.log(table.rows[i])
-                let cellLat = table.rows[i].cells[4].textContent;
-                let cellLong = table.rows[i].cells[5].textContent;
-                let cellBanner = table.rows[i].cells[6].textContent;
-                let contentString = `
-                            <center><img src = ${cellBanner} width = "300" height = "150"> </center> <br>
-                            <b>Name: </b> ${table.rows[i].cells[0].textContent} <br>
-                            <b>Address: </b> ${table.rows[i].cells[2].textContent} `;
-
-                createVenueMarker(cellLat, cellLong, contentString);
-            })
-        };
-        showTableData(table);
-    })
-
     spotifyButton.addEventListener("click", () => {
-        deleteMarkers();
         let data = spotify.spotifyEvents._embedded.events;
         if (cookies.cookieConsent !== "" && window.localStorage.getItem("spotifyEvents")) {
             let spotifyEvents = JSON.parse(window.localStorage.getItem("spotifyEvents"));
             data = spotifyEvents._embedded.events;
         }
-        allConcerts.addEventListener("click", function () {
-            deleteMarkers()
-            deleteSelectedMarker()
-            showVenueMarkers(data)
-        })
-        let table = document.getElementById("eventsTable")
-        for (let i = 0; i < table.rows.length; i++) {
-            table.rows[i].addEventListener("click", () => {
-                let cellLat = table.rows[i].cells[4].textContent;
-                let cellLong = table.rows[i].cells[5].textContent;
-                let cellBanner = table.rows[i].cells[6].textContent;
-                let contentString = `
-                          <center><img src = ${cellBanner} width = "300" height = "150"> </center> <br>
-                          <b>Name: </b> ${table.rows[i].cells[0].textContent} <br>
-                          <b>Address: </b> ${table.rows[i].cells[2].textContent} `;
-
-                deleteMarkers();
-                deleteSelectedMarker();
-                console.log(selectedMarker)
-                createVenueMarker(cellLat, cellLong, contentString);
-            });
-        };
+        allConcerts.click();
     });
 
   // --------------- marker creation functions -----------------
+
+    function eventClicked(i) {
+        deleteMarkers();
+        deleteSelectedMarker();
+        table.rows[i].addEventListener("click", () => {
+            deleteMarkers();
+            deleteSelectedMarker();
+            if (infowindow) {
+                infowindow.close();
+            }
+            let cellLat = table.rows[i].cells[4].textContent;
+            let cellLong = table.rows[i].cells[5].textContent;
+            let cellBanner = table.rows[i].cells[6].textContent;
+            let contentString = `
+                      <center><img src = ${cellBanner} width = "300" height = "150"> </center> <br>
+                      <b>Name: </b> ${table.rows[i].cells[0].textContent} <br>
+                      <b>Address: </b> ${table.rows[i].cells[2].textContent} `;
+            let currentMarker = createVenueMarker(cellLat, cellLong, contentString);
+            currentMap.panTo(new google.maps.LatLng(cellLat, cellLong));
+            infowindow.open(currentMap, currentMarker);
+        });
+    }
 
     function showVenueMarkers(data) {
         for (let i = 0; i < data.length; i++) {
