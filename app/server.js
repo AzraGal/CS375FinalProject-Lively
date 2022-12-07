@@ -388,7 +388,7 @@ app.get("/", (req, res) => {
 app.get("/hotelCoordinates", (req, res) => {
 	const hotelCoordConfig = {
 		headers: {
-			'X-Api-Key': env["geocoding_key"]
+			'X-Api-Key': process.env.GEOCODING_KEY
 		}
 	}
 
