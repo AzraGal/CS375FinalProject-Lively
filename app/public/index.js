@@ -153,6 +153,8 @@ function init() {
             cookies.setCookie("selected_genres", JSON.stringify(select2GenresIDs), 30);
         });
         if (cookies.getCookie("date_range") !== "") {
+            $('input[name="daterange"]').data('daterangepicker').setStartDate(cookies.getCookie("date_range").substring(1, 11));
+            $('input[name="daterange"]').data('daterangepicker').setEndDate(cookies.getCookie("date_range").substring(12));
             $('input[name="daterange"]').val(cookies.getCookie("date_range").substring(1));
         }
     }
