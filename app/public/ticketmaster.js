@@ -56,7 +56,7 @@ tmGetEventsButton.addEventListener("click", () => {
     console.log(promise);
 })
 
-function getTicketmasterEvents(selectedArtists, selectedGenres, location) {
+function getTicketmasterEvents(selectedArtists, selectedGenres, city, state, startDate, endDate) {
 // function getTicketmasterEvents() {
     //returns a promise of fetch call to server 
     console.log("fetching Events from TicketMaster with search parameters:");//TODO: add search parameter logging printing here
@@ -68,7 +68,11 @@ function getTicketmasterEvents(selectedArtists, selectedGenres, location) {
         },
         body: JSON.stringify({selectedArtists: selectedArtists, 
                                 selectedGenres: selectedGenres,
-                                location: location}),
+                                city: city,
+                                state: state,
+                                startDate: startDate,
+                                endDate: endDate,
+        }),
     }).then((response) => {
         return response.json();
     }).then((body)=>{

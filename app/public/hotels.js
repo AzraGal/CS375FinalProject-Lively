@@ -1,5 +1,6 @@
 let search = document.getElementById("submitSearchButton");
-let searchLocation = document.getElementById("location");
+let searchCity = document.getElementById("city");
+let searchState = document.getElementById("state");
 let hotelLocations = document.getElementById("hotelLocations");
 let hotelTableBody = document.getElementById("hotelBody");
 let locations = {}; 
@@ -9,78 +10,77 @@ let visibleHotelDetails = false;
 let selectedHotelRow, selectedHotelRowId;
 
 const states = {
-    alabama: "AL",
-    alaska: "AK",
-    arizona: "AZ",
-    arkansas: "AR",
-    california: "CA",
-    colorado: "CO",
-    connecticut: "CT",
-    delaware: "DE",
-    florida: "FL",
-    georgia: "GA",
-    hawaii: "HI",
-    idaho: "ID",
-    illinois: "IL", 
-    indiana: "IN",
-    iowa: "IA",
-    kansas: "KS",
-    kentucky: "KY",
-    louisiana: "LA",
-    maine: "ME",
-    maryland: "MD",
-    massachusetts: "MA", 
-    michigan: "MI", 
-    minnesota: "MN",
-    mississippi: "MS", 
-    missouri: "MO",
-    montana: "MT",
-    nebraska: "NE",
-    nevada: "NV",
-    new_hampshire: "NH",
-    new_jersey: "NJ",
-    new_mexico: "NM",
-    new_york: "NY",
-    north_carolina: "NC",
-    north_dakota: "ND",
-    ohio: "OH",
-    oklahoma: "OK",
-    oregon: "OR",
-    pennsylvania: "PA",
-    rhode_island: "RI",
-    south_carolina: "SC",
-    south_dakota: "SD",
-    tennessee: "TN",
-    texas: "TX",
-    utah: "UT",
-    vermont: "VT",
-    virginia: "VA",
-    washington: "WA",
-    west_virginia: "WV",
-    wisconsin: "WI",
-    wyoming: "WY"
+    AL: "Alabama",
+    AK: "Alaska",
+    AZ: "Arizona",
+    AR: "Arkansas",
+    CA: "California",
+    CO: "Colorado",
+    CT: "Connecticut",
+    DE: "Delaware",
+    FL: "Florida",
+    GA: "Georgia",
+    HI: "Hawaii",
+    ID: "Idaho",
+    IL: "Illinois", 
+    IN: "Indiana",
+    IA: "Iowa",
+    KS: "Kansas",
+    KY: "Kentucky",
+    LA: "Louisiana",
+    ME: "Maine",
+    MD: "Maryland",
+    MA: "Massachusetts", 
+    MI: "Michigan", 
+    MN: "Minnesota",
+    MS: "Mississippi", 
+    MO: "Missouri",
+    MT: "Montana",
+    NE: "Nebraska",
+    NV: "Nevada",
+    NH: "New Hampshire",
+    NK: "New Jersey",
+    NM: "New Mexico",
+    NY: "New York",
+    NC: "North Carolina",
+    ND: "North Dakota",
+    OH: "Ohio",
+    OK: "Oklahoma",
+    OR: "Oregon",
+    PA: "Pennsylvania",
+    RI: "Rhode Island",
+    SC: "South Carolina",
+    SD: "South Dakota",
+    TN: "Tennessee",
+    TX: "Texas",
+    UT: "Utah",
+    VT: "Vermont",
+    VA: "Virginia",
+    WA: "Washington",
+    WV: "West Virginia",
+    WI: "Wisconsin",
+    WY: "Wyoming"
 };
 
 //commented out for the Search-functionality branch to save our API requests
-// search.addEventListener("click", () => {
-//     let searchLocationVal = searchLocation.value;
+search.addEventListener("click", () => {
+    let searchCityVal = searchCity.value;
+    let searchStateVal = searchState.value;
 
-//     fetch("/hotelsCoordinates?searchLocation=" + searchLocationVal).then((response) => {
-//         return response.json(); 
-//     }).then((body) => {
-//         console.log(body);
-//         let cities = body.data;
+    fetch("/hotelsCoordinates?searchCity=" + searchCityVal).then((response) => {
+        return response.json(); 
+    }).then((body) => {
+        console.log(body);
+        let cities = body.data;
 
-//         for (let i = 0; i < cities.length; i ++) {
-//             if (cities[i].type === "CITY") {
-//                 let city = [cities[i].regionNames.displayName, cities[i].coordinates.latitude, cities[i].coordinates.longitude];
-//                 locations[cities[i].gaiaId] = city; 
-//             }
-//         }
-
-//         generateLocations();
-//     }); 
-// });
+        for (let i = 0; i < cities.length; i ++) {
+            if (cities[i].type === "CITY" && cities[i].regionNames.displayName.includes(states[searchStateVal])) {
+                console.log("neato");
+                fetchHotels(cities[i].gaiaId);
+            }
+        }
+    }); 
+});
 
 function formatStateName(name) {
     name = name.toLowerCase().replace(" ", "_");
@@ -125,7 +125,6 @@ function fetchHotels(locationId) {
         let searchResults = body.properties;
 
         while (hotelTableBody.rows.length > 0) {
-            console.log("delete");
             hotelTableBody.deleteRow(0);
         }
 
@@ -194,5 +193,15 @@ hotelTableBody.addEventListener("click", (e) => {
         let address = document.createElement("li");
         detailList.append(address);
         address.textContent = details.location.address.addressLine; 
+
+        let lat = document.createElement("p");
+        let long = document.createElement("p");
+        row.append(lat);
+        row.append(long);
+
+        lat.textContent = details.location.coordinates.latitude;
+        long.textContent = details.location.coordinates.longitude;
+        lat.setAttribute("hidden", true);
+        long.setAttribute("hidden", true);
     });
 });
