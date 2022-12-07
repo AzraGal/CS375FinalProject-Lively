@@ -2,9 +2,6 @@ import {displayConcertSearchResults} from "./tableDisplay.js"; //be sure to dele
 
 export { getTicketmasterEvents }
 
-let tmGetGenreButton = document.getElementById('buttonTicketMasterGenres');
-let tmGetEventsButton = document.getElementById('buttonTicketMasterEvents');
-
 let submitSearchButton = document.getElementById("submitSearchButton");
 let artistInput = document.getElementById("artist");
 let genreInput = document.getElementById("genre");
@@ -38,24 +35,6 @@ eventTable.addEventListener("click", function(event) {
 //   }
 });
 
-
-
-tmGetGenreButton.addEventListener("click", () => {
-    console.log("fetching Genres from TicketMaster");
-    fetch('/tmGenres').then((response) => {
-        return response.json();
-    }).then((body)=>{
-        console.log(body);
-    })
-})
-
-tmGetEventsButton.addEventListener("click", () => {
-    console.log("fetching Events from TicketMaster");
-    let promise = getTicketmasterEvents(["Wage War", "We Came As Romans"], ["Metal"], "Philadelphia,PA");
-    let displayPromise = displayConcertSearchResults(promise)
-    console.log(promise);
-})
-
 function getTicketmasterEvents(selectedArtists, selectedGenres, city, state, startDate, endDate) {
 // function getTicketmasterEvents() {
     //returns a promise of fetch call to server 
@@ -83,11 +62,17 @@ function getTicketmasterEvents(selectedArtists, selectedGenres, city, state, sta
 };
 
 export function populateEventsTable(body) {
+    
+    clearEventsTable();
+    
+    if (body['_embedded'] == undefined ||
+        (body['_embedded'].events == undefined)
+    ){
+        console.error("Server reply contains no _embedded object or no _embedded.events object")
+        return;
+    } 
+    
     let events = body['_embedded'].events;
-    while (eventTableBody.childElementCount > 0) {
-        eventTableBody.firstElementChild.remove();
-    }
-
     console.log(events);
 
     for (let i = 0; i < events.length; i++) {
@@ -222,3 +207,9 @@ export function populateEventsTable(body) {
             
     }
 } 
+
+function clearEventsTable() {
+    while (eventTableBody.childElementCount > 0) {
+        eventTableBody.firstElementChild.remove();   
+    }
+}
