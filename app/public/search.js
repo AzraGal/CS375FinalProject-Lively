@@ -9,6 +9,10 @@ let genreInput = document.getElementById("genre");
 let stateInput = document.getElementById("state");
 let cityInput = document.getElementById("city");
 
+var drp = $('input[name="daterange"]').data('daterangepicker');
+let daterange = document.getElementById("daterange");
+
+
 function submitSearch(){
     let selectedArtists = listOfSelectedArtists;
     let genre = genreInput.value;
@@ -21,8 +25,19 @@ function submitSearch(){
     console.log("selectedGenres:", selectedGenres)
     console.log("city:", city)
     console.log("state:", state)
+    var startDate = drp.startDate.format('YYYY-MM-DD');
+    var endDate = drp.endDate.format('YYYY-MM-DD');
+    let dateRangeVal = daterange.value;
     
-    let eventSearchPromise = getTicketmasterEvents(selectedArtists, selectedGenres, city, state);
+    if (dateRangeVal == ""){
+        startDate = ""
+        endDate = ""
+    } else {
+        startDate = startDate + "T00:00:00Z";
+        endDate = endDate + "T23:59:00Z";
+    }
+
+    let eventSearchPromise = getTicketmasterEvents(selectedArtists, selectedGenres, city, state, startDate, endDate);
     // clearEventsTable()
     // let displayConcertSearchPromise = displayConcertSearchResults(eventSearchPromise)
 

@@ -243,6 +243,8 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 	console.log(req.body, req.body.selectedArtists.length);
 	let selectedArtists = req.body.selectedArtists;
 	let selectedGenres = req.body.selectedGenres;
+	let startDate = req.body.startDate;
+	let endDate = req.body.endDate;
 	let city = req.body.city;
 	let state= req.body.state;
 	let locale = "en-us";
@@ -250,8 +252,7 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 	let pageSize = 200
 
 	if ( (selectedArtists == undefined) ||
-	(selectedGenres == undefined) || //TODO: add location filtering 
-	(selectedLocation == undefined) //TODO: Benedict, add checking if any of the arrays contain invalid entries, like numbers for genres. Check your old homeworks for thats
+	(selectedGenres == undefined) //TODO: Benedict, add checking if any of the arrays contain invalid entries, like numbers for genres. Check your old homeworks for thats
 	){ //TODO: test this checking for invalid requests before deployment
 		res.status(400).json({error: "Not all post request fields were populated!"});
 	}
@@ -284,6 +285,8 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 	let allRequestPromises = []
 	let allRequestResults = {_embedded:{events:[]}}
 	let classificationNameQueryParam = `&classificationName=${combinedGenres}`
+	let startDateQueryParam = `&startDateTime=${startDate}`
+	let endDateQueryParam = `&endDateTime=${endDate}`
 
 	let url = urlBase + 
 				countryCodeQueryParam + 
@@ -291,6 +294,8 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 				classificationNameQueryParam + 
 				cityQueryParam + 
 				stateQueryParam + 
+				startDateQueryParam +
+				endDateQueryParam +
 				pageSizeQueryParam;
 
 	if ( !(selectedArtists.length <= 0) ){
@@ -305,6 +310,8 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 				classificationNameQueryParam + 
 				cityQueryParam + 
 				stateQueryParam + 
+				startDateQueryParam +
+				endDateQueryParam +
 				pageSizeQueryParam;
 			console.log(url);
 			// while(TMtimeoutCounter==0){console.log(TMtimeoutCounter);};
@@ -317,7 +324,7 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 				// console.log(response.data);
 				//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
 				// console.log(Object.getOwnPropertyNames(response.headers));
-				// console.log(response);
+				console.log(response);
 				console.log("TM response events.length", response.data._embedded.events.length);
 				return response.data._embedded.events
 				// let requestedEvents = response.data._embedded.events;
@@ -332,13 +339,14 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 		// });
 		}
 		Promise.all(allRequestPromises).then((arrayOfRequestedEvents) => {
-			// console.log(arrayOfRequestedEvents[2].length);
+			console.log("arrayOfRequestedEvents", arrayOfRequestedEvents);
 			// allRequestResults.push(...arrayOfRequestedEvents);
 			arrayOfRequestedEvents.forEach(requestedEventSet => {
-				requestedEventSet.forEach(event => {
-					allRequestResults["_embedded"].events.push(event)
-				});
-				
+				if ( !(requestedEventSet == undefined)){
+					requestedEventSet.forEach(event => {
+						allRequestResults["_embedded"].events.push(event)
+					});
+				}
 			});
 		}).then( () => {
 			// console.log("allRequestResults length", allRequestResults);

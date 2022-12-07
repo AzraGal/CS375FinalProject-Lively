@@ -3,11 +3,13 @@ import * as artistSearch from "./artistSearch.js";
 
 let submitSearchButton = document.getElementById("submitSearchButton");
 let artistInput = document.getElementById("artist");
-let locationInput = document.getElementById("location");
+let cityInput = document.getElementById("city");
+let stateInput = document.getElementById("state");
 let artist = "";
 let listOfSelectedArtists = [];
 let selectedGenres = [];
-let location = "";
+let city = "";
+let state = "";
 
 // let getConcertHotels = document.getElementById("concertRes");
 
@@ -127,12 +129,18 @@ function init() {
         }
         if (cookies.getCookie("selected_genres") !== "") {
             select2GenresIDs = JSON.parse(cookies.getCookie("selected_genres").substring(1));
-            locationInput.value = cookies.getCookie("location_search").substring(1);
         }
-        locationInput.value = cookies.getCookie("location_search").substring(1);
-        locationInput.addEventListener("keyup", (event) => {
-            cookies.deleteCookie("location_search");
-            cookies.setCookie("location_search", locationInput.value, 30);
+        cityInput.value = cookies.getCookie("city").substring(1);
+        cityInput.addEventListener("change", (event) => {
+            cookies.deleteCookie("city");
+            cookies.setCookie("city", cityInput.value, 30);
+            console.log("city");
+        });
+        stateInput.value = cookies.getCookie("state").substring(1);
+        stateInput.addEventListener("change", (event) => {
+            cookies.deleteCookie("state");
+            cookies.setCookie("state", stateInput.value, 30);
+            console.log("state");
         });
         $(".js-example-basic-multiple").on("select2:select", function (sel) {
             select2GenresIDs.push(sel.params.data.id);
@@ -169,16 +177,19 @@ function submitSearch() {
     artist = artistInput.value;
     listOfSelectedArtists = artistSearch.listOfSelectedArtists;
     selectedGenres = getSelectedGenres();
-    location = locationInput.value;
+    city = cityInput.value;
+    state = stateInput.value;
     document.getElementById("suggestedArtists").style.display = "none";
 
     if (cookies.cookieConsent !== "") {
         cookies.deleteCookie("current_artist_search");
         cookies.deleteCookie("selected_artists");
-        cookies.deleteCookie("location_search");
+        cookies.deleteCookie("city");
+        cookies.deleteCookie("state");
         cookies.setCookie("current_artist_search", artist, 30);
         cookies.setCookie("selected_artists", JSON.stringify(listOfSelectedArtists), 30);
-        cookies.setCookie("location_search", location, 30);
+        cookies.setCookie("city", city, 30);
+        cookies.setCookie("state", state, 30);
     }
 }
 
