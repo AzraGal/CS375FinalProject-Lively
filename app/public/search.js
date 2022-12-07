@@ -30,9 +30,12 @@ function submitSearch(){
     // clearEventsTable()
     // let displayConcertSearchPromise = displayConcertSearchResults(eventSearchPromise)
 
-    //we get the search results as var here
-    //submit to populate table
-    //submit to populate map
+    // eventSearchPromise.then({body} => {
+    //     //submit to populate table
+    //     //submit to populate map
+    // })
+
+
 }
 
 submitSearchButton.addEventListener("click", submitSearch);
