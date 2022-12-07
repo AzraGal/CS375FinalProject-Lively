@@ -33,11 +33,10 @@ function submitSearch(){
         startDate = ""
         endDate = ""
     } else {
-        console.log(startDate + "T00:00:00Z");
-        console.log(endDate + "T23:59:00Z");
+        startDate = startDate + "T00:00:00Z";
+        endDate = endDate + "T23:59:00Z";
     }
 
-    
     let eventSearchPromise = getTicketmasterEvents(selectedArtists, selectedGenres, city, state, startDate, endDate);
     // clearEventsTable()
     // let displayConcertSearchPromise = displayConcertSearchResults(eventSearchPromise)
