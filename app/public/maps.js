@@ -21,13 +21,18 @@ function initMap() {
 
 
     searchButton.click();
-    
+
+    searchButton.addEventListener("click", () => {
+        deleteMarkers();
+        deleteSelectedMarker();
+    });
+
     allConcerts.addEventListener("click", function () {
         for (let i = 0; i < table.rows.length; i++) {
             eventClicked(i);
         };
         showTableData(table);
-    })
+    });
 
     spotifyButton.addEventListener("click", () => {
         let data = spotify.spotifyEvents._embedded.events;
@@ -35,11 +40,6 @@ function initMap() {
             let spotifyEvents = JSON.parse(window.localStorage.getItem("spotifyEvents"));
             data = spotifyEvents._embedded.events;
         }
-        allConcerts.addEventListener("click", function () {
-            deleteMarkers()
-            deleteSelectedMarker()
-            showVenueMarkers(data)
-        })
         allConcerts.click();
     });
 
@@ -49,6 +49,8 @@ function initMap() {
         deleteMarkers();
         deleteSelectedMarker();
         table.rows[i].addEventListener("click", () => {
+            deleteMarkers();
+            deleteSelectedMarker();
             if (infowindow) {
                 infowindow.close();
             }
