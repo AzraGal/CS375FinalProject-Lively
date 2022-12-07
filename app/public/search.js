@@ -29,7 +29,7 @@ function submitSearch(){
     console.log("state:", state)
     var startDate = drp.startDate.format('YYYY-MM-DD');
     var endDate = drp.endDate.format('YYYY-MM-DD');
-    let dateRangeVal = daterange.value;
+    let dateRangeVal = daterange.value; 
     
     if (dateRangeVal == ""){
         startDate = ""
