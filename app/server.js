@@ -425,9 +425,10 @@ app.get("/", (req, res) => {
 });
 
 app.get("/hotelsCoordinates", (req, res) => {
+	console.log("help");
     const hotelDestConfig = {
         params: {
-            query: req.query.searchLocation,
+            query: req.query.searchCity,
             domain: "US",
             locale: "en_US"
         }, 
