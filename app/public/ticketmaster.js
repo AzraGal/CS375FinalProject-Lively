@@ -2,9 +2,6 @@ import {displayConcertSearchResults} from "./tableDisplay.js"; //be sure to dele
 
 export { getTicketmasterEvents }
 
-let tmGetGenreButton = document.getElementById('buttonTicketMasterGenres');
-let tmGetEventsButton = document.getElementById('buttonTicketMasterEvents');
-
 let submitSearchButton = document.getElementById("submitSearchButton");
 let artistInput = document.getElementById("artist");
 let genreInput = document.getElementById("genre");
@@ -37,24 +34,6 @@ eventTable.addEventListener("click", function(event) {
 //     console.log(target);
 //   }
 });
-
-
-
-tmGetGenreButton.addEventListener("click", () => {
-    console.log("fetching Genres from TicketMaster");
-    fetch('/tmGenres').then((response) => {
-        return response.json();
-    }).then((body)=>{
-        console.log(body);
-    })
-})
-
-tmGetEventsButton.addEventListener("click", () => {
-    console.log("fetching Events from TicketMaster");
-    let promise = getTicketmasterEvents(["Wage War", "We Came As Romans"], ["Metal"], "Philadelphia,PA");
-    let displayPromise = displayConcertSearchResults(promise)
-    console.log(promise);
-})
 
 function getTicketmasterEvents(selectedArtists, selectedGenres, city, state, startDate, endDate) {
 // function getTicketmasterEvents() {
