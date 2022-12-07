@@ -9,6 +9,8 @@ let genreInput = document.getElementById("genre");
 let stateInput = document.getElementById("state");
 let cityInput = document.getElementById("city");
 
+var drp = $('input[name="daterange"]').data('daterangepicker');
+
 function submitSearch(){
     let selectedArtists = listOfSelectedArtists;
     let genre = genreInput.value;
@@ -21,6 +23,10 @@ function submitSearch(){
     console.log("selectedGenres:", selectedGenres)
     console.log("city:", city)
     console.log("state:", state)
+    startDate = drp.startDate.format('YYYY-MM-DD');
+    console.log(startDate);
+    endDate = drp.endDate.format('YYYY-MM-DD');
+    console.log(endDate);    
     
     let eventSearchPromise = getTicketmasterEvents(selectedArtists, selectedGenres, city, state);
     // clearEventsTable()
