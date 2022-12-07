@@ -8,25 +8,44 @@ import {displayConcertSearchResults, clearEventsTable} from "./tableDisplay.js";
 let submitSearchButton = document.getElementById("submitSearchButton");
 let artistInput = document.getElementById("artist");
 let genreInput = document.getElementById("genre");
-let locationInput = document.getElementById("location");
+let stateInput = document.getElementById("state");
+let cityInput = document.getElementById("city");
+
+var drp = $('input[name="daterange"]').data('daterangepicker');
+let daterange = document.getElementById("daterange");
+
 
 function submitSearch(){
     let selectedArtists = listOfSelectedArtists;
     let genre = genreInput.value;
     let selectedGenres = getSelectedGenres(); 
-    let location = locationInput.value;
+    let state = stateInput.value;
+    let city = cityInput.value;
     
     console.log("selectedArtists:", selectedArtists)
     console.log("genre:", genre)
     console.log("selectedGenres:", selectedGenres)
-    console.log("location:", location)
+    console.log("city:", city)
+    console.log("state:", state)
+    var startDate = drp.startDate.format('YYYY-MM-DD');
+    var endDate = drp.endDate.format('YYYY-MM-DD');
+    let dateRangeVal = daterange.value; 
     
-    let eventSearchPromise = getTicketmasterEvents(selectedArtists, selectedGenres, location);
+    if (dateRangeVal == ""){
+        startDate = ""
+        endDate = ""
+    } else {
+        startDate = startDate + "T00:00:00Z";
+        endDate = endDate + "T23:59:00Z";
+    }
+
+    let eventSearchPromise = getTicketmasterEvents(selectedArtists, selectedGenres, city, state, startDate, endDate);
     eventSearchPromise.then((body) => {
         console.log(body);
         populateEventsTable(body);
         document.getElementById("allConcerts").click();
     })
+
     // clearEventsTable()
     // let displayConcertSearchPromise = displayConcertSearchResults(eventSearchPromise)
 

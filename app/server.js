@@ -234,15 +234,17 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 	console.log(req.body, req.body.selectedArtists.length);
 	let selectedArtists = req.body.selectedArtists;
 	let selectedGenres = req.body.selectedGenres;
-	let selectedLocation = req.body.location;
+	let startDate = req.body.startDate;
+	let endDate = req.body.endDate;
+	let city = req.body.city;
+	let state= req.body.state;
 	let locale = "en-us";
 
 	let pageSize = 200
 
 	if ( (selectedArtists == undefined) ||
-	(selectedGenres == undefined) || //TODO: add location filtering 
-	(selectedLocation == undefined) //TODO: Benedict, add checking if any of the arrays contain invalid entries, like numbers for genres. Check your old homeworks for thats
-	){ //TODO: test this checking for invalid requests before deployment
+	(selectedGenres == undefined) //TODO: Benedict, add checking if any of the arrays contain invalid entries, like numbers for genres. Check your old homeworks for thats
+	){
 		res.status(400).json({error: "Not all post request fields were populated!"});
 	}
 
@@ -256,15 +258,6 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 	}
 	console.log(combinedGenres);
 
-	let city = ''
-	let state = ''
-
-	let splitLocation = selectedLocation.split(",")
-	if (splitLocation.length == 2){ //
-		city = splitLocation[0]
-		state = splitLocation[1]
-	}
-
 	let urlBase = `https://app.ticketmaster.com/discovery/v2/events.json?&apikey=${process.env.TICKETMASTERAPIKEY}&locale=${locale}`
 	let countryCodeQueryParam = "&countryCode=US"
 	let cityQueryParam = `&city=${city}`
@@ -274,6 +267,8 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 	let allRequestPromises = []
 	let allRequestResults = {_embedded:{events:[]}}
 	let classificationNameQueryParam = `&classificationName=${combinedGenres}`
+	let startDateQueryParam = `&startDateTime=${startDate}`
+	let endDateQueryParam = `&endDateTime=${endDate}`
 
 	let url = urlBase + 
 				countryCodeQueryParam + 
@@ -281,6 +276,8 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 				classificationNameQueryParam + 
 				cityQueryParam + 
 				stateQueryParam + 
+				startDateQueryParam +
+				endDateQueryParam +
 				pageSizeQueryParam;
 
 	if ( !(selectedArtists.length <= 0) ){
@@ -295,6 +292,8 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 				classificationNameQueryParam + 
 				cityQueryParam + 
 				stateQueryParam + 
+				startDateQueryParam +
+				endDateQueryParam +
 				pageSizeQueryParam;
 			console.log(url);
 			// while(TMtimeoutCounter==0){console.log(TMtimeoutCounter);};
@@ -307,28 +306,30 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 				// console.log(response.data);
 				//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
 				// console.log(Object.getOwnPropertyNames(response.headers));
-				// console.log(response);
-				console.log("TM response events.length", response.data._embedded.events.length);
-				return response.data._embedded.events
-				// let requestedEvents = response.data._embedded.events;
+				console.log(response);
+				if ( !(response.data._embedded == undefined) ){
+					return response.data._embedded.events
+				} else {
+					return null
+				}
 			})
 			.catch(function (error) {
 				// console.log(Object.getOwnPropertyNames(error.response.headers));
 				console.log(error);
-				// if (error.response.header)
 			});
 			// console.log(requestPromise);
 			allRequestPromises.push(requestPromise)
-		// });
 		}
 		Promise.all(allRequestPromises).then((arrayOfRequestedEvents) => {
-			// console.log(arrayOfRequestedEvents[2].length);
-			// allRequestResults.push(...arrayOfRequestedEvents);
+			console.log("arrayOfRequestedEvents", arrayOfRequestedEvents);
 			arrayOfRequestedEvents.forEach(requestedEventSet => {
-				requestedEventSet.forEach(event => {
-					allRequestResults["_embedded"].events.push(event)
-				});
-				
+				if ( !(requestedEventSet == undefined) ||
+						!(requestedEventSet == null)
+				){
+					requestedEventSet.forEach(event => {
+						allRequestResults["_embedded"].events.push(event)
+					});
+				}
 			});
 		}).then( () => {
 			// console.log("allRequestResults length", allRequestResults);
@@ -346,28 +347,6 @@ app.post('/tmEvents', async (req, res) => {//find query parameters here: https:/
 		});
 	}
 })
-
-// app.post("/tmEvents", async (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
-// app.post('/tmEvents', (req, res) => {//find query parameters here: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/#search-events-v2
-// 	console.log(req.body, req.body.selectedArtists.length);
-// 	let city = "Philadelphia"
-// 	let heavyMetalSubGenreId = "KZazBEonSMnZfZ7vkFd"
-// 	let indieRockSubGenreId = "KZazBEonSMnZfZ7vAde"
-// 	let artistName = "Wage War"
-// 	let pageSize = 200
-	
-// 	let url = `https://app.ticketmaster.com/discovery/v2/events.json?size=${pageSize}&subGenreId=${heavyMetalSubGenreId + ',' + indieRockSubGenreId}&apikey=${ticketmasterAPIkey}`
-// 	axios(url)
-// 	.then(response => {
-// 		// console.log(response.data);
-// 		//response.data.segment._embedded.genres contains all genres with subgenres within each at: response.data.segment._embedded.genres[#]._embedded
-// 		console.log(response.data["_embedded"].events);
-// 		res.json(response.data)
-// 	})
-// 	.catch(function (error) {
-// 		console.log(error);
-// 	});
-// })
 
 app.get("/spotifyArtistEvents", async (req, res) => {
 	let artist = req.query.artist;
@@ -406,10 +385,22 @@ app.get("/", (req, res) => {
     res.send("public/index.html"); 
 });
 
-app.get("/hotelsCoordinates", (req, res) => {
+app.get("/hotelCoordinates", (req, res) => {
+	const hotelCoordConfig = {
+		headers: {
+			'X-Api-Key': env["geocoding_key"]
+		}
+	}
+
+	axios.get('https://api.api-ninjas.com/v1/reversegeocoding?lat=' + req.query.lat + '&lon=' + req.query.long, hotelCoordConfig)
+        .then((response) => { res.json(response.data); })
+        .catch((error) => { console.log(error); });
+});
+
+app.get("/hotelRegion", (req, res) => {
     const hotelDestConfig = {
         params: {
-            query: req.query.searchLocation,
+            query: req.query.searchCity,
             domain: "US",
             locale: "en_US"
         }, 
@@ -430,8 +421,8 @@ app.get("/hotels", (req, res) => {
 			region_id: req.query.regionId,
             domain: "US",
             locale: "en_US",
-            checkin_date: "2022-12-29",
-            checkout_date: "2022-12-30",
+            checkin_date: "2023-06-29",
+            checkout_date: "2023-06-30",
             sort_order: "DISTANCE",
             adults_number: "2"
         },
